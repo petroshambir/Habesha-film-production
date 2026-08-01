@@ -14,7 +14,7 @@ function Gallery() {
 
   useEffect(() => {
     // ካብ ዳታቤዝ ኩሉ ፕሮጀክትታት ነምጽእ እሞ ነቲ ናይዚ URL ዝሰማማዕ ንመርጾ
-    fetch('https://film-production-portfolio.onrender.com/api/projects')
+    fetch('https://habesha-film-production-server.onrender.com/api/projects')
       .then(res => res.json())
       .then(data => {
         // ንኣብነት 'bridal-shoots' ዝብል ናብ 'Bridal Shoots' ቀይርካ ንምድላድ

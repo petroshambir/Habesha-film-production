@@ -11,7 +11,7 @@ function AdminDashboard() {
   const [sectionsData, setSectionsData] = useState({});
 
   useEffect(() => {
-    fetch('https://film-production-portfolio.onrender.com/api/projects')
+    fetch('https://habesha-film-production-server.onrender.com/api/projects')
       .then(res => res.json())
       .then(data => {
         const dataMap = {};
@@ -56,7 +56,7 @@ function AdminDashboard() {
         headings: data.headings
       };
 
-      const res = await fetch(`https://film-production-portfolio.onrender.com/api/projects/${title}`, {
+      const res = await fetch(`https://habesha-film-production-server.onrender.com/api/projects/${title}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)

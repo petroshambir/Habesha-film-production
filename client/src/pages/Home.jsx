@@ -16,7 +16,7 @@ function Home() {
   const [sections, setSections] = useState([]); 
 
   useEffect(() => {
-    fetch('https://film-production-portfolio.onrender.com/api/projects')
+    fetch('https://habesha-film-production-server.onrender.com/api/projects')
       .then(res => res.json())
       .then(data => {
         // ንነፍስወከፍ ክፍሊ ካብቲ description ዝመጸ ሰንሰለት (String) ኣንቢብና ነውጽኦ
