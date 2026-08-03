@@ -3,12 +3,21 @@ import ClientProject from '../models/ClientProject.js';
 
 const router = express.Router();
 
+// 0. [ADMIN & CLIENT] ኩሎም ፖርታልስ ንምጽዋዕ (እቲ ዝጎድሎ ዝነበረ እዚ እዩ)
+router.get('/portals', async (req, res) => {
+    try {
+        const portals = await ClientProject.find().sort({ createdAt: -1 });
+        res.status(200).json(portals);
+    } catch (err) {
+        console.error("Error fetching portals:", err);
+        res.status(500).json({ success: false, message: 'Server error' });
+    }
+});
+
 // 1. [ADMIN] ሓድሽ ፎልደርን ፓስኮድን ምፍጣር (Generate Passcode & Folder)
 router.post('/create-portal', async (req, res) => {
     try {
         const { clientName, portalNumber, images } = req.body;
-
-        // ብኣውቶማቲክ 4 ኣሃዙ ዘለዎ ፍሉይ ፓስኮድ ጀነረት ምግባር (ንኣብነት: 4821)
         const passcode = Math.floor(1000 + Math.random() * 9000).toString();
 
         const newProject = new ClientProject({
@@ -72,7 +81,6 @@ router.delete('/delete-portal/:id', async (req, res) => {
         if (!project) {
             return res.status(404).json({ success: false, message: "Project not found" });
         }
-        // ኣብዚ እንተደሊኻ ነቲ ስእሊታት ካብ Cloudinary ዝድምስሰሉ API logic ክትውስኽ ትኽእል ኢኻ።
         
         res.status(200).json({ success: true, message: "Portal and images deleted successfully" });
     } catch (err) {
