@@ -100,7 +100,7 @@ function SectionRenderer({ title, data, setData, onSave }) {
     formData.append('images', file);
 
     try {
-      const res = await fetch(`https://film-production-portfolio.onrender.com/api/projects/${title}/upload`, {
+      const res = await fetch(`https://habesha-film-production-server.onrender.com/api/projects/${title}/upload`, {
         method: 'POST',
         body: formData
       });
