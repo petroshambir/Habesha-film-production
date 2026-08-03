@@ -10,7 +10,6 @@ function ClientSelection() {
   const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
-  // 1. ፓስኮድ ኣእቲኻ ናብቲ ስእሊታት ምእታው (Login)
   const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -39,7 +38,6 @@ function ClientSelection() {
     }
   };
 
-  // 2. ስእሊ ምስ ተመረጸ/ተሰረዘ (Checkbox Toggle)
   const handleCheckboxChange = (imageUrl) => {
     if (selectedImages.includes(imageUrl)) {
       setSelectedImages(selectedImages.filter(img => img !== imageUrl));
@@ -48,7 +46,6 @@ function ClientSelection() {
     }
   };
 
-  // 3. ዝተመረጸ ስእሊታት ናብ ስቱድዮ ምልኣክ (Submit Selection)
   const handleSubmitSelection = async () => {
     if (selectedImages.length === 0) {
       alert('ብዘይውሕድ ሓደ ስእሊ ክትመርጽ ኣለካ!');
@@ -81,8 +78,6 @@ function ClientSelection() {
       <Navbar />
 
       <div className="flex-grow flex flex-col items-center justify-center px-4 py-24">
-        
-        {/* 1. PASSCODE LOGIN SCREEN */}
         {!project ? (
           <div className="bg-white p-8 md:p-12 shadow-2xl border border-zinc-200 max-w-md w-full text-center">
             <h2 className="text-2xl font-serif mb-2 text-zinc-900">Client Photo Selection</h2>
@@ -108,19 +103,15 @@ function ClientSelection() {
             </form>
           </div>
         ) : submitted ? (
-          /* 2. SUCCESS SCREEN AFTER SUBMISSION */
           <div className="bg-white p-10 shadow-xl border border-zinc-200 max-w-md w-full text-center">
             <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl">✓</div>
             <h2 className="text-2xl font-serif mb-2 text-zinc-900">ምርጫኹም ብዕወት ተሰዲዱ ኣሎ!</h2>
             <p className="text-sm text-zinc-600 mb-6">
-              ንሕና ነቲ ዝመረጽኩዎም <b>{selectedImages.length}</b> ስእሊታት ተቐቢልና ኤዲቲንግ ክንጅምር ኢና። ነቲ ፎልደር ክንዓጽዎ ኢና፣ ነቲ ዝሰርሕዎ ስራሕ ድማ ብቐረባ ክንሕብረኩም ኢና።
+              ንሕና ነቲ ዝመረጽኩዎም <b>{selectedImages.length}</b> ስእሊታት ተቐቢልና ኤዲቲንግ ክንጅምር ኢና።
             </p>
           </div>
         ) : (
-          /* 3. INTERACTIVE GALLERY & CHECKBOX SELECTION */
           <div className="max-w-7xl w-full mx-auto px-4">
-            
-            {/* Header with Sticky Counter Box */}
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 border-b pb-6 sticky top-20 bg-[#fcfbf9] z-10 py-4">
               <div>
                 <span className="text-xs uppercase font-bold tracking-widest text-amber-600">Welcome, {project.clientName}</span>
@@ -141,7 +132,6 @@ function ClientSelection() {
               </div>
             </div>
 
-            {/* Images Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
               {project.images.map((imgUrl, index) => {
                 const isSelected = selectedImages.includes(imgUrl);
@@ -160,17 +150,15 @@ function ClientSelection() {
                       loading="lazy"
                     />
                     
-                    {/* Checkbox Overlay */}
                     <div className="absolute top-3 right-3">
                       <input 
                         type="checkbox" 
                         checked={isSelected}
-                        onChange={() => {}} // Handled by parent div click
+                        onChange={() => {}}
                         className="w-5 h-5 accent-amber-600 cursor-pointer pointer-events-none"
                       />
                     </div>
 
-                    {/* Selected Badge */}
                     {isSelected && (
                       <div className="absolute inset-0 bg-amber-600/20 pointer-events-none flex items-center justify-center">
                         <span className="bg-amber-600 text-white text-[10px] uppercase font-bold px-2 py-1 tracking-widest shadow">
@@ -182,7 +170,6 @@ function ClientSelection() {
                 );
               })}
             </div>
-
           </div>
         )}
       </div>
