@@ -121,11 +121,21 @@ function Gallery() {
     fetch('https://habesha-film-production-server.onrender.com/api/projects')
       .then(res => res.json())
       .then(data => {
-        const found = data.find(item => 
-          item.title.toLowerCase().replace(/\s+/g, '-') === category.toLowerCase()
-        );
-        setProjectData(found || { title: category.replace(/-/g, ' '), images: [] });
-        setLoading(false);
+        // const found = data.find(item => 
+        //   item.title.toLowerCase().replace(/\s+/g, '-') === category.toLowerCase()
+        // );
+        // setProjectData(found || { title: category.replace(/-/g, ' '), images: [] });
+        // setLoading(false);
+        const found = data.find(item => {
+  const formattedItemTitle = item.title
+    .toLowerCase()
+    .replace(/"/g, '')
+    .replace(/&/g, 'and')
+    .trim()
+    .replace(/\s+/g, '-');
+    
+  return formattedItemTitle === category.toLowerCase().trim();
+});
       })
       .catch(err => {
         console.error("Error fetching gallery:", err);
