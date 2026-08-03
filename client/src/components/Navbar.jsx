@@ -60,14 +60,24 @@
 
 // export default Navbar;
 
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import logo from '../assets/images/robi-logo.png';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [workOpen, setWorkOpen] = useState(false);
+  const [galleryLinks, setGalleryLinks] = useState([]);
+
+  // ካብ ሰርቨር ነቶም ፕሮጀክትታት/ጋለሪታት ብኣውቶማቲክ ነንብቦ
+  useEffect(() => {
+    fetch('https://habesha-film-production-server.onrender.com/api/projects')
+      .then(res => res.json())
+      .then(data => {
+        setGalleryLinks(data);
+      })
+      .catch(err => console.log("Error fetching navbar categories:", err));
+  }, []);
 
   return (
     <nav className="absolute top-0 left-0 w-full z-50 px-6 md:px-12 py-6 flex justify-between items-center text-white">
@@ -92,7 +102,7 @@ function Navbar() {
         <Link to="/" className="hover:text-zinc-400 transition-colors">Home</Link>
         <a href="#about" className="hover:text-zinc-400 transition-colors">About</a>
        
-        {/* Gallery Dropdown with Hover Bridge & Smooth Delay */}
+        {/* Gallery Dropdown (Dynamic from Database) */}
         <div 
           className="relative py-2 md:py-0"
           onMouseEnter={() => setWorkOpen(true)}
@@ -112,27 +122,23 @@ function Navbar() {
 
           {workOpen && (
             <div className="md:absolute md:top-[calc(100%+0.75rem)] md:right-0 bg-black/95 backdrop-blur-md py-3 px-4 w-full md:w-56 border border-white/10 shadow-2xl transition-all duration-300 animate-fadeIn space-y-2">
-              <Link 
-                to="/gallery/wedding" 
-                onClick={() => { setWorkOpen(false); setIsOpen(false); }}
-                className="block py-2 text-zinc-300 hover:text-amber-300 transition-colors border-b border-white/5 last:border-none"
-              >
-                Wedding
-              </Link>
-              <Link 
-                to="/gallery/bridal-shoots" 
-                onClick={() => { setWorkOpen(false); setIsOpen(false); }}
-                className="block py-2 text-zinc-300 hover:text-amber-300 transition-colors border-b border-white/5 last:border-none"
-              >
-                Bridal Shoots
-              </Link>
-              <Link 
-                to="/gallery/baby-shower" 
-                onClick={() => { setWorkOpen(false); setIsOpen(false); }}
-                className="block py-2 text-zinc-300 hover:text-amber-300 transition-colors border-b border-white/5 last:border-none"
-              >
-                Baby Shower
-              </Link>
+              {galleryLinks.length > 0 ? (
+                galleryLinks.map((item, index) => {
+                  const slug = item.title.toLowerCase().trim().replace(/[^\w\s-]/g, '').replace(/\s+/g, '-');
+                  return (
+                    <Link 
+                      key={item._id || index}
+                      to={`/gallery/${slug}`} 
+                      onClick={() => { setWorkOpen(false); setIsOpen(false); }}
+                      className="block py-2 text-zinc-300 hover:text-amber-300 transition-colors border-b border-white/5 last:border-none capitalize"
+                    >
+                      {item.title}
+                    </Link>
+                  );
+                })
+              ) : (
+                <span className="block py-2 text-zinc-500 text-xs">Loading...</span>
+              )}
             </div>
           )}
         </div>
