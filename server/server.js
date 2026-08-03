@@ -5,7 +5,7 @@ import cors from 'cors';
 import connectDB from './Database Connection/DB.js';
 import projectRoutes from './Route/projectRoutes.js';
 import authRoutes from './Route/authRoutes.js';
-import clientRoutes from './routes/clientRoutes.js'; // ወይ ከከም መገሻ ናይቲ ፎልደርካ
+import clientRoutes from './Route/clientRoutes.js'; // ወይ ከከም መገሻ ናይቲ ፎልደርካ
 
 // 1. መጀመርያ app ፍጠር
 const app = express(); 
