@@ -37,7 +37,7 @@ import Welcome from './components/Welcome'; // ሓድሽ ኮምፖነንትካ
 import Gallery from './components/Gallery'; // ኣብዚ ኮምፖነንት ኣሎ
 import AdminLogin from './components/AdminLogin'; // ኣብዚ ኮምፖነንት ኣሎ
 import AdminDashboard from './components/AdminDashboard'; // ኣብዚ ኮምፖነንት ኣሎ
-import ClientSelection from './pages/ClientSelection';
+import ClientSelection from './components/ClientSelection';
 
 function App() {
   return (
