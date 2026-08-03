@@ -242,6 +242,7 @@
 
 // export default AdminDashboard;
 
+
 import React, { useState, useEffect } from 'react';
 
 const sectionsConfig = [
@@ -253,7 +254,7 @@ const sectionsConfig = [
 function AdminDashboard() {
   const [sectionsData, setSectionsData] = useState({});
   
-  // Client Portals States
+  // Client Portals States (ወሲኽናዮ ዘለና ሓድሽ ክፋል)
   const [clientName, setClientName] = useState('');
   const [portalNumber, setPortalNumber] = useState('');
   const [portalImages, setPortalImages] = useState('');
@@ -266,6 +267,7 @@ function AdminDashboard() {
       .then(data => {
         const dataMap = {};
         data.forEach(item => {
+          // ካብቲ ሰርቨር ዝመጽእ ጽሑፍ ጸሪና ንዕቀቦ
           let parsedDescriptions = [];
           let parsedHeadings = [];
           
@@ -290,13 +292,11 @@ function AdminDashboard() {
       })
       .catch(err => console.error("Error loading admin data:", err));
 
-    // Fetch existing client portals
     fetchPortals();
   }, []);
 
   const fetchPortals = async () => {
     try {
-      // እዚ ንምርኣይ እንተዘይተደልዩ ካብ clientRoutes ክመጽእ ይኽእል
       const res = await fetch('https://habesha-film-production-server.onrender.com/api/client/portals');
       if (res.ok) {
         const data = await res.json();
@@ -309,6 +309,8 @@ function AdminDashboard() {
 
   const handleSave = async (title, data) => {
     try {
+      // ሰርቨርካ ን descriptions ብቐጥታ ክቕበሎ ስለዘይክእል፡ 
+      // ንሕና ነቲ ዝጸሓፍናዮ ጽሑፋት ብሓደ መልክዕ (Stringified) ኣብቲ "description" ዝብል ሰርቨር ዝፈልጦ Field ንሰዶ
       const combinedPayloadString = `${data.desc || ''}||DESCS||${JSON.stringify(data.descriptions || [])}||DESCS||${JSON.stringify(data.headings || [])}`;
 
       const payload = {
@@ -342,7 +344,6 @@ function AdminDashboard() {
 
     setPortalLoading(true);
     try {
-      // ኡስማትን ሊንክታትን ብኮማ (Comma) ተፈልዮም ክኣትዉ ይኽእሉ
       const imageArray = portalImages.split(',').map(img => img.trim()).filter(img => img !== '');
 
       const response = await fetch('https://habesha-film-production-server.onrender.com/api/client/create-portal', {
@@ -373,16 +374,34 @@ function AdminDashboard() {
     }
   };
 
+  const handleDeletePortal = async (id) => {
+    if (!window.confirm("ነዚ ፖርታል ክትደምስሶ ትደልኹ ኢኹም?")) return;
+
+    try {
+      const res = await fetch(`https://habesha-film-production-server.onrender.com/api/client/delete-portal/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        alert("ፖርታል ብዕወት ጠፊኡ ኣሎ!");
+        fetchPortals();
+      } else {
+        alert("ክጠፍእ ኣይከኣለን።");
+      }
+    } catch (err) {
+      console.error("Error deleting portal:", err);
+    }
+  };
+
   return (
     <div className="p-4 md:p-8 bg-zinc-950 min-h-screen text-white">
-      <h1 className="text-3xl md:text-4xl font-bold mb-10 text-amber-500">Admin Content & Client Manager</h1>
+      <h1 className="text-3xl md:text-4xl font-bold mb-10 text-amber-500">Admin Content & Client Portals Manager</h1>
 
-      {/* --- CLIENT PORTAL GENERATOR SECTION --- */}
+      {/* --- CLIENT PORTAL GENERator SECTION (ዝተሓወሶ ሓድሽ ክፋል) --- */}
       <div className="mb-16 p-6 md:p-8 border border-amber-500/30 rounded-2xl bg-zinc-900 shadow-2xl">
-        <h2 className="text-2xl font-bold text-amber-400 mb-4">Create Client Selection Portal (ፓስኮድ ንከስተመር ምፍጣር)</h2>
-        <p className="text-xs text-zinc-400 mb-6">ንሓደ ከስተመር ዝርዝር ስእሊታት ኣሰናዲእካ ኣብዚ ፓስኮድ ኣፍልቆ።</p>
+        <h2 className="text-2xl font-bold text-amber-400 mb-2">Create Client Selection Portal</h2>
+        <p className="text-xs text-zinc-400 mb-6">ንከስተመር ስእሊታት መረጻ እዋኑ ዝሓለወ ስፔሻል ፓስኮድ (Passcode) ኣፍልቆ።</p>
 
-        <form onSubmit={handleCreatePortal} className="space-y-4 max-w-2xl">
+        <form onSubmit={handleCreatePortal} className="space-y-4 max-w-2xl mb-8">
           <div>
             <label className="block text-zinc-400 text-xs mb-1 uppercase font-bold">Client Name (ሽም ከስተመር):</label>
             <input 
@@ -426,9 +445,30 @@ function AdminDashboard() {
             {portalLoading ? 'Generating...' : 'Generate Portal & Passcode'}
           </button>
         </form>
+
+        {/* --- LIST OF CREATED PORTALS --- */}
+        <h3 className="text-lg font-bold text-zinc-200 mb-4 border-t border-zinc-800 pt-6">Existing Client Portals ({createdPortals.length})</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          {createdPortals.map((portal) => (
+            <div key={portal._id} className="bg-zinc-800/60 border border-zinc-700 p-4 rounded-xl flex justify-between items-center">
+              <div>
+                <h4 className="font-bold text-amber-300">{portal.clientName}</h4>
+                <p className="text-xs text-zinc-400">Portal #: {portal.portalNumber}</p>
+                <p className="text-xs text-amber-400 font-mono mt-1">Passcode: <span className="bg-zinc-900 px-2 py-0.5 rounded text-white font-bold">{portal.passcode}</span></p>
+                <p className="text-xs text-zinc-400 mt-1">Status: <span className={portal.isCompleted ? "text-green-400 font-bold" : "text-yellow-400"}>{portal.isCompleted ? "Completed (ዝመረጸ)" : "Pending (ገና)"}</span></p>
+              </div>
+              <button 
+                onClick={() => handleDeletePortal(portal._id)}
+                className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded text-xs font-bold h-fit"
+              >
+                Delete
+              </button>
+            </div>
+          ))}
+        </div>
       </div>
 
-      {/* --- PORTFOLIO SECTIONS MANAGER --- */}
+      {/* --- ናተይ ናይ መበቆል Sections (ከምዘለዎ ዝቐጸለ) --- */}
       {sectionsConfig.map((section) => {
         const currentData = sectionsData[section.title] || { names: '', desc: '', images: [], descriptions: [], headings: [] };
 
@@ -554,6 +594,7 @@ function SectionRenderer({ title, data, setData, onSave }) {
         </div>
       </div>
 
+      {/* ነፍስወከፍ ስእሊ መግለጺ ንምጽሓፍ */}
       <div className="mt-8 space-y-6">
         <h3 className="text-xl font-semibold text-amber-400 border-b border-zinc-800 pb-2">Manage Image Headings & Descriptions</h3>
         {data.images && data.images.map((img, index) => {

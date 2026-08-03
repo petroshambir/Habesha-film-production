@@ -1,41 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 function ClientSelection() {
-  const [passcode, setPasscode] = useState('');
+  const [portals, setPortals] = useState([]);
   const [project, setProject] = useState(null);
   const [selectedImages, setSelectedImages] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [fetchingPortals, setFetchingPortals] = useState(true);
   const [error, setError] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    setError('');
+  // ኩሎም ንጡፋት ፖርታልስ ካብ ሰርቨር ንምጽዋዕ
+  useEffect(() => {
+    fetchPortals();
+  }, []);
 
+  const fetchPortals = async () => {
     try {
-      const response = await fetch('https://habesha-film-production-server.onrender.com/api/client/verify-client-passcode', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ passcode }),
-      });
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setProject(data.project);
-        setSelectedImages(data.project.selectedImages || []);
+      const response = await fetch('https://habesha-film-production-server.onrender.com/api/client/portals');
+      if (response.ok) {
+        const data = await response.json();
+        setPortals(data);
       } else {
-        setError(data.message || 'ይቕሬታ፣ ክሕለፍ ኣይፍቀድን እዩ (Invalid Passcode)');
+        setError('ፖርታልስ ከተጽውዕ ኣይከኣለን።');
       }
     } catch (err) {
-      console.error("Login error:", err);
-      setError('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ። ደጊምካ ፈትን።');
+      console.error("Error fetching portals:", err);
+      setError('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ።');
     } finally {
-      setLoading(false);
+      setFetchingPortals(false);
     }
+  };
+
+  // ሓደ ከስተመር ሽሙ ምስ ጠወቐ ቀጥታ ናብቲ ናቱ ፖርታል ንምእታው
+  const handleSelectClient = (portal) => {
+    setProject(portal);
+    setSelectedImages(portal.selectedImages || []);
   };
 
   const handleCheckboxChange = (imageUrl) => {
@@ -79,28 +80,35 @@ function ClientSelection() {
 
       <div className="flex-grow flex flex-col items-center justify-center px-4 py-24">
         {!project ? (
-          <div className="bg-white p-8 md:p-12 shadow-2xl border border-zinc-200 max-w-md w-full text-center">
-            <h2 className="text-2xl font-serif mb-2 text-zinc-900">Client Photo Selection</h2>
-            <p className="text-sm text-zinc-600 mb-6">በጃኹም ኣብቲ ስቱድዮ ዝተዋህበኩም ፓስኮድ ኣብዚ ኣእትዉ።</p>
-            
-            <form onSubmit={handleLogin} className="space-y-4">
-              <input 
-                type="text"
-                placeholder="Enter Passcode"
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                className="w-full px-4 py-3 border border-zinc-300 focus:outline-none focus:border-zinc-900 text-center tracking-widest text-lg uppercase"
-                required
-              />
-              <button 
-                type="submit"
-                disabled={loading}
-                className="w-full bg-zinc-900 text-white py-3 uppercase text-xs font-bold tracking-widest hover:bg-zinc-800 transition-colors disabled:opacity-50"
-              >
-                {loading ? 'Checking...' : 'Enter Gallery'}
-              </button>
-              {error && <p className="text-red-500 text-xs mt-2">{error}</p>}
-            </form>
+          <div className="bg-white p-8 md:p-12 shadow-2xl border border-zinc-200 max-w-xl w-full text-center">
+            <h2 className="text-2xl font-serif mb-2 text-zinc-900">Client Photo Selection Portals</h2>
+            <p className="text-sm text-zinc-600 mb-6">በጃኹም ንምርጫ ስእሊታት ናይቲ ስቱድዮ ስምኩም ጠውቑ።</p>
+
+            {fetchingPortals ? (
+              <p className="text-sm text-zinc-400 py-6">Loading portals...</p>
+            ) : error ? (
+              <p className="text-red-500 text-xs py-4">{error}</p>
+            ) : portals.length === 0 ? (
+              <p className="text-sm text-zinc-500 py-6">ዝተዳለወ ፖርታል የለን።</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-96 overflow-y-auto p-1">
+                {portals.map((portal) => (
+                  <button
+                    key={portal._id}
+                    onClick={() => handleSelectClient(portal)}
+                    className="p-4 border border-zinc-200 bg-zinc-50 hover:bg-zinc-900 hover:text-white transition-all text-left flex flex-col justify-between rounded-lg group shadow-sm"
+                  >
+                    <div>
+                      <span className="text-[10px] uppercase font-bold tracking-widest text-amber-600 group-hover:text-amber-400">Portal #{portal.portalNumber}</span>
+                      <h3 className="text-base font-serif font-bold text-zinc-900 group-hover:text-white mt-1">{portal.clientName}</h3>
+                    </div>
+                    <span className="text-xs text-zinc-500 group-hover:text-zinc-300 mt-3 flex items-center gap-1 font-semibold">
+                      Select Photos &rarr;
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         ) : submitted ? (
           <div className="bg-white p-10 shadow-xl border border-zinc-200 max-w-md w-full text-center">
@@ -109,11 +117,23 @@ function ClientSelection() {
             <p className="text-sm text-zinc-600 mb-6">
               ንሕና ነቲ ዝመረጽኩዎም <b>{selectedImages.length}</b> ስእሊታት ተቐቢልና ኤዲቲንግ ክንጅምር ኢና።
             </p>
+            <button 
+              onClick={() => { setProject(null); setSubmitted(false); }}
+              className="bg-zinc-900 text-white px-6 py-2 text-xs uppercase font-bold tracking-widest hover:bg-zinc-800 transition-colors"
+            >
+              Back to Portals
+            </button>
           </div>
         ) : (
           <div className="max-w-7xl w-full mx-auto px-4">
             <div className="flex flex-col md:flex-row justify-between items-center mb-8 border-b pb-6 sticky top-20 bg-[#fcfbf9] z-10 py-4">
               <div>
+                <button 
+                  onClick={() => setProject(null)}
+                  className="text-xs uppercase font-bold tracking-widest text-zinc-500 hover:text-zinc-900 mb-2 flex items-center gap-1"
+                >
+                  &larr; Back to Client List
+                </button>
                 <span className="text-xs uppercase font-bold tracking-widest text-amber-600">Welcome, {project.clientName}</span>
                 <h1 className="text-3xl font-serif text-zinc-900">Portal #{project.portalNumber} - Photo Selection</h1>
               </div>
