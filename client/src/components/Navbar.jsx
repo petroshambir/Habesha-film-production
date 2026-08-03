@@ -341,6 +341,12 @@ function Navbar() {
         
         <Link to="/price" className="hover:text-zinc-400 transition-colors">Price</Link>
         <Link to="/contact" className="hover:text-zinc-400 transition-colors">Contact</Link>
+        <Link 
+  to="/client-selection" 
+  className="text-xs uppercase font-bold tracking-widest text-zinc-900 hover:text-amber-600 transition-colors"
+>
+  Client Selection
+</Link>
      
       </div>
     </nav>
