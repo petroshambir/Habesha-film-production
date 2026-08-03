@@ -99,19 +99,29 @@
 // }
 
 // export default Price;
-
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
 function Price() {
-  const [isAuthenticated, setIsAuthenticated] = useState(
-    sessionStorage.getItem('priceAuth') === 'true'
-  );
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [passcode, setPasscode] = useState('');
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // ገጽ ምስ ተኸፈተ ግዜ (10 ደቓይቕ) ምርካብን ምጽራይን
+  useEffect(() => {
+    const authData = localStorage.getItem('priceAuthData');
+    if (authData) {
+      const { expiry } = JSON.parse(authData);
+      if (new Date().getTime() < expiry) {
+        setIsAuthenticated(true);
+      } else {
+        localStorage.removeItem('priceAuthData');
+        setIsAuthenticated(false);
+      }
+    }
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -131,7 +141,14 @@ function Price() {
 
       if (response.ok && data.success) {
         setIsAuthenticated(true);
-        sessionStorage.setItem('priceAuth', 'true');
+
+        // ን10 ደቓይቕ ዝጸንሕ ግዜ ቐምጥ (10 mins * 60 secs * 1000 ms)
+        const expiryDuration = 10 * 60 * 1000; 
+        const authData = {
+          value: 'true',
+          expiry: new Date().getTime() + expiryDuration,
+        };
+        localStorage.setItem('priceAuthData', JSON.stringify(authData));
       } else {
         setError(true);
       }
@@ -223,7 +240,7 @@ function Price() {
                 </button>
               </div>
 
-              {/* 3. Gold Package (ከም ዝለዓለ ደረጃ ተወሳኺ ስርሓት ዘለዎ) */}
+              {/* 3. Gold Package */}
               <div className="bg-white border-2 border-amber-500 p-8 shadow-xl relative flex flex-col justify-between transition-transform hover:-translate-y-1">
                 <span className="absolute -top-3 right-6 bg-amber-500 text-white text-[10px] uppercase font-bold tracking-widest px-3 py-1">
                   Best Value
@@ -239,7 +256,7 @@ function Price() {
                     <li className="flex items-center gap-2">✓ ምሉእ መዓልቲ ሰፊሕ ቀረጻ</li>
                     <li className="flex items-center gap-2">✓ 4K Ultra HD ቪድዮ ኳሊቲ</li>
                     <li className="flex items-center gap-2">✓ <b>Drone Footage</b> (ናይ ኣየር ቀረጻ)</li>
-                    <li className="flex items-center gap-2 text-amber-600 font-bold">🎁 <b>ಬቦናስ:</b> 2 ነጻ ሰሻል ሚድያ ማርኬቲንግ ቪድዮታት</li>
+                    <li className="flex items-center gap-2 text-amber-600 font-bold">🎁 <b>ቦናስ:</b> 2 ነጻ ሰሻል ሚድያ ማርኬቲንግ ቪድዮታት</li>
                   </ul>
                 </div>
                 <button className="w-full bg-amber-500 text-white py-3 text-xs uppercase font-bold tracking-widest hover:bg-amber-600 transition-colors">
@@ -247,7 +264,7 @@ function Price() {
                 </button>
               </div>
 
-              {/* 4. Premium Package (እቲ ዝለዓለ ደረጃ) */}
+              {/* 4. Premium Package */}
               <div className="bg-zinc-900 text-white border border-zinc-900 p-8 shadow-xl flex flex-col justify-between transition-transform hover:-translate-y-1">
                 <div>
                   <span className="text-xs uppercase font-bold tracking-widest text-amber-400">Ultimate VIP</span>
