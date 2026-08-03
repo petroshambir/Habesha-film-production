@@ -28,25 +28,7 @@ function Navbar() {
 
         <a href="/" className="hover:text-zinc-400">Home</a>
         <a href="#about" className="hover:text-zinc-400">About</a>
-        <a href="#contact" className="hover:text-zinc-400">Contact</a>
-        <a href="#gallery" className="hover:text-zinc-400">Gallery</a>
-        
-        {/* Our Work Dropdown (Mobile-friendly) */}
-        {/* <div className="relative">
-          <button 
-            className="hover:text-zinc-400 flex items-center" 
-            onClick={() => setWorkOpen(!workOpen)}
-          >
-            Our Work ▾
-          </button>
-          {workOpen && (
-            <div className="md:absolute md:top-full md:right-0 bg-black/90 p-4 w-full md:w-48 mt-2 border border-white/10">
-              <a href="#wedding" className="block py-2 hover:text-zinc-400">Wedding</a>
-              <a href="#bridal" className="block py-2 hover:text-zinc-400">Bridal</a>
-              <a href="#baby-shower" className="block py-2 hover:text-zinc-400">Baby Shower</a>
-            </div>
-          )}
-        </div> */}
+     
         <div 
   className="relative"
   onMouseEnter={() => setWorkOpen(true)}
@@ -56,7 +38,7 @@ function Navbar() {
     className="hover:text-zinc-400 flex items-center" 
     onClick={() => setWorkOpen(!workOpen)}
   >
-    Our Work ▾
+     Gallery ▾
   </button>
   
   {workOpen && (
@@ -67,6 +49,9 @@ function Navbar() {
     </div>
   )}
 </div>
+        <a href="#contact" className="hover:text-zinc-400">Contact</a>
+        {/* <a href="#gallery" className="hover:text-zinc-400">Our Work</a> */}
+   
         
       </div>
     </nav>
