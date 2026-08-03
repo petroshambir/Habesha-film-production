@@ -1,11 +1,101 @@
-import React from 'react'
+import React, { useState } from 'react';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
 
 function Price() {
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    sessionStorage.getItem('priceAuth') === 'true'
+  );
+  const [passcode, setPasscode] = useState('');
+  const [error, setError] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(false);
+
+    try {
+      // ናብቲ ናይ Backend ሰርቨርካ እንሰዶ ሓበሬታ
+      const response = await fetch('https://habesha-film-production-server.onrender.com/api/auth/verify-passcode', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ passcode }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setIsAuthenticated(true);
+        sessionStorage.setItem('priceAuth', 'true');
+      } else {
+        setError(true);
+      }
+    } catch (err) {
+      console.error("Error verifying passcode:", err);
+      setError(true);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div>
-      Price
+    <div className="min-h-screen bg-[#fcfbf9] text-zinc-900 font-sans flex flex-col justify-between">
+      <Navbar />
+
+      <div className="flex-grow flex items-center justify-center px-4 py-32">
+        {!isAuthenticated ? (
+          <div className="bg-white p-8 md:p-12 shadow-2xl border border-zinc-200 max-w-md w-full text-center">
+            <h2 className="text-2xl font-serif mb-4 text-zinc-900">Protected Price Page</h2>
+            <p className="text-sm text-zinc-600 mb-6">እዚ ገጽ ብሚጢራዊ ፓስኮድ ዝተዓጸወ እዩ።</p>
+            
+            <form onSubmit={handleLogin} className="space-y-4">
+              <input 
+                type="password"
+                placeholder="Enter Passcode"
+                value={passcode}
+                onChange={(e) => setPasscode(e.target.value)}
+                className="w-full px-4 py-3 border border-zinc-300 focus:outline-none focus:border-zinc-900 text-center tracking-widest text-lg"
+              />
+              <button 
+                type="submit"
+                disabled={loading}
+                className="w-full bg-zinc-900 text-white py-3 uppercase text-xs font-bold tracking-widest hover:bg-zinc-800 transition-colors disabled:opacity-50"
+              >
+                {loading ? 'Checking...' : 'Submit'}
+              </button>
+              {error && <p className="text-red-500 text-xs mt-2">ጌጋ ፓስኮድ! ደጊምካ ፈትን።</p>}
+            </form>
+          </div>
+        ) : (
+          /* ትሕዝቶ ናይ Price */
+          <div className="max-w-4xl mx-auto text-center px-6">
+            <h1 className="text-4xl md:text-5xl font-serif mb-6">Our Pricing Plans</h1>
+            <p className="text-zinc-600 text-lg mb-12">እንቋዕ ብደሓን መጻእኩም! ዋጋታትና ኣብዚ ታሕቲ ኣለዉ።</p>
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="p-8 border border-zinc-200 bg-white shadow-lg">
+                <h3 className="font-bold text-xl mb-2">Basic Package</h3>
+                <p className="text-3xl font-serif mb-4">$500</p>
+              </div>
+              <div className="p-8 border border-zinc-900 bg-zinc-900 text-white shadow-lg">
+                <h3 className="font-bold text-xl mb-2">Standard Package</h3>
+                <p className="text-3xl font-serif mb-4">$1000</p>
+              </div>
+              <div className="p-8 border border-zinc-200 bg-white shadow-lg">
+                <h3 className="font-bold text-xl mb-2">Premium Package</h3>
+                <p className="text-3xl font-serif mb-4">$1500</p>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <Footer />
     </div>
-  )
+  );
 }
 
-export default Price
+export default Price;
