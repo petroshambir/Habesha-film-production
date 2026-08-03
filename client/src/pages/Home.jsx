@@ -25,17 +25,34 @@ function Home() {
           let parsedHeadings = section.headings || [];
           let mainDesc = section.desc || section.description || '';
 
-          try {
-            if (typeof section.description === 'string' && section.description.includes('||DESCS||')) {
-              const parts = section.description.split('||DESCS||');
-              mainDesc = parts[0];
-              parsedDescriptions = JSON.parse(parts[1] || '[]');
-              parsedHeadings = JSON.parse(parts[2] || '[]');
-            }
-          } catch (e) {
-            console.log("Error parsing section data", e);
-          }
-
+          // try {
+          //   if (typeof section.description === 'string' && section.description.includes('||DESCS||')) {
+          //     const parts = section.description.split('||DESCS||');
+          //     mainDesc = parts[0];
+          //     parsedDescriptions = JSON.parse(parts[1] || '[]');
+          //     parsedHeadings = JSON.parse(parts[2] || '[]');
+          //   }
+          // } catch (e) {
+          //   console.log("Error parsing section data", e);
+          // }
+// ኣብ Home.jsx ዘሎ Parsing Logic ብግቡእ ክስራሕ ኣለዎ:
+try {
+  if (typeof section.description === 'string' && section.description.includes('||DESCS||')) {
+    const parts = section.description.split('||DESCS||');
+    mainDesc = parts[0] || '';
+    
+    // ንዝተደጋገመ JSON Strings ንምሕካኽ
+    try {
+      parsedDescriptions = parts[1] ? JSON.parse(parts[1]) : [];
+    } catch(err) { parsedDescriptions = []; }
+    
+    try {
+      parsedHeadings = parts[2] ? JSON.parse(parts[2]) : [];
+    } catch(err) { parsedHeadings = []; }
+  }
+} catch (e) {
+  console.log("Error parsing section data", e);
+}
           return {
             ...section,
             desc: mainDesc,
