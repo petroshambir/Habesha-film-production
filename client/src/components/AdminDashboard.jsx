@@ -253,13 +253,13 @@ const sectionsConfig = [
 
 function AdminDashboard() {
   const [sectionsData, setSectionsData] = useState({});
-  
-  // Client Portals States (ወሲኽናዮ ዘለና ሓድሽ ክፋል)
+
+  // ንኮሚሽን/ምርጫ ካስተመራት ዝምልከት ስቴት
   const [clientName, setClientName] = useState('');
   const [portalNumber, setPortalNumber] = useState('');
-  const [portalImages, setPortalImages] = useState('');
-  const [createdPortals, setCreatedPortals] = useState([]);
-  const [portalLoading, setPortalLoading] = useState(false);
+  const [clientImages, setClientImages] = useState([]);
+  const [portalsList, setPortalsList] = useState([]);
+  const [creatingPortal, setCreatingPortal] = useState(false);
 
   useEffect(() => {
     fetch('https://habesha-film-production-server.onrender.com/api/projects')
@@ -267,7 +267,6 @@ function AdminDashboard() {
       .then(data => {
         const dataMap = {};
         data.forEach(item => {
-          // ካብቲ ሰርቨር ዝመጽእ ጽሑፍ ጸሪና ንዕቀቦ
           let parsedDescriptions = [];
           let parsedHeadings = [];
           
@@ -300,17 +299,70 @@ function AdminDashboard() {
       const res = await fetch('https://habesha-film-production-server.onrender.com/api/client/portals');
       if (res.ok) {
         const data = await res.json();
-        setCreatedPortals(data);
+        setPortalsList(data);
       }
     } catch (err) {
-      console.log("Portals fetch info:", err);
+      console.error("Error fetching portals:", err);
+    }
+  };
+
+  const handleCreatePortal = async (e) => {
+    e.preventDefault();
+    if (!clientName || !portalNumber || clientImages.length === 0) {
+      alert('በጃኹም ሽም ካስተመር፡ ቑጽሪ ፖርታል፡ ከምኡውን ብዘይውሕድ ሓደ ስእሊ ኣእትዉ!');
+      return;
+    }
+
+    setCreatingPortal(true);
+    try {
+      const res = await fetch('https://habesha-film-production-server.onrender.com/api/client/create-portal', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ clientName, portalNumber, images: clientImages })
+      });
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        alert(`ፖርታል ብሰላም ተፈጢሩ! ፓስኮድ: [ ${data.passcode} ]`);
+        setClientName('');
+        setPortalNumber('');
+        setClientImages([]);
+        fetchPortals();
+      } else {
+        alert(data.message || 'ፖርታል ምፍጣር ኣይከኣለን።');
+      }
+    } catch (err) {
+      console.error("Error creating portal:", err);
+      alert('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ።');
+    } finally {
+      setCreatingPortal(false);
+    }
+  };
+
+  const handleClientImageUpload = (e) => {
+    const files = Array.from(e.target.files);
+    // ናብ Base64 ወይ URL ናይ ምስቀል መስርሕ (ኣብዚ ንመረዳእታ ፋይላት ናብ object URL ይቕየር ወይ ድማ ብሩቲን ክስቀል ይኽእል)
+    const newImageUrls = files.map(file => URL.createObjectURL(file));
+    setClientImages(prev => [...prev, ...newImageUrls]);
+  };
+
+  const handleDeletePortal = async (id) => {
+    if (!window.confirm('ነዚ ፖርታል ከተጥፍኦ ትደል ኢኻ?')) return;
+    try {
+      const res = await fetch(`https://habesha-film-production-server.onrender.com/api/client/delete-portal/${id}`, {
+        method: 'DELETE'
+      });
+      if (res.ok) {
+        setPortalsList(portalsList.filter(p => p._id !== id));
+        alert('ፖርታል ተደምሲሱ ኣሎ!');
+      }
+    } catch (err) {
+      console.error("Delete error:", err);
     }
   };
 
   const handleSave = async (title, data) => {
     try {
-      // ሰርቨርካ ን descriptions ብቐጥታ ክቕበሎ ስለዘይክእል፡ 
-      // ንሕና ነቲ ዝጸሓፍናዮ ጽሑፋት ብሓደ መልክዕ (Stringified) ኣብቲ "description" ዝብል ሰርቨር ዝፈልጦ Field ንሰዶ
       const combinedPayloadString = `${data.desc || ''}||DESCS||${JSON.stringify(data.descriptions || [])}||DESCS||${JSON.stringify(data.headings || [])}`;
 
       const payload = {
@@ -335,140 +387,82 @@ function AdminDashboard() {
     }
   };
 
-  const handleCreatePortal = async (e) => {
-    e.preventDefault();
-    if (!clientName || !portalNumber) {
-      alert('ሽም ከስተመርን ቁፅሪ ፖርታልን ክልቲኡ ክልአኽ ኣለዎ!');
-      return;
-    }
-
-    setPortalLoading(true);
-    try {
-      const imageArray = portalImages.split(',').map(img => img.trim()).filter(img => img !== '');
-
-      const response = await fetch('https://habesha-film-production-server.onrender.com/api/client/create-portal', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          clientName,
-          portalNumber,
-          images: imageArray
-        })
-      });
-
-      const data = await response.json();
-      if (response.ok && data.success) {
-        alert(`ፖርታል ብዕወት ተፈጢሩ! ፓስኮድ ከስተመር: ${data.passcode}`);
-        setClientName('');
-        setPortalNumber('');
-        setPortalImages('');
-        fetchPortals();
-      } else {
-        alert('ፖርታል ምፍጣር ኣይከኣለን።');
-      }
-    } catch (err) {
-      console.error("Portal creation error:", err);
-      alert('ሰርቨር ጌጋ ኣጋጢሙ።');
-    } finally {
-      setPortalLoading(false);
-    }
-  };
-
-  const handleDeletePortal = async (id) => {
-    if (!window.confirm("ነዚ ፖርታል ክትደምስሶ ትደልኹ ኢኹም?")) return;
-
-    try {
-      const res = await fetch(`https://habesha-film-production-server.onrender.com/api/client/delete-portal/${id}`, {
-        method: 'DELETE'
-      });
-      if (res.ok) {
-        alert("ፖርታል ብዕወት ጠፊኡ ኣሎ!");
-        fetchPortals();
-      } else {
-        alert("ክጠፍእ ኣይከኣለን።");
-      }
-    } catch (err) {
-      console.error("Error deleting portal:", err);
-    }
-  };
-
   return (
     <div className="p-4 md:p-8 bg-zinc-950 min-h-screen text-white">
-      <h1 className="text-3xl md:text-4xl font-bold mb-10 text-amber-500">Admin Content & Client Portals Manager</h1>
+      <h1 className="text-3xl md:text-4xl font-bold mb-10 text-amber-500">Admin Content Manager</h1>
 
-      {/* --- CLIENT PORTAL GENERator SECTION (ዝተሓወሶ ሓድሽ ክፋል) --- */}
-      <div className="mb-16 p-6 md:p-8 border border-amber-500/30 rounded-2xl bg-zinc-900 shadow-2xl">
-        <h2 className="text-2xl font-bold text-amber-400 mb-2">Create Client Selection Portal</h2>
-        <p className="text-xs text-zinc-400 mb-6">ንከስተመር ስእሊታት መረጻ እዋኑ ዝሓለወ ስፔሻል ፓስኮድ (Passcode) ኣፍልቆ።</p>
-
-        <form onSubmit={handleCreatePortal} className="space-y-4 max-w-2xl mb-8">
-          <div>
-            <label className="block text-zinc-400 text-xs mb-1 uppercase font-bold">Client Name (ሽም ከስተመር):</label>
-            <input 
-              type="text" 
-              value={clientName}
-              onChange={(e) => setClientName(e.target.value)}
-              className="bg-zinc-800 border border-zinc-700 p-3 rounded-lg w-full text-white text-sm"
-              placeholder="ንኣብነት: Dawit & Meron"
-              required
-            />
+      {/* ─── ሓድሽ ካስተመር ፖርታል መፍጠሪ ክፍሊ ─── */}
+      <div className="mb-16 p-6 border border-amber-500/50 rounded-2xl bg-zinc-900 shadow-2xl">
+        <h2 className="text-2xl font-bold text-amber-400 mb-6">Create Client Selection Portal</h2>
+        <form onSubmit={handleCreatePortal} className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-zinc-400 mb-1 text-sm">Client Name (ሽም ካስተመር):</label>
+              <input 
+                type="text" 
+                value={clientName}
+                onChange={(e) => setClientName(e.target.value)}
+                placeholder="ንኣብነት: Dawit & Meron"
+                className="bg-zinc-800 border border-zinc-700 p-3 rounded-lg w-full text-white"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-zinc-400 mb-1 text-sm">Portal Number (ቑጽሪ ፖርታል):</label>
+              <input 
+                type="text" 
+                value={portalNumber}
+                onChange={(e) => setPortalNumber(e.target.value)}
+                placeholder="ንኣብነት: 01 ወይ 102"
+                className="bg-zinc-800 border border-zinc-700 p-3 rounded-lg w-full text-white"
+                required
+              />
+            </div>
           </div>
 
           <div>
-            <label className="block text-zinc-400 text-xs mb-1 uppercase font-bold">Portal Number (ቁፅሪ ፖርታል):</label>
+            <label className="block text-zinc-400 mb-1 text-sm">Upload Client Photos (ስእሊታት ምጽዓን):</label>
             <input 
-              type="text" 
-              value={portalNumber}
-              onChange={(e) => setPortalNumber(e.target.value)}
-              className="bg-zinc-800 border border-zinc-700 p-3 rounded-lg w-full text-white text-sm"
-              placeholder="ንኣብነት: 01 ወይ 2026"
-              required
+              type="file" 
+              multiple
+              onChange={handleClientImageUpload}
+              className="text-zinc-400 text-sm file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-amber-500 file:text-black hover:file:bg-amber-400 w-full bg-zinc-800 p-2 rounded-lg" 
             />
-          </div>
-
-          <div>
-            <label className="block text-zinc-400 text-xs mb-1 uppercase font-bold">Image URLs (ብኮማ ተፈልዩ ክእቱ ይኽእል):</label>
-            <textarea 
-              rows="3"
-              value={portalImages}
-              onChange={(e) => setPortalImages(e.target.value)}
-              className="bg-zinc-800 border border-zinc-700 p-3 rounded-lg w-full text-white text-sm"
-              placeholder="https://res.cloudinary.com/... , https://res.cloudinary.com/..."
-            />
+            <p className="text-xs text-zinc-500 mt-1">ዝተመረጹ ስእሊታት ቑጽሪ: {clientImages.length}</p>
           </div>
 
           <button 
             type="submit" 
-            disabled={portalLoading}
-            className="bg-amber-600 hover:bg-amber-700 text-black font-bold uppercase text-xs tracking-widest px-6 py-3 rounded-lg w-full transition-colors disabled:opacity-50"
+            disabled={creatingPortal}
+            className="bg-amber-500 hover:bg-amber-600 text-black font-bold px-6 py-3 rounded-lg w-full transition-colors"
           >
-            {portalLoading ? 'Generating...' : 'Generate Portal & Passcode'}
+            {creatingPortal ? 'Generating Portal & Passcode...' : 'Create Portal & Generate Passcode'}
           </button>
         </form>
 
-        {/* --- LIST OF CREATED PORTALS --- */}
-        <h3 className="text-lg font-bold text-zinc-200 mb-4 border-t border-zinc-800 pt-6">Existing Client Portals ({createdPortals.length})</h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {createdPortals.map((portal) => (
-            <div key={portal._id} className="bg-zinc-800/60 border border-zinc-700 p-4 rounded-xl flex justify-between items-center">
-              <div>
-                <h4 className="font-bold text-amber-300">{portal.clientName}</h4>
-                <p className="text-xs text-zinc-400">Portal #: {portal.portalNumber}</p>
-                <p className="text-xs text-amber-400 font-mono mt-1">Passcode: <span className="bg-zinc-900 px-2 py-0.5 rounded text-white font-bold">{portal.passcode}</span></p>
-                <p className="text-xs text-zinc-400 mt-1">Status: <span className={portal.isCompleted ? "text-green-400 font-bold" : "text-yellow-400"}>{portal.isCompleted ? "Completed (ዝመረጸ)" : "Pending (ገና)"}</span></p>
+        {/* ዝተፈጥሩ ፖርታላት ዝርአይሉ ሰሌዳ */}
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold text-zinc-300 mb-4">Active Client Portals ({portalsList.length})</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 max-h-60 overflow-y-auto">
+            {portalsList.map(portal => (
+              <div key={portal._id} className="bg-zinc-800 p-4 rounded-xl border border-zinc-700 flex justify-between items-center">
+                <div>
+                  <h4 className="font-bold text-amber-300">{portal.clientName}</h4>
+                  <p className="text-xs text-zinc-400">Portal #{portal.portalNumber}</p>
+                  <p className="text-xs text-green-400 font-mono mt-1">Passcode: {portal.passcode}</p>
+                </div>
+                <button 
+                  onClick={() => handleDeletePortal(portal._id)}
+                  className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-bold"
+                >
+                  Delete
+                </button>
               </div>
-              <button 
-                onClick={() => handleDeletePortal(portal._id)}
-                className="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded text-xs font-bold h-fit"
-              >
-                Delete
-              </button>
-            </div>
-          ))}
+            ))}
+          </div>
         </div>
       </div>
 
-      {/* --- ናተይ ናይ መበቆል Sections (ከምዘለዎ ዝቐጸለ) --- */}
       {sectionsConfig.map((section) => {
         const currentData = sectionsData[section.title] || { names: '', desc: '', images: [], descriptions: [], headings: [] };
 
@@ -594,7 +588,6 @@ function SectionRenderer({ title, data, setData, onSave }) {
         </div>
       </div>
 
-      {/* ነፍስወከፍ ስእሊ መግለጺ ንምጽሓፍ */}
       <div className="mt-8 space-y-6">
         <h3 className="text-xl font-semibold text-amber-400 border-b border-zinc-800 pb-2">Manage Image Headings & Descriptions</h3>
         {data.images && data.images.map((img, index) => {
