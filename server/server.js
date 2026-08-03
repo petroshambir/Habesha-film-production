@@ -5,6 +5,7 @@ import cors from 'cors';
 import connectDB from './Database Connection/DB.js';
 import projectRoutes from './Route/projectRoutes.js';
 import authRoutes from './Route/authRoutes.js';
+import clientRoutes from './routes/clientRoutes.js'; // ወይ ከከም መገሻ ናይቲ ፎልደርካ
 
 // 1. መጀመርያ app ፍጠር
 const app = express(); 
@@ -31,6 +32,7 @@ app.use((req, res, next) => {
     console.log(`${req.method} request to ${req.url}`);
     next();
 });
+app.use('/api/client', clientRoutes);
 // 5. ሰርቨር ኣበግሶ
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
