@@ -242,6 +242,7 @@ function Navbar() {
         </div>
 
         <a href="#contact" className="hover:text-zinc-400 transition-colors">Contact</a>
+        <a href="#price" className="hover:text-zinc-400 transition-colors">Price</a>
       </div>
     </nav>
   );
