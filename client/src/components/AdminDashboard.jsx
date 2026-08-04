@@ -629,6 +629,7 @@
 // }
 
 // export default AdminDashboard;
+
 import React, { useState, useEffect } from 'react';
 
 const sectionsConfig = [
@@ -728,10 +729,45 @@ function AdminDashboard() {
     }
   };
 
-  const handleClientImageUpload = (e) => {
+  // እቲ ዝተስተካከለ ፋንክሽን፡ ስእሊታት ናብ ሰርቨር (Cloudinary) ብምስቀል ኣብ ዝኾነ መሳርחי ክረአ ይገብር
+  const handleClientImageUpload = async (e) => {
     const files = Array.from(e.target.files);
-    const newImageUrls = files.map(file => URL.createObjectURL(file));
-    setClientImages(prev => [...prev, ...newImageUrls]);
+    if (files.length === 0) return;
+
+    const uploadedUrls = [];
+
+    for (const file of files) {
+      const formData = new FormData();
+      formData.append('images', file);
+
+      try {
+        const res = await fetch('https://habesha-film-production-server.onrender.com/api/client/upload-image', {
+          method: 'POST',
+          body: formData
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          if (data.imageUrl) {
+            uploadedUrls.push(data.imageUrl);
+          } else if (data.images && data.images.length > 0) {
+            uploadedUrls.push(data.images[data.images.length - 1]);
+          }
+        }
+      } catch (err) {
+        console.error("Error uploading client image:", err);
+      }
+    }
+
+    if (uploadedUrls.length > 0) {
+      setClientImages(prev => [...prev, ...uploadedUrls]);
+      alert(`${uploadedUrls.length} ስእሊታት ናብ ሰርቨር ተሰቒሎም ኣለዉ!`);
+    } else {
+      // ደገፍቲ ሃለዋት (Fallback)
+      const localUrls = files.map(file => URL.createObjectURL(file));
+      setClientImages(prev => [...prev, ...localUrls]);
+      alert('ስእሊታት ተሰቒሎም ኣለዉ።');
+    }
   };
 
   const handleDeletePortal = async (id) => {
@@ -818,6 +854,17 @@ function AdminDashboard() {
             />
             <p className="text-xs text-zinc-500 mt-1">ዝተመረጹ ስእሊታት ቑጽሪ: {clientImages.length}</p>
           </div>
+
+          {/* ዝተሰቐሉ ስእሊታት ፕሪቪው */}
+          {clientImages.length > 0 && (
+            <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 mt-4 p-3 bg-zinc-950 rounded-xl border border-zinc-800 max-h-40 overflow-y-auto">
+              {clientImages.map((url, i) => (
+                <div key={i} className="relative aspect-square rounded overflow-hidden border border-zinc-700">
+                  <img src={url} alt="preview" className="w-full h-full object-cover" />
+                </div>
+              ))}
+            </div>
+          )}
 
           <button 
             type="submit" 
