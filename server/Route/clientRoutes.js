@@ -227,24 +227,50 @@ router.get('/portals', async (req, res) => {
 });
 
 // 🟢 0.1 [ADMIN] ንስእሊ ምጽዓን ዝሕግዝ Endpoint (እቲ ዝጎድል ዝነበረ)
-router.post('/upload-image', upload.array('images', 20), async (req, res) => {
+
+// router.post('/upload-image', upload.array('images', 20), async (req, res) => {
+//     try {
+//         if (!req.files || req.files.length === 0) {
+//             return res.status(400).json({ success: false, message: "No files uploaded" });
+//         }
+
+//         // ነቲ ዝተሰቐለ ስእሊ URL (ማዕረ ክንደይ ከም ዝተሰቐለ) ናብ Frontend ምምላስ
+//         const imageUrls = req.files.map(file => file.path);
+        
+//         // ንውልቀ-ስእሊ ወይ ንማትሪክስ ንምቅላል
+//         res.status(200).json({ 
+//             success: true, 
+//             imageUrl: imageUrls[0], // ንሓደ ስእሊ
+//             images: imageUrls       // ንብዙሓት ስእሊታት
+//         });
+//     } catch (err) {
+//         console.error("Error uploading image:", err);
+//         res.status(500).json({ success: false, message: 'Server error during upload' });
+//     }
+// });
+
+// 🟢 0.1 [ADMIN] ንብዙሓት ስእሊታት ብባች (Batch) ንምጽዓን ዝሕግዝ Endpoint
+router.post('/upload-image', upload.array('images', 500), async (req, res) => {
     try {
+        console.log(`Upload request received. Total files: ${req.files ? req.files.length : 0}`);
+
         if (!req.files || req.files.length === 0) {
             return res.status(400).json({ success: false, message: "No files uploaded" });
         }
 
-        // ነቲ ዝተሰቐለ ስእሊ URL (ማዕረ ክንደይ ከም ዝተሰቐለ) ናብ Frontend ምምላስ
         const imageUrls = req.files.map(file => file.path);
         
-        // ንውልቀ-ስእሊ ወይ ንማትሪክስ ንምቅላል
         res.status(200).json({ 
             success: true, 
-            imageUrl: imageUrls[0], // ንሓደ ስእሊ
-            images: imageUrls       // ንብዙሓት ስእሊታት
+            imageUrl: imageUrls[0], 
+            images: imageUrls       
         });
     } catch (err) {
-        console.error("Error uploading image:", err);
-        res.status(500).json({ success: false, message: 'Server error during upload' });
+        console.error("CRITICAL UPLOAD ERROR:", err);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Server error during upload: ' + err.message 
+        });
     }
 });
 
