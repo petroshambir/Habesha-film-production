@@ -631,6 +631,7 @@
 // export default AdminDashboard;
 
 import React, { useState, useEffect } from 'react';
+import JSZip from 'jszip';
 
 const sectionsConfig = [
   { title: 'Weddings', storageKey: 'portfolio_weddings' },
