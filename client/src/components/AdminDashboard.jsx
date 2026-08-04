@@ -730,46 +730,84 @@ function AdminDashboard() {
   };
 
   // እቲ ዝተስተካከለ ፋንክሽን፡ ስእሊታት ናብ ሰርቨር (Cloudinary) ብምስቀል ኣብ ዝኾነ መሳርחי ክረአ ይገብር
+  // const handleClientImageUpload = async (e) => {
+  //   const files = Array.from(e.target.files);
+  //   if (files.length === 0) return;
+
+  //   const uploadedUrls = [];
+
+  //   for (const file of files) {
+  //     const formData = new FormData();
+  //     formData.append('images', file);
+
+  //     try {
+  //       const res = await fetch('https://habesha-film-production-server.onrender.com/api/client/upload-image', {
+  //         method: 'POST',
+  //         body: formData
+  //       });
+
+  //       if (res.ok) {
+  //         const data = await res.json();
+  //         if (data.imageUrl) {
+  //           uploadedUrls.push(data.imageUrl);
+  //         } else if (data.images && data.images.length > 0) {
+  //           uploadedUrls.push(data.images[data.images.length - 1]);
+  //         }
+  //       }
+  //     } catch (err) {
+  //       console.error("Error uploading client image:", err);
+  //     }
+  //   }
+
+  //   if (uploadedUrls.length > 0) {
+  //     setClientImages(prev => [...prev, ...uploadedUrls]);
+  //     alert(`${uploadedUrls.length} ስእሊታት ናብ ሰርቨር ተሰቒሎም ኣለዉ!`);
+  //   } else {
+  //     // ደገፍቲ ሃለዋት (Fallback)
+  //     const localUrls = files.map(file => URL.createObjectURL(file));
+  //     setClientImages(prev => [...prev, ...localUrls]);
+  //     alert('ስእሊታት ተሰቒሎም ኣለዉ።');
+  //   }
+  // };
+
+  // 🟢 ዝተመሓየሸ፡ ንኹሎም ስእሊታት ብሓንሳብ ናብ ሰርቨር (Cloudinary) ዝጽዕን
   const handleClientImageUpload = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
 
-    const uploadedUrls = [];
-
-    for (const file of files) {
-      const formData = new FormData();
+    const formData = new FormData();
+    // ንኩሎም ዝተመርጹ ፋይላት ኣብ ሓደ FormData 'images' ብዝብል ቁልፊ ንመላልኦም
+    files.forEach(file => {
       formData.append('images', file);
+    });
 
-      try {
-        const res = await fetch('https://habesha-film-production-server.onrender.com/api/client/upload-image', {
-          method: 'POST',
-          body: formData
-        });
+    try {
+      const res = await fetch('https://habesha-film-production-server.onrender.com/api/client/upload-image', {
+        method: 'POST',
+        body: formData
+      });
 
-        if (res.ok) {
-          const data = await res.json();
-          if (data.imageUrl) {
-            uploadedUrls.push(data.imageUrl);
-          } else if (data.images && data.images.length > 0) {
-            uploadedUrls.push(data.images[data.images.length - 1]);
-          }
+      if (res.ok) {
+        const data = await res.json();
+        // ሰርቨርካ 'images' (Array) ወይ 'imageUrl' ክመልስ ይኽእል እዩ
+        const newUrls = data.images || (data.imageUrl ? [data.imageUrl] : []);
+        
+        if (newUrls.length > 0) {
+          setClientImages(prev => [...prev, ...newUrls]);
+          alert(`${newUrls.length} ስእሊታት ብሰላም ተሰቒሎም ኣለዉ!`);
+        } else {
+          alert('ስእሊታት ተሰቒሎም ግን ሊንክ ኣይተረኽበን።');
         }
-      } catch (err) {
-        console.error("Error uploading client image:", err);
+      } else {
+        const errData = await res.json();
+        alert(errData.message || 'ስእሊ ክስቀል ኣይከኣለን።');
       }
-    }
-
-    if (uploadedUrls.length > 0) {
-      setClientImages(prev => [...prev, ...uploadedUrls]);
-      alert(`${uploadedUrls.length} ስእሊታት ናብ ሰርቨር ተሰቒሎም ኣለዉ!`);
-    } else {
-      // ደገፍቲ ሃለዋት (Fallback)
-      const localUrls = files.map(file => URL.createObjectURL(file));
-      setClientImages(prev => [...prev, ...localUrls]);
-      alert('ስእሊታት ተሰቒሎም ኣለዉ።');
+    } catch (err) {
+      console.error("Error uploading client images:", err);
+      alert('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ። F12 Console ርአ።');
     }
   };
-
+  
   const handleDeletePortal = async (id) => {
     if (!window.confirm('ነዚ ፖርታል ከተጥፍኦ ትደል ኢኻ?')) return;
     try {
