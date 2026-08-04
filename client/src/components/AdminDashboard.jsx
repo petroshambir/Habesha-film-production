@@ -707,7 +707,7 @@ function AdminDashboard() {
       const res = await fetch('https://habesha-film-production-server.onrender.com/api/client/create-portal', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ clientName, portalNumber, images: clientImages })
+        body: JSON.stringify({ clientName: clientName.trim(), portalNumber: portalNumber.trim(), images: clientImages })
       });
 
       const data = await res.json();
