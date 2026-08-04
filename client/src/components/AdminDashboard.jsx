@@ -807,7 +807,7 @@ function AdminDashboard() {
       alert('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ። F12 Console ርአ።');
     }
   };
-  
+
   const handleDeletePortal = async (id) => {
     if (!window.confirm('ነዚ ፖርታል ከተጥፍኦ ትደል ኢኻ?')) return;
     try {
@@ -960,7 +960,7 @@ function AdminDashboard() {
       </div>
 
       {/* ─── ዝተመረጻ ስእሊታት መርአዪ ሞዳል (Modal) ─── */}
-      {viewingPortalSelections && (
+      {/* {viewingPortalSelections && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
           <div className="bg-zinc-900 border border-zinc-700 rounded-2xl max-w-4xl w-full p-6 max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4 border-b border-zinc-800 pb-3">
@@ -985,8 +985,103 @@ function AdminDashboard() {
             </div>
           </div>
         </div>
-      )}
+      )} */}
+{/* ─── ዝተመረጻ ስእሊታት መርአዪ ሞዳል (Modal) ─── */}
+  {viewingPortalSelections && (
+    <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+      <div className="bg-zinc-900 border border-zinc-700 rounded-2xl max-w-4xl w-full p-6 max-h-[90vh] overflow-y-auto">
+        <div className="flex justify-between items-center mb-4 border-b border-zinc-800 pb-3">
+          <div>
+            <h3 className="text-xl font-bold text-amber-400">{viewingPortalSelections.clientName} - Selected Photos</h3>
+            <p className="text-xs text-zinc-400">Portal #{viewingPortalSelections.portalNumber} (Total: {viewingPortalSelections.selectedImages.length})</p>
+          </div>
+          <button 
+            onClick={() => setViewingPortalSelections(null)}
+            className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-3 py-1.5 rounded-lg text-sm"
+          >
+            ✕ Close
+          </button>
+        </div>
 
+        {/* 🟢 ሓደሽቲ መቆጣጠሪ ሰሌዳ (Actions: Download & Move to Portfolio) */}
+        <div className="flex flex-wrap gap-3 mb-6 p-4 bg-zinc-800/60 rounded-xl border border-zinc-700 items-center justify-between">
+          <div className="text-xs text-zinc-300">
+            ማዕቀብ: <span className="text-amber-400 font-bold">{viewingPortalSelections.selectedImages.length} ስእሊታት</span> ተመርጺዮም ኣለዉ።
+          </div>
+          <div className="flex gap-2">
+            {/* 1. ናብ ላፕቶብ/ፍላሽ ንምውራድ */}
+            <button 
+              onClick={async () => {
+                alert('ስእሊታት ንምውራድ ይዳለዉ ኣለዉ...');
+                for (let i = 0; i < viewingPortalSelections.selectedImages.length; i++) {
+                  const url = viewingPortalSelections.selectedImages[i];
+                  try {
+                    const response = await fetch(url);
+                    const blob = await response.blob();
+                    const blobUrl = window.URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = blobUrl;
+                    link.download = `client_photo_${i + 1}.jpg`;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                  } catch (err) {
+                    console.error("Download error:", err);
+                  }
+                }
+                alert('ኩሎም ስእሊታት ብሰላም ወሪዶም!');
+              }}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5"
+            >
+              📥 Download All (Laptop/Flash)
+            </button>
+
+            {/* 2. ናብቲ ዋና ፖርትፎሊዮ (Editing/Main Sections) ንምሕላፍ */}
+            <button 
+              onClick={() => {
+                const targetSection = prompt("እዞም ስእሊታት ናበይ ክሰጋገሩ ትደሊ? (Weddings, Bridal Shoots, ወይ Baby Shower & Baptism ብትኽክል ጽሓፍ):");
+                if (!targetSection) return;
+
+                // ኣብቲ ዝተመረጸ ክፍሊ እቶም ስእሊታት ንምውሳኽ
+                const currentSecData = sectionsData[targetSection];
+                if (!currentSecData) {
+                  alert('እቲ ዝበልካዮ ሽም ክፍሊ ኣይተረኽበን። በጃኹም ብትኽክል ጽሓፍዎ።');
+                  return;
+                }
+
+                const updatedImages = [...(currentSecData.images || []), ...viewingPortalSelections.selectedImages];
+                setSectionsData({
+                  ...sectionsData,
+                  [targetSection]: { ...currentSecData, images: updatedImages }
+                });
+
+                alert(`ስእሊታት ብሰላም ናብቲ የዕሩኽ ፖርትፎሊዮ [ ${targetSection} ] ተሰጊሮም ኣለዉ! ሕጂ 'Save' ግበሮ።`);
+              }}
+              className="bg-amber-500 hover:bg-amber-600 text-black px-4 py-2 rounded-lg text-xs font-bold transition-colors flex items-center gap-1.5"
+            >
+              🚀 Send to Portfolio Sections
+            </button>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+          {viewingPortalSelections.selectedImages.map((imgUrl, idx) => (
+            <div key={idx} className="aspect-square bg-zinc-800 border border-zinc-700 rounded-lg overflow-hidden relative group">
+              <img src={imgUrl} alt={`Selected ${idx}`} className="w-full h-full object-cover" />
+              <a 
+                href={imgUrl} 
+                target="_blank" 
+                rel="noreferrer" 
+                className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs font-bold text-amber-300 underline"
+              >
+                View Full
+              </a>
+            </div>
+          ))}
+         </div>
+      </div>
+    </div>
+  )}
       {sectionsConfig.map((section) => {
         const currentData = sectionsData[section.title] || { names: '', desc: '', images: [], descriptions: [], headings: [] };
 
