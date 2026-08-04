@@ -629,7 +629,6 @@
 // }
 
 // export default AdminDashboard;
-
 import React, { useState, useEffect } from 'react';
 
 const sectionsConfig = [
@@ -876,42 +875,32 @@ function AdminDashboard() {
       </div>
 
       {/* ─── ዝተመረጻ ስእሊታት መርአዪ ሞዳል (Modal) ─── */}
-     <div className="mt-8 space-y-6">
-        <h3 className="text-xl font-semibold text-amber-400 border-b border-zinc-800 pb-2">Manage Image Headings & Descriptions</h3>
-        {data.images && data.images.map((img, index) => {
-          const defaultHeading = `Featured Moment ${index + 1}`;
-          const defaultDesc = `0${index + 1}. A wonderful captured memory of the special day.`;
-
-          return (
-            <div key={index} className="flex flex-col sm:flex-row gap-4 p-4 bg-zinc-800/50 border border-zinc-700 rounded-xl items-center">
-              <div className="relative w-full sm:w-28 h-48 sm:h-28 flex-shrink-0 border border-zinc-700 rounded-lg overflow-hidden">
-                <img src={img} className="w-full h-full object-cover" alt="upload" />
-                <button onClick={() => deleteImage(index)} className="absolute top-2 right-2 sm:top-0 sm:right-0 bg-red-600 hover:bg-red-700 text-white px-2.5 py-1 sm:px-2 sm:py-0.5 text-xs font-bold rounded-lg sm:rounded-none">Delete &times;</button>
-              </div>
-              <div className="flex-1 w-full space-y-3">
-                <div>
-                  <label className="block text-xs text-zinc-400 mb-1">Image {index + 1} Heading:</label>
-                  <input 
-                    type="text"
-                    value={data.headings && data.headings[index] !== undefined ? data.headings[index] : defaultHeading}
-                    onChange={(e) => handleHeadingChange(index, e.target.value)}
-                    className="bg-zinc-900 border border-zinc-700 p-2.5 rounded-lg w-full text-sm text-white"
-                  />
-              </div>
+      {viewingPortalSelections && (
+        <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-4">
+          <div className="bg-zinc-900 border border-zinc-700 rounded-2xl max-w-4xl w-full p-6 max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-4 border-b border-zinc-800 pb-3">
               <div>
-                  <label className="block text-xs text-zinc-400 mb-1">Image {index + 1} Description:</label>
-                  <input 
-                    type="text"
-                    value={data.descriptions && data.descriptions[index] !== undefined ? data.descriptions[index] : defaultDesc}
-                    onChange={(e) => handleDescriptionChange(index, e.target.value)}
-                    className="bg-zinc-900 border border-zinc-700 p-2.5 rounded-lg w-full text-sm text-white"
-                  />
+                <h3 className="text-xl font-bold text-amber-400">{viewingPortalSelections.clientName} - Selected Photos</h3>
+                <p className="text-xs text-zinc-400">Portal #{viewingPortalSelections.portalNumber} (Total: {viewingPortalSelections.selectedImages.length})</p>
               </div>
-              </div>
+              <button 
+                onClick={() => setViewingPortalSelections(null)}
+                className="bg-zinc-800 hover:bg-zinc-700 text-zinc-300 font-bold px-3 py-1.5 rounded-lg text-sm"
+              >
+                ✕ Close
+              </button>
             </div>
-          );
-        })}
-      </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+              {viewingPortalSelections.selectedImages.map((imgUrl, idx) => (
+                <div key={idx} className="aspect-square bg-zinc-800 border border-zinc-700 rounded-lg overflow-hidden">
+                  <img src={imgUrl} alt={`Selected ${idx}`} className="w-full h-full object-cover" />
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
 
       {sectionsConfig.map((section) => {
         const currentData = sectionsData[section.title] || { names: '', desc: '', images: [], descriptions: [], headings: [] };
@@ -1066,7 +1055,7 @@ function SectionRenderer({ title, data, setData, onSave }) {
                     type="text"
                     value={data.descriptions && data.descriptions[index] !== undefined ? data.descriptions[index] : defaultDesc}
                     onChange={(e) => handleDescriptionChange(index, e.target.value)}
-                    className="bg-zinc-900 border border-zinc-700 p-2 rounded w-full text-sm text-value"
+                    className="bg-zinc-900 border border-zinc-700 p-2 rounded w-full text-sm text-white"
                   />
                 </div>
               </div>
