@@ -1064,7 +1064,38 @@ function ClientSelection() {
   };
 
   // ፓስኮድ ናብ ሰርቨር ልኢኽካ ናይ ምጽራይ መስርሕ
-  const handleVerifyPasscode = async (e) => {
+//   const handleVerifyPasscode = async (e) => {
+//     e.preventDefault();
+//     if (!enteredPasscode.trim()) return;
+
+//     setVerifying(true);
+//     setPasscodeError('');
+
+//     try {
+//       const response = await fetch('https://habesha-film-production-server.onrender.com/api/client/verify-client-passcode', {
+//         method: 'POST',
+//         headers: { 'Content-Type': 'application/json' },
+//         body: JSON.stringify({ passcode: enteredPasscode.trim() })
+//       });
+
+//       const data = await response.json();
+
+//       if (response.ok && data.success) {
+//         setProject(data.project);
+//         setSelectedImages(data.project.selectedImages || []);
+//         setSelectedPortalForPasscode(null); // መሸፈኒ ሞዳል ምዕጻው
+//       } else {
+//         setPasscodeError(data.message || 'ዝኣተውዎ ፓስኮድ ጌጋ እዩ።');
+//       }
+//     } catch (err) {
+//       console.error("Passcode verification error:", err);
+//       setPasscodeError('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ።');
+//     } finally {
+//       setVerifying(false);
+//     }
+//   };
+
+const handleVerifyPasscode = async (e) => {
     e.preventDefault();
     if (!enteredPasscode.trim()) return;
 
@@ -1072,6 +1103,7 @@ function ClientSelection() {
     setPasscodeError('');
 
     try {
+      // 🟢 እቲ ሰርቨር ራውት /verify-client-passcode ስለዝኾነ ብትኽክል ተጸዊዑ ኣሎ
       const response = await fetch('https://habesha-film-production-server.onrender.com/api/client/verify-client-passcode', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1082,8 +1114,9 @@ function ClientSelection() {
 
       if (response.ok && data.success) {
         setProject(data.project);
+        // ቅድሚ ሕጂ ዝተመርጻ ስእሊታት እንተሃልየን ኣብቲ state ይኣትዋ
         setSelectedImages(data.project.selectedImages || []);
-        setSelectedPortalForPasscode(null); // መሸፈኒ ሞዳል ምዕጻው
+        setSelectedPortalForPasscode(null); // ሞዳል ምዕጻው
       } else {
         setPasscodeError(data.message || 'ዝኣተውዎ ፓስኮድ ጌጋ እዩ።');
       }
