@@ -48,56 +48,43 @@ import Navbar from './Navbar';
 
 function Hero({ imageSrc }) {
   return (
-    <div className="relative w-full h-[75vh] md:h-[85vh] flex flex-col justify-between bg-[#050505]">
-      
+    <section className="relative w-full h-[85vh] flex items-end justify-start overflow-hidden bg-[#050505]">
       {/* Navbar ኣብ ልዕሊቲ ስእሊ ብ Absolute ተቐሚጡ ኣሎ */}
-      <div className="absolute top-0 left-0 w-full z-20">
-        <Navbar />
+      <div className="absolute top-0 left-0 w-full z-30">
+        <Navbar /> 
       </div>
-
-      {/* Hero Background Image & Dark Overlay (ልክዕ ከም Contact ገጽካ) */}
+      
+      {/* ድሕረ ባይታ ስእሊ (Background Image) - ልክዕ ከም Contact ገጽካ ውቁብ ምስሊ */}
       <div className="absolute inset-0 z-0">
         <img 
           src={imageSrc || "https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=1920&auto=format&fit=crop"} 
           alt="Habesha Film Production Hero" 
           className="w-full h-full object-cover brightness-50"
         />
+        {/* Cinematic Gradient Mask (ንቪዲዮ/ስእሊ ብሉጽ ትርኢት ንምሃብ) */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-black/40 to-black/60"></div>
       </div>
-
-      {/* Hero Content & Habesha Pictures H2 */}
-      <div className="relative z-10 mt-auto text-center px-4 pb-16 max-w-4xl mx-auto">
-        <span className="text-[10px] md:text-xs uppercase font-bold tracking-[0.4em] text-[#dfb557] block mb-3">
-          Professional Film & Studio Production
-        </span>
-        
-        <h1 className="text-4xl sm:text-6xl md:text-7xl font-serif mb-4 text-zinc-100 drop-shadow-lg tracking-tight">
-          Capturing Your Eternal Moments
-        </h1>
-        
-        <div className="w-16 h-[2px] bg-[#dfb557] mx-auto mb-4"></div>
-        
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-serif text-[#dfb557] tracking-wider font-light drop-shadow mb-8">
-          Habesha Pictures
-        </h2>
-
-        <div className="flex flex-wrap items-center justify-center gap-4">
-          <a 
-            href="#work" 
-            className="bg-[#dfb557] text-black px-8 py-3.5 rounded-xl text-xs uppercase font-bold tracking-[0.2em] hover:bg-[#c99f45] transition-all shadow-xl"
-          >
+      
+      {/* ዝንሳፈፍ ትሕዝቶ (ብታሕቲ ኣብ ጸጋም - ከምቲ ዝደለኻዮ መዋቕር) */}
+      <div className="relative z-10 p-8 sm:p-12 md:p-24 animate-fade-in-up w-full max-w-4xl">
+        <div className="flex flex-col items-start border-l-2 border-[#dfb557] pl-6 sm:pl-8">
+          <span className="text-[10px] md:text-xs uppercase tracking-[0.4em] text-[#dfb557] font-bold mb-2">
+            Habesha Pictures & Studio
+          </span>
+          <h1 className="text-5xl sm:text-6xl md:text-8xl font-black text-white tracking-tight mb-2 font-serif drop-shadow-lg">
+            Habesha
+          </h1>
+          <p className="text-xs sm:text-sm uppercase tracking-[0.3em] text-zinc-300 mb-6 font-light">
+            Film & Digital Production
+          </p>
+          
+          <a href="#work" className="group flex items-center gap-4 text-xs uppercase tracking-[0.3em] text-[#dfb557] font-semibold hover:text-white transition-colors">
+            <span className="w-12 h-[1px] bg-[#dfb557] transition-all group-hover:w-20"></span>
             Explore Reel
-          </a>
-          <a 
-            href="/contact" 
-            className="bg-zinc-900/80 border border-[#dfb557]/40 text-zinc-100 px-8 py-3.5 rounded-xl text-xs uppercase font-bold tracking-[0.2em] hover:bg-zinc-800 hover:border-[#dfb557] transition-all backdrop-blur-md"
-          >
-            Contact Us
           </a>
         </div>
       </div>
-
-    </div>
+    </section>
   );
 }
 
