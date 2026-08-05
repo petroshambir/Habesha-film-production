@@ -770,7 +770,6 @@ import "yet-another-react-lightbox/styles.css";
 function Home() {
   const [open, setOpen] = useState(false);
   const [currentImages, setCurrentImages] = useState([]);
-  const [title, setTitle] = useState('');
   
   const [sections, setSections] = useState([]); 
 
@@ -826,8 +825,6 @@ function Home() {
   return (
     <div className="min-h-screen bg-[#050505] text-zinc-100 font-sans selection:bg-[#dfb557]/30 selection:text-[#dfb557] overflow-x-hidden">
       <Hero videoSrc={heroVideo} buttonText="Explore Our Work" />
-
-      {title && <h1 className="text-center text-3xl md:text-4xl mt-10 text-zinc-100 px-4">{title}</h1>}
 
       <section className="py-12 md:py-24 w-full">
         {sections.map((section, index) => {
@@ -1127,4 +1124,5 @@ function Home() {
     </div>
   );
 }
+
 export default Home;
