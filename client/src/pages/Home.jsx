@@ -385,7 +385,6 @@
 
 // export default Home;
 
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
@@ -453,7 +452,7 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#070707] text-zinc-100 font-sans selection:bg-[#d4af37]/30 selection:text-[#d4af37]">
+    <div className="min-h-screen bg-[#09090b] text-zinc-100 font-sans selection:bg-[#c5a059]/35 selection:text-[#c5a059]">
       <Hero videoSrc={heroVideo} buttonText="Explore Our Work" />
 
       {title && <h1 className="text-center text-4xl mt-10 text-zinc-100">{title}</h1>}
@@ -507,17 +506,17 @@ function Home() {
             : defaultHeadings;
 
           return (
-            <div key={section.id || index} className="mb-36 w-full border-b border-zinc-900 pb-20 last:border-b-0">
+            <div key={section.id || index} className="mb-40 w-full border-b border-zinc-800/60 pb-28 last:border-b-0">
               
               {section.names && (
-                <div className="mb-16 text-center px-6">
-                  <span className="text-[10px] tracking-[0.5em] uppercase text-[#d4af37] font-semibold block mb-3">
-                    Featured Collection
+                <div className="mb-20 text-center px-6">
+                  <span className="text-[10px] tracking-[0.5em] uppercase text-[#c5a059] font-semibold block mb-3">
+                    Cinematic Wedding Story
                   </span>
-                  <h3 className="text-3xl md:text-6xl font-serif italic text-zinc-100 tracking-wide">
+                  <h3 className="text-4xl md:text-7xl font-serif italic text-zinc-100 tracking-wide font-normal">
                     {section.names}
                   </h3>
-                  <div className="w-12 h-[1px] bg-[#d4af37]/50 mx-auto my-4"></div>
+                  <div className="w-16 h-[1px] bg-[#c5a059]/60 mx-auto my-5"></div>
                   <p className="text-[11px] md:text-[12px] uppercase tracking-[0.4em] text-zinc-400 font-light">
                     {section.date}
                   </p>
@@ -525,48 +524,51 @@ function Home() {
               )}
 
               {isWedding ? (
-                <div className="w-full space-y-20 md:space-y-24">
+                <div className="w-full space-y-28 md:space-y-36">
                   
+                  {/* Hero Featured Image */}
                   {Array.isArray(section.images) && section.images[0] && (
-                    <div className="w-full">
-                      <div className="text-center max-w-2xl mx-auto mb-6 md:mb-8 px-6">
-                        <span className="text-[10px] md:text-[11px] tracking-[0.6em] uppercase text-[#d4af37] font-bold block mb-2">
+                    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6">
+                      <div className="text-center max-w-2xl mx-auto mb-8 px-4">
+                        <span className="text-[10px] md:text-[11px] tracking-[0.6em] uppercase text-[#c5a059] font-bold block mb-2">
                           {customHeadings[0] || defaultHeadings[0]}
                         </span>
-                        <p className="text-base md:text-lg leading-relaxed text-zinc-400">
+                        <p className="text-base md:text-lg leading-relaxed text-zinc-300 font-light">
                           {customDescriptions[0] || defaultDescriptions[0]}
                         </p>
                       </div>
-                      <div className="group w-full h-[320px] sm:h-[400px] md:h-[550px] overflow-hidden shadow-2xl bg-zinc-900 border border-zinc-800/60 rounded-xl md:rounded-2xl max-w-7xl mx-auto px-4 md:px-0">
+                      <div className="group w-full h-[380px] sm:h-[480px] md:h-[650px] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border border-zinc-800/80 relative">
                         <img 
                           src={section.images[0]} 
                           alt={section.title} 
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
                         />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60"></div>
                       </div>
                     </div>
                   )}
 
+                  {/* 1, 2, 3 Moments - Balanced Asymmetrical Showcase */}
                   {Array.isArray(section.images) && section.images.length > 1 && (
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-24 space-y-16 md:space-y-20">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-16 space-y-24 md:space-y-32">
                       {section.images.slice(1, 4).map((img, i) => {
                         const actualIdx = i + 1;
                         return (
-                          <div key={i} className={`flex ${i % 2 !== 0 ? 'flex-row-reverse md:flex-row-reverse' : 'flex-row md:flex-row'} items-center gap-4 sm:gap-8 md:gap-12`}>
-                            <div className="flex-1 space-y-2 sm:space-y-3 md:space-y-4 text-left px-1 sm:px-2">
-                              <span className="text-[9px] sm:text-[10px] tracking-[0.4em] uppercase text-[#d4af37] font-bold block">
-                                Moment 0{actualIdx + 1}
+                          <div key={i} className={`flex flex-col ${i % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-8 md:gap-16`}>
+                            <div className="flex-1 space-y-3 text-center md:text-left px-2">
+                              <span className="text-[10px] tracking-[0.5em] uppercase text-[#c5a059] font-semibold block">
+                                Chapter 0{actualIdx + 1}
                               </span>
-                              <h3 className="text-xl sm:text-2xl md:text-4xl font-serif text-zinc-100 leading-tight">
+                              <h3 className="text-2xl sm:text-3xl md:text-5xl font-serif text-zinc-100 leading-tight">
                                 {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
                               </h3>
-                              <p className="text-xs sm:text-sm md:text-base text-zinc-400 leading-relaxed">
+                              <p className="text-sm md:text-base text-zinc-400 leading-relaxed font-light pt-2">
                                 {customDescriptions[actualIdx] || defaultDescriptions[actualIdx]}
                               </p>
                             </div>
                             <div className="flex-1 w-full flex justify-center">
-                              <div className="group aspect-[3/4] w-[130px] sm:w-[200px] md:max-w-md overflow-hidden rounded-t-[80px] sm:rounded-t-[120px] md:rounded-t-[140px] rounded-b-xl shadow-2xl bg-zinc-900 border border-zinc-800/80">
-                                <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                              <div className="group w-full max-w-md aspect-[4/5] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border border-zinc-800/80 relative">
+                                <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                               </div>
                             </div>
                           </div>
@@ -575,46 +577,48 @@ function Home() {
                     </div>
                   )}
 
+                  {/* Mid Full-Width Cinematic Banner */}
                   {Array.isArray(section.images) && section.images[4] && (
-                    <div className="w-full pt-4">
-                      <div className="text-center max-w-2xl mx-auto mb-6 md:mb-8 px-6">
-                        <span className="text-[10px] md:text-[11px] tracking-[0.6em] uppercase text-[#d4af37] font-bold block mb-2">
+                    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-6">
+                      <div className="text-center max-w-2xl mx-auto mb-8 px-4">
+                        <span className="text-[10px] md:text-[11px] tracking-[0.6em] uppercase text-[#c5a059] font-bold block mb-2">
                           {customHeadings[4] || defaultHeadings[4]}
                         </span>
-                        <p className="text-base md:text-lg leading-relaxed text-zinc-400">
+                        <p className="text-base md:text-lg leading-relaxed text-zinc-300 font-light">
                           {customDescriptions[4] || defaultDescriptions[4]}
                         </p>
                       </div>
-                      <div className="group w-full h-[320px] sm:h-[400px] md:h-[550px] overflow-hidden shadow-2xl bg-zinc-900 border border-zinc-800/60 rounded-xl md:rounded-2xl max-w-7xl mx-auto px-4 md:px-0">
+                      <div className="group w-full h-[380px] sm:h-[480px] md:h-[650px] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border border-zinc-800/80 relative">
                         <img 
                           src={section.images[4]} 
                           alt={section.title} 
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
                         />
                       </div>
                     </div>
                   )}
 
+                  {/* Moments 5, 6, 7 */}
                   {Array.isArray(section.images) && section.images.length > 5 && (
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-24 space-y-16 md:space-y-20 pt-4">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-16 space-y-24 md:space-y-32 pt-6">
                       {section.images.slice(5, 8).map((img, i) => {
                         const actualIdx = i + 5;
                         return (
-                          <div key={i} className={`flex ${i % 2 !== 0 ? 'flex-row-reverse md:flex-row-reverse' : 'flex-row md:flex-row'} items-center gap-4 sm:gap-8 md:gap-12`}>
-                            <div className="flex-1 space-y-2 sm:space-y-3 md:space-y-4 text-left px-1 sm:px-2">
-                              <span className="text-[9px] sm:text-[10px] tracking-[0.4em] uppercase text-[#d4af37] font-bold block">
-                                Moment 0{actualIdx + 1}
+                          <div key={i} className={`flex flex-col ${i % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-8 md:gap-16`}>
+                            <div className="flex-1 space-y-3 text-center md:text-left px-2">
+                              <span className="text-[10px] tracking-[0.5em] uppercase text-[#c5a059] font-semibold block">
+                                Chapter 0{actualIdx + 1}
                               </span>
-                              <h3 className="text-xl sm:text-2xl md:text-4xl font-serif text-zinc-100 leading-tight">
+                              <h3 className="text-2xl sm:text-3xl md:text-5xl font-serif text-zinc-100 leading-tight">
                                 {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
                               </h3>
-                              <p className="text-xs sm:text-sm md:text-base text-zinc-400 leading-relaxed">
+                              <p className="text-sm md:text-base text-zinc-400 leading-relaxed font-light pt-2">
                                 {customDescriptions[actualIdx] || defaultDescriptions[actualIdx]}
                               </p>
                             </div>
                             <div className="flex-1 w-full flex justify-center">
-                              <div className="group aspect-[3/4] w-[130px] sm:w-[200px] md:max-w-md overflow-hidden rounded-t-[80px] sm:rounded-t-[120px] md:rounded-t-[140px] rounded-b-xl shadow-2xl bg-zinc-900 border border-zinc-800/80">
-                                <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                              <div className="group w-full max-w-md aspect-[4/5] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border border-zinc-800/80 relative">
+                                <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                               </div>
                             </div>
                           </div>
@@ -623,46 +627,48 @@ function Home() {
                     </div>
                   )}
 
+                  {/* Banner Image 8 */}
                   {Array.isArray(section.images) && section.images[8] && (
-                    <div className="w-full pt-4">
-                      <div className="text-center max-w-2xl mx-auto mb-6 md:mb-8 px-6">
-                        <span className="text-[10px] md:text-[11px] tracking-[0.6em] uppercase text-[#d4af37] font-bold block mb-2">
+                    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-6">
+                      <div className="text-center max-w-2xl mx-auto mb-8 px-4">
+                        <span className="text-[10px] md:text-[11px] tracking-[0.6em] uppercase text-[#c5a059] font-bold block mb-2">
                           {customHeadings[8] || defaultHeadings[8]}
                         </span>
-                        <p className="text-base md:text-lg leading-relaxed text-zinc-400">
+                        <p className="text-base md:text-lg leading-relaxed text-zinc-300 font-light">
                           {customDescriptions[8] || defaultDescriptions[8]}
                         </p>
                       </div>
-                      <div className="group w-full h-[320px] sm:h-[400px] md:h-[550px] overflow-hidden shadow-2xl bg-zinc-900 border border-zinc-800/60 rounded-xl md:rounded-2xl max-w-7xl mx-auto px-4 md:px-0">
+                      <div className="group w-full h-[380px] sm:h-[480px] md:h-[650px] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border border-zinc-800/80 relative">
                         <img 
                           src={section.images[8]} 
                           alt={section.title} 
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
                         />
                       </div>
                     </div>
                   )}
 
+                  {/* Moments 9, 10, 11 */}
                   {Array.isArray(section.images) && section.images.length > 9 && (
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-24 space-y-16 md:space-y-20 pt-4">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-16 space-y-24 md:space-y-32 pt-6">
                       {section.images.slice(9, 12).map((img, i) => {
                         const actualIdx = i + 9;
                         return (
-                          <div key={i} className={`flex ${i % 2 !== 0 ? 'flex-row-reverse md:flex-row-reverse' : 'flex-row md:flex-row'} items-center gap-4 sm:gap-8 md:gap-12`}>
-                            <div className="flex-1 space-y-2 sm:space-y-3 md:space-y-4 text-left px-1 sm:px-2">
-                              <span className="text-[9px] sm:text-[10px] tracking-[0.4em] uppercase text-[#d4af37] font-bold block">
-                                Moment 0{actualIdx + 1}
+                          <div key={i} className={`flex flex-col ${i % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-8 md:gap-16`}>
+                            <div className="flex-1 space-y-3 text-center md:text-left px-2">
+                              <span className="text-[10px] tracking-[0.5em] uppercase text-[#c5a059] font-semibold block">
+                                Chapter 0{actualIdx + 1}
                               </span>
-                              <h3 className="text-xl sm:text-2xl md:text-4xl font-serif text-zinc-100 leading-tight">
+                              <h3 className="text-2xl sm:text-3xl md:text-5xl font-serif text-zinc-100 leading-tight">
                                 {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
                               </h3>
-                              <p className="text-xs sm:text-sm md:text-base text-zinc-400 leading-relaxed">
+                              <p className="text-sm md:text-base text-zinc-400 leading-relaxed font-light pt-2">
                                 {customDescriptions[actualIdx] || defaultDescriptions[actualIdx]}
                               </p>
                             </div>
                             <div className="flex-1 w-full flex justify-center">
-                              <div className="group aspect-[3/4] w-[130px] sm:w-[200px] md:max-w-md overflow-hidden rounded-t-[80px] sm:rounded-t-[120px] md:rounded-t-[140px] rounded-b-xl shadow-2xl bg-zinc-900 border border-zinc-800/80">
-                                <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                              <div className="group w-full max-w-md aspect-[4/5] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border border-zinc-800/80 relative">
+                                <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                               </div>
                             </div>
                           </div>
@@ -671,46 +677,48 @@ function Home() {
                     </div>
                   )}
 
+                  {/* Banner Image 12 */}
                   {Array.isArray(section.images) && section.images[12] && (
-                    <div className="w-full pt-4">
-                      <div className="text-center max-w-2xl mx-auto mb-6 md:mb-8 px-6">
-                        <span className="text-[10px] md:text-[11px] tracking-[0.6em] uppercase text-[#d4af37] font-bold block mb-2">
+                    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-6">
+                      <div className="text-center max-w-2xl mx-auto mb-8 px-4">
+                        <span className="text-[10px] md:text-[11px] tracking-[0.6em] uppercase text-[#c5a059] font-bold block mb-2">
                           {customHeadings[12] || defaultHeadings[12]}
                         </span>
-                        <p className="text-base md:text-lg leading-relaxed text-zinc-400">
+                        <p className="text-base md:text-lg leading-relaxed text-zinc-300 font-light">
                           {customDescriptions[12] || defaultDescriptions[12]}
                         </p>
                       </div>
-                      <div className="group w-full h-[320px] sm:h-[400px] md:h-[550px] overflow-hidden shadow-2xl bg-zinc-900 border border-zinc-800/60 rounded-xl md:rounded-2xl max-w-7xl mx-auto px-4 md:px-0">
+                      <div className="group w-full h-[380px] sm:h-[480px] md:h-[650px] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border border-zinc-800/80 relative">
                         <img 
                           src={section.images[12]} 
                           alt={section.title} 
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
+                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
                         />
                       </div>
                     </div>
                   )}
 
+                  {/* Moments 13, 14, 15 */}
                   {Array.isArray(section.images) && section.images.length > 13 && (
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-24 space-y-16 md:space-y-20 pt-4">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-16 space-y-24 md:space-y-32 pt-6">
                       {section.images.slice(13, 16).map((img, i) => {
                         const actualIdx = i + 13;
                         return (
-                          <div key={i} className={`flex ${i % 2 !== 0 ? 'flex-row-reverse md:flex-row-reverse' : 'flex-row md:flex-row'} items-center gap-4 sm:gap-8 md:gap-12`}>
-                            <div className="flex-1 space-y-2 sm:space-y-3 md:space-y-4 text-left px-1 sm:px-2">
-                              <span className="text-[9px] sm:text-[10px] tracking-[0.4em] uppercase text-[#d4af37] font-bold block">
-                                Moment 0{actualIdx + 1}
+                          <div key={i} className={`flex flex-col ${i % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center gap-8 md:gap-16`}>
+                            <div className="flex-1 space-y-3 text-center md:text-left px-2">
+                              <span className="text-[10px] tracking-[0.5em] uppercase text-[#c5a059] font-semibold block">
+                                Chapter 0{actualIdx + 1}
                               </span>
-                              <h3 className="text-xl sm:text-2xl md:text-4xl font-serif text-zinc-100 leading-tight">
+                              <h3 className="text-2xl sm:text-3xl md:text-5xl font-serif text-zinc-100 leading-tight">
                                 {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
                               </h3>
-                              <p className="text-xs sm:text-sm md:text-base text-zinc-400 leading-relaxed">
+                              <p className="text-sm md:text-base text-zinc-400 leading-relaxed font-light pt-2">
                                 {customDescriptions[actualIdx] || defaultDescriptions[actualIdx]}
                               </p>
                             </div>
                             <div className="flex-1 w-full flex justify-center">
-                              <div className="group aspect-[3/4] w-[130px] sm:w-[200px] md:max-w-md overflow-hidden rounded-t-[80px] sm:rounded-t-[120px] md:rounded-t-[140px] rounded-b-xl shadow-2xl bg-zinc-900 border border-zinc-800/80">
-                                <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                              <div className="group w-full max-w-md aspect-[4/5] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border border-zinc-800/80 relative">
+                                <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                               </div>
                             </div>
                           </div>
@@ -719,25 +727,25 @@ function Home() {
                     </div>
                   )}
 
-                  <div className="text-center pt-10 px-6">
+                  <div className="text-center pt-12 px-6">
                     <Link 
                       to={`/gallery/${generateSlug(section.title)}`}
-                      className="text-[11px] md:text-[12px] font-bold uppercase tracking-[0.4em] border-2 border-[#d4af37] px-8 md:px-10 py-3 md:py-4 text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-lg shadow-[#d4af37]/10"
+                      className="text-[11px] md:text-[12px] font-bold uppercase tracking-[0.4em] border-2 border-[#c5a059] px-10 py-4 text-[#c5a059] hover:bg-[#c5a059] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-xl shadow-[#c5a059]/10"
                     >
-                      View Gallery
+                      View Full Gallery
                     </Link>
                   </div>
                 </div>
               ) : (
-                <div className={`max-w-7xl mx-auto px-6 flex flex-col ${index % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center text-center md:text-left gap-12 md:gap-16 py-12`}>
-                  <div className="flex-1 flex flex-col items-center md:items-start justify-center space-y-4">
-                    <span className="text-[11px] tracking-[0.6em] uppercase text-[#d4af37] font-bold">
+                <div className={`max-w-7xl mx-auto px-6 flex flex-col ${index % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center text-center md:text-left gap-12 md:gap-20 py-12`}>
+                  <div className="flex-1 flex flex-col items-center md:items-start justify-center space-y-5">
+                    <span className="text-[11px] tracking-[0.6em] uppercase text-[#c5a059] font-bold">
                       0{index + 1} — Selection
                     </span>
                     <h2 className="text-3xl md:text-6xl font-light tracking-tighter leading-none text-zinc-100">
                       {section.title}
                     </h2>
-                    <p className="text-base md:text-lg leading-relaxed text-zinc-400 max-w-md pt-4">
+                    <p className="text-base md:text-lg leading-relaxed text-zinc-400 max-w-md pt-2 font-light">
                       {section.desc || section.description}
                     </p>
                   </div>
@@ -745,16 +753,16 @@ function Home() {
                   <div className="flex-1 flex flex-col items-center md:items-start w-full">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                       {Array.isArray(section.images) && section.images.slice(0, 2).map((img, i) => (
-                        <div key={i} className={`group aspect-[2/3] overflow-hidden bg-zinc-900 border border-zinc-800/80 rounded-xl shadow-2xl ${i === 1 ? 'md:mt-16' : ''}`}>
-                          <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
+                        <div key={i} className={`group aspect-[3/4] overflow-hidden bg-zinc-900 border border-zinc-800/80 rounded-2xl shadow-2xl relative ${i === 1 ? 'md:mt-20' : ''}`}>
+                          <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
                         </div>
                       ))}
                     </div>
                     
-                    <div className="mt-8 w-full text-center md:text-left flex justify-center md:justify-start">
+                    <div className="mt-12 w-full text-center md:text-left flex justify-center md:justify-start">
                       <Link 
                         to={`/gallery/${generateSlug(section.title)}`}
-                        className="text-[11px] md:text-[12px] font-bold uppercase tracking-[0.4em] border-2 border-[#d4af37] px-8 py-3 text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-lg shadow-[#d4af37]/10"
+                        className="text-[11px] md:text-[12px] font-bold uppercase tracking-[0.4em] border-2 border-[#c5a059] px-8 py-4 text-[#c5a059] hover:bg-[#c5a059] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-xl shadow-[#c5a059]/10"
                       >
                         View Gallery
                       </Link>
