@@ -19,7 +19,7 @@ function Footer() {
         
         {/* ንፋልማይ ክፋል */}
         <div className="space-y-4 flex flex-col items-center md:items-start">
-          <h3 className="text-xl font-light tracking-widest uppercase">JONI Studio</h3>
+          <h3 className="text-xl font-light tracking-widest uppercase">Habesha Film Production</h3>
           <p className="text-zinc-500 text-sm leading-relaxed max-w-xs">
             Crafting cinematic stories and timeless portraits for your most cherished moments. 
           </p>
@@ -42,12 +42,12 @@ function Footer() {
           <div className="flex items-center justify-center md:justify-start gap-6">
             
             {/* ቲክቶክ ስእሊ (w-8 h-8 ኣብ ሞባይል ይዓቢ፣ md:w-6 md:h-6 ኣብ ላፕቶፕ ንቁሩብ ይመጣጠን) */}
-            <a href="https://www.tiktok.com/@robeltesfu21" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
+            <a href="https://www.tiktok.com/@habshapicture?_r=1&_t=ZS-98RLvYscrdH:opacity-80 transition-opacity">
               <img src={tiktokImg} alt="TikTok" className="w-8 h-8 md:w-6 md:h-6 object-contain rounded-md" />
             </a>
 
             {/* ኢንስታግራም ስእሊ */}
-            <a href="https://www.instagram.com/_u/robel.tesfu.1848" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
+            <a href="https://www.instagram.com/habesha_pictuer?igsh=anF1OXc4dnB4bGs1acity-80 transition-opacity">
               <img src={instagramImg} alt="Instagram" className="w-8 h-8 md:w-6 md:h-6 object-contain rounded-md" />
             </a>
 
@@ -57,7 +57,7 @@ function Footer() {
             </a>
 
             {/* ፌስቡክ ስእሊ */}
-            <a href="https://www.facebook.com/profile.php?id=61563600000000" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
+            <a href="https://www.facebook.com/share/1BbUufnsKQ/" className="hover:opacity-80 transition-opacity">
               <img src={facebookImg} alt="Facebook" className="w-8 h-8 md:w-6 md:h-6 object-contain rounded-md" />
             </a>
 
