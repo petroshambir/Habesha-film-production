@@ -526,7 +526,7 @@ function Home() {
               {isWedding ? (
                 <div className="w-full space-y-12 md:space-y-20">
                   
-                  {/* 1. መጀመርታ ሓንቲ ዓባይ/ውቁብቲ ክብቲ ስእሊ (Hero Initial Circle or Banner) */}
+                  {/* 1. ናይ መጀመርታ ዓባይ ስእሊ (Hero Initial Banner Image) */}
                   {Array.isArray(section.images) && section.images[0] && (
                     <div className="w-full max-w-4xl mx-auto px-4">
                       <div className="text-center max-w-lg mx-auto mb-6">
@@ -537,7 +537,7 @@ function Home() {
                           {customDescriptions[0] || defaultDescriptions[0]}
                         </p>
                       </div>
-                      <div className="w-full aspect-[16/9] overflow-hidden rounded-xl shadow-xl bg-zinc-900 border border-zinc-800 relative">
+                      <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border border-zinc-800 relative">
                         <img 
                           src={section.images[0]} 
                           alt={section.title} 
@@ -547,26 +547,26 @@ function Home() {
                     </div>
                   )}
 
-                  {/* 2. ካብኡ ቀጺሉ ድማ በብ 4 ክብቲ ስእልታት እናተወሰኸ ዝኸይድ ቀጥታዊ ታይምላይን (Expanding 4-Circle Timeline Layout) */}
+                  {/* 2. በብ 4 ሰርክል እናተሓሓዘ ዝኸይድ ታይምላይን (4-Circle Timeline System with Larger Mobile Circles) */}
                   {Array.isArray(section.images) && section.images.length > 1 && (
                     <div className="max-w-3xl mx-auto px-4 relative">
-                      {/* ማእከላይ ቀጥታዊ መስመር (Timeline Vertical Line) */}
+                      {/* ማእከላይ ቀጥታዊ መስመር (Vertical Timeline Line) */}
                       <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-[#dfb557]/30 transform -translate-x-1/2 hidden sm:block"></div>
 
-                      <div className="space-y-12 sm:space-y-16">
+                      <div className="space-y-14 sm:space-y-20">
                         {section.images.slice(1, 13).map((img, i) => {
                           const actualIdx = i + 1;
-                          const isEven = i % 2 === 0; // ንየማንን ንጸጋምን ንምቕያር
+                          const isEven = i % 2 === 0;
 
                           return (
-                            <div key={i} className={`flex flex-col sm:flex-row items-center gap-6 ${isEven ? 'sm:flex-row-reverse' : ''}`}>
+                            <div key={i} className={`flex flex-col sm:flex-row items-center gap-6 sm:gap-10 ${isEven ? 'sm:flex-row-reverse' : ''}`}>
                               
                               {/* ጽሑፍ ክፍሊ */}
-                              <div className={`flex-1 text-center ${isEven ? 'sm:text-left' : 'sm:text-right'} space-y-1.5 px-2`}>
-                                <span className="text-[9px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
-                                  Milestone 0{actualIdx}
+                              <div className={`flex-1 text-center ${isEven ? 'sm:text-left' : 'sm:text-right'} space-y-2 px-2`}>
+                                <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-bold block">
+                                  Chapter 0{actualIdx}
                                 </span>
-                                <h4 className="text-lg sm:text-xl font-serif text-zinc-100">
+                                <h4 className="text-xl sm:text-2xl font-serif text-zinc-100">
                                   {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
                                 </h4>
                                 <p className="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
@@ -574,9 +574,9 @@ function Home() {
                                 </p>
                               </div>
 
-                              {/* ክብቲ ስእሊ ክፍሊ (Circle Image with Gold Border) */}
+                              {/* ዓባይ ሰርክል ስእሊ (Larger Circle Image for Mobile & Desktop) */}
                               <div className="relative flex-shrink-0">
-                                <div className="w-32 h-32 sm:w-40 sm:h-40 rounded-full overflow-hidden border-2 border-[#dfb557]/60 shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500">
+                                <div className="w-44 h-44 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500">
                                   <img src={img} alt={section.title} className="w-full h-full object-cover" />
                                 </div>
                               </div>
@@ -589,16 +589,16 @@ function Home() {
                     </div>
                   )}
 
-                  {/* 3. ናይ መወዳእታ ገርዲ (Gallery Grid) */}
+                  {/* 3. ናይ መወዳእታ ገርዲ (Gallery Grid Collection) */}
                   {Array.isArray(section.images) && section.images.length > 13 && (
-                    <div className="max-w-4xl mx-auto px-4 pt-10">
+                    <div className="max-w-4xl mx-auto px-4 pt-12">
                       <div className="text-center mb-6">
                         <h3 className="text-2xl font-serif text-zinc-100 uppercase tracking-widest">More Memories</h3>
                         <div className="w-8 h-[1px] bg-[#dfb557] mx-auto mt-2"></div>
                       </div>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                         {section.images.slice(13, 19).map((img, i) => (
-                          <div key={i} className="aspect-square overflow-hidden rounded-lg bg-zinc-900 border border-zinc-800 shadow-md">
+                          <div key={i} className="aspect-square overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800 shadow-lg">
                             <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                           </div>
                         ))}
@@ -609,7 +609,7 @@ function Home() {
                   <div className="text-center pt-8 px-4">
                     <Link 
                       to={`/gallery/${generateSlug(section.title)}`}
-                      className="text-[11px] font-bold uppercase tracking-[0.3em] border border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-lg shadow-md"
+                      className="text-[11px] font-bold uppercase tracking-[0.3em] border border-[#dfb557] px-8 py-3.5 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-lg"
                     >
                       View Full Gallery
                     </Link>
