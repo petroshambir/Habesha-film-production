@@ -385,6 +385,7 @@
 
 // export default Home;
 
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
@@ -440,7 +441,6 @@ function Home() {
       .catch(err => console.log(err));
   }, []);
 
-  // ጽሩይ Slug ንምፍጣር ዝሕግዝ ተግባር (Helper function for URLs)
   const generateSlug = (titleText) => {
     if (!titleText) return '';
     return titleText
@@ -460,7 +460,6 @@ function Home() {
       <section className="py-12 md:py-24 w-full">
         {sections.map((section, index) => {
           const titleLower = section.title ? section.title.toLowerCase() : '';
-          // እዚ ኩሎም ናይ ብራይዳል ክፋላት ጥራሕ ከም ዝፈል ዘረጋግጽ ኮድ እዩ (Bridal/Wedding Logic Only)
           const isWedding = titleLower.includes('wedding') || titleLower.includes('bridal');
 
           const defaultDescriptions = [
@@ -513,7 +512,7 @@ function Home() {
               {section.names && (
                 <div className="mb-10 md:mb-16 text-center px-4">
                   <span className="text-[9px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
-                    Love Story & Timeline
+                    Event Story & Timeline
                   </span>
                   <h3 className="text-3xl sm:text-4xl md:text-6xl font-serif italic text-zinc-100 tracking-wide font-light">
                     {section.names}
@@ -525,14 +524,17 @@ function Home() {
                 </div>
               )}
 
+              {/* ናይ ብራይዳል / ዊዲንግ ክፍሊ ጥራሕ (Bridal / Wedding Layout Only) */}
               {isWedding ? (
-                // ናይ ብራይዳል / ውዲንግ ዲዛይን (Wedding Layout Only)
-                <div className="w-full space-y-12 md:space-y-20">
+                <div className="w-full space-y-12 md:space-y-16">
                   
-                  {/* 1. ናይ መጀመርታ ዓባይ ስእሊ (Hero Initial Banner Image with Golden Border) */}
+                  {/* 1. መጀመርታ ዘላ ዓባይ ስእሊ (Hero Banner) */}
                   {Array.isArray(section.images) && section.images[0] && (
                     <div className="w-full max-w-4xl mx-auto px-4">
-                      <div className="text-center max-w-lg mx-auto mb-6">
+                      <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border-2 border-[#dfb557]/40 relative mb-4">
+                        <img src={section.images[0]} alt={section.title} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="text-center max-w-lg mx-auto p-4 rounded-xl bg-zinc-950/60 border border-[#dfb557]/40 shadow-xl">
                         <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-1">
                           {customHeadings[0] || defaultHeadings[0]}
                         </span>
@@ -540,47 +542,38 @@ function Home() {
                           {customDescriptions[0] || defaultDescriptions[0]}
                         </p>
                       </div>
-                      <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border-2 border-[#dfb557]/40 relative">
-                        <img 
-                          src={section.images[0]} 
-                          alt={section.title} 
-                          className="w-full h-full object-cover" 
-                        />
-                      </div>
                     </div>
                   )}
 
-                  {/* 2. ቀዳሞት 4 ሰርክል ስእልታት (First 4 Circle Images with Zigzag & Golden Borders) */}
+                  {/* 2. ቀዳሞት 4 ስእልታት (ጎኒ ንጎኒ ሰርክላት ኮይነን ጽሑፈን ኣብ ታሕቲ) */}
                   {Array.isArray(section.images) && section.images.length > 1 && (
-                    <div className="max-w-4xl mx-auto px-4 relative">
-                      <div className="space-y-12 sm:space-y-16">
+                    <div className="max-w-4xl mx-auto px-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                         {section.images.slice(1, 5).map((img, i) => {
                           const actualIdx = i + 1;
-                          const isEven = i % 2 === 0; // ዚግዛግ ንምግባር (የማን / ጸጋம்)
 
                           return (
-                            <div key={i} className={`flex flex-col sm:flex-row items-center gap-6 sm:gap-10 ${isEven ? 'sm:flex-row-reverse' : ''}`}>
-                              
-                              {/* ጽሑፍ ክፍሊ ብጎልደን ቦርደር */}
-                              <div className={`flex-1 text-center ${isEven ? 'sm:text-left' : 'sm:text-right'} p-5 rounded-2xl bg-zinc-950/60 border border-[#dfb557]/40 shadow-xl space-y-2`}>
-                                <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-bold block">
+                            <div 
+                              key={i} 
+                              className="flex flex-col items-center text-center p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/50 shadow-2xl space-y-4"
+                            >
+                              {/* ሰርክል ስእሊ ኣብ ላዕሊ */}
+                              <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-full overflow-hidden border-4 border-[#dfb557] shadow-xl bg-zinc-900 flex-shrink-0">
+                                <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                              </div>
+
+                              {/* መግለጺ ጽሑፍ ኣብ ታሕቲ */}
+                              <div className="space-y-1.5 w-full">
+                                <span className="text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
                                   Chapter 0{actualIdx}
                                 </span>
-                                <h4 className="text-xl sm:text-2xl font-serif text-zinc-100">
+                                <h4 className="text-lg sm:text-xl font-serif text-zinc-100">
                                   {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
                                 </h4>
                                 <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
                                   {customDescriptions[actualIdx] || defaultDescriptions[actualIdx]}
                                 </p>
                               </div>
-
-                              {/* ዓባይ ሰርክል ስእሊ ብጎልደን ቦርደር */}
-                              <div className="relative flex-shrink-0">
-                                <div className="w-44 h-44 sm:w-52 sm:h-52 rounded-full overflow-hidden border-4 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500">
-                                  <img src={img} alt={section.title} className="w-full h-full object-cover" />
-                                </div>
-                              </div>
-
                             </div>
                           );
                         })}
@@ -588,10 +581,13 @@ function Home() {
                     </div>
                   )}
 
-                  {/* 3. ኣብ ማእከል እትኣቱ ካልኣይቲ ዓባይ ስእሊ (Middle Banner Image with Golden Border) */}
+                  {/* 3. ማእከላይ ዓባይ ስእሊ (Middle Banner) */}
                   {Array.isArray(section.images) && section.images[5] && (
-                    <div className="w-full max-w-4xl mx-auto px-4 pt-6">
-                      <div className="text-center max-w-lg mx-auto mb-6">
+                    <div className="w-full max-w-4xl mx-auto px-4 pt-4">
+                      <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border-2 border-[#dfb557]/40 relative mb-4">
+                        <img src={section.images[5]} alt={section.title} className="w-full h-full object-cover" />
+                      </div>
+                      <div className="text-center max-w-lg mx-auto p-4 rounded-xl bg-zinc-950/60 border border-[#dfb557]/40 shadow-xl">
                         <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-1">
                           {customHeadings[5] || defaultHeadings[5]}
                         </span>
@@ -599,47 +595,38 @@ function Home() {
                           {customDescriptions[5] || defaultDescriptions[5]}
                         </p>
                       </div>
-                      <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border-2 border-[#dfb557]/40 relative">
-                        <img 
-                          src={section.images[5]} 
-                          alt={section.title} 
-                          className="w-full h-full object-cover" 
-                        />
-                      </div>
                     </div>
                   )}
 
-                  {/* 4. ካልኣይቲ ግዜ 4 ሰርክል ስእልታት (Next 4 Circle Images with Zigzag & Golden Borders) */}
+                  {/* 4.ቀጻሊ ስእልታት (ጎኒ ንጎኒ ሰርክላት ኮይነን ጽሑፈን ኣብ ታሕቲ) */}
                   {Array.isArray(section.images) && section.images.length > 6 && (
-                    <div className="max-w-4xl mx-auto px-4 relative pt-6">
-                      <div className="space-y-12 sm:space-y-16">
+                    <div className="max-w-4xl mx-auto px-4">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
                         {section.images.slice(6, 10).map((img, i) => {
                           const actualIdx = i + 6;
-                          const isEven = i % 2 === 0;
 
                           return (
-                            <div key={i} className={`flex flex-col sm:flex-row items-center gap-6 sm:gap-10 ${isEven ? 'sm:flex-row-reverse' : ''}`}>
-                              
-                              {/* ጽሑፍ ክፍሊ ብጎልደን ቦርደር */}
-                              <div className={`flex-1 text-center ${isEven ? 'sm:text-left' : 'sm:text-right'} p-5 rounded-2xl bg-zinc-950/60 border border-[#dfb557]/40 shadow-xl space-y-2`}>
-                                <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-bold block">
+                            <div 
+                              key={i} 
+                              className="flex flex-col items-center text-center p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/50 shadow-2xl space-y-4"
+                            >
+                              {/* ሰርክል ስእሊ ኣብ ላዕሊ */}
+                              <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-full overflow-hidden border-4 border-[#dfb557] shadow-xl bg-zinc-900 flex-shrink-0">
+                                <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                              </div>
+
+                              {/* መግለጺ ጽሑፍ ኣብ ታሕቲ */}
+                              <div className="space-y-1.5 w-full">
+                                <span className="text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
                                   Chapter 0{actualIdx}
                                 </span>
-                                <h4 className="text-xl sm:text-2xl font-serif text-zinc-100">
+                                <h4 className="text-lg sm:text-xl font-serif text-zinc-100">
                                   {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
                                 </h4>
                                 <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
                                   {customDescriptions[actualIdx] || defaultDescriptions[actualIdx]}
                                 </p>
                               </div>
-
-                              {/* ዓባይ ሰርክል ስእሊ ብጎልደን ቦርደር */}
-                              <div className="relative flex-shrink-0">
-                                <div className="w-44 h-44 sm:w-52 sm:h-52 rounded-full overflow-hidden border-4 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500">
-                                  <img src={img} alt={section.title} className="w-full h-full object-cover" />
-                                </div>
-                              </div>
-
                             </div>
                           );
                         })}
@@ -647,9 +634,9 @@ function Home() {
                     </div>
                   )}
 
-                  {/* 5. ናይ መወዳእታ ገርዲ (Gallery Grid Collection with Golden Borders) */}
+                  {/* 5. ተወሳኺ ስእልታት (Grid) */}
                   {Array.isArray(section.images) && section.images.length > 10 && (
-                    <div className="max-w-4xl mx-auto px-4 pt-12">
+                    <div className="max-w-4xl mx-auto px-4 pt-8">
                       <div className="text-center mb-6">
                         <h3 className="text-2xl font-serif text-zinc-100 uppercase tracking-widest">More Memories</h3>
                         <div className="w-8 h-[1px] bg-[#dfb557] mx-auto mt-2"></div>
@@ -674,7 +661,6 @@ function Home() {
                   </div>
                 </div>
               ) : (
-                // ናይ በይቢ ሻወር ወይ ካልኦት ፕሮጀክትታት (Non-Wedding Layout - hidden based on your request)
                 <div style={{ display: 'none' }}></div>
               )}
             </div>
