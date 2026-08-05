@@ -524,7 +524,7 @@ function Home() {
               )}
 
               {isWedding ? (
-                <div className="w-full space-y-12 md:space-y-20">
+                <div className="w-full space-y-10 md:space-y-16">
                   
                   {/* 1. ናይ መጀመርታ ዓባይ ስእሊ (Hero Initial Banner Image with Golden Border) */}
                   {Array.isArray(section.images) && section.images[0] && (
@@ -547,19 +547,22 @@ function Home() {
                     </div>
                   )}
 
-                  {/* 2. መጀመርታ 4 ሰርክል ስእልታት (First 4 Circle Images with Mobile & Desktop Zigzag + Golden Border) */}
+                  {/* 2. መጀመርታ 4 ሰርክል ስእልታት (First 4 Circle Images - Combined in One Container with Single Golden Border) */}
                   {Array.isArray(section.images) && section.images.length > 1 && (
                     <div className="max-w-4xl mx-auto px-4 relative">
-                      <div className="space-y-12 sm:space-y-16">
+                      <div className="space-y-8 sm:space-y-12">
                         {section.images.slice(1, 5).map((img, i) => {
                           const actualIdx = i + 1;
                           const isEven = i % 2 === 0;
 
                           return (
-                            <div key={i} className={`flex items-center gap-4 sm:gap-10 ${isEven ? 'flex-row-reverse text-right sm:text-left' : 'flex-row text-left sm:text-right'}`}>
+                            <div 
+                              key={i} 
+                              className={`flex items-center justify-between gap-3 sm:gap-6 p-4 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/50 shadow-2xl ${isEven ? 'flex-row-reverse text-right sm:text-left' : 'flex-row text-left sm:text-right'}`}
+                            >
                               
-                              {/* ጽሑፍ ክፍሊ ብጎልደን ቦርደር */}
-                              <div className={`flex-1 ${isEven ? 'sm:text-left text-right' : 'sm:text-right text-left'} p-4 sm:p-5 rounded-2xl bg-zinc-950/60 border border-[#dfb557]/40 shadow-xl space-y-2 w-1/2`}>
+                              {/* ጽሑፍ ክፍሊ */}
+                              <div className={`flex-1 ${isEven ? 'sm:text-left text-right' : 'sm:text-right text-left'} space-y-1.5`}>
                                 <span className="text-[8px] sm:text-[10px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
                                   Chapter 0{actualIdx}
                                 </span>
@@ -571,9 +574,9 @@ function Home() {
                                 </p>
                               </div>
 
-                              {/* ዓባይ ሰርክል ስእሊ ብጎልደን ቦርደር */}
+                              {/* ዓባይ ሰርክል ስእሊ */}
                               <div className="relative flex-shrink-0 flex justify-center">
-                                <div className="w-28 h-28 sm:w-52 sm:h-52 rounded-full overflow-hidden border-2 sm:border-4 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500 flex-shrink-0">
+                                <div className="w-24 h-24 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 sm:border-4 border-[#dfb557] shadow-xl bg-zinc-900 hover:scale-105 transition-transform duration-500 flex-shrink-0">
                                   <img src={img} alt={section.title} className="w-full h-full object-cover" />
                                 </div>
                               </div>
@@ -587,7 +590,7 @@ function Home() {
 
                   {/* 3. ኣብ ማእከል እትኣቱ ካልኣይቲ ዓባይ ስእሊ (Middle Banner Image with Golden Border) */}
                   {Array.isArray(section.images) && section.images[5] && (
-                    <div className="w-full max-w-4xl mx-auto px-4 pt-6">
+                    <div className="w-full max-w-4xl mx-auto px-4 pt-4">
                       <div className="text-center max-w-lg mx-auto mb-6">
                         <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-1">
                           {customHeadings[5] || defaultHeadings[5]}
@@ -606,19 +609,22 @@ function Home() {
                     </div>
                   )}
 
-                  {/* 4. ካልኣይቲ ግዜ 4 ሰርክል ስእልታት (Next 4 Circle Images with Mobile & Desktop Zigzag + Golden Borders) */}
+                  {/* 4. ካልኣይቲ ግዜ 4 ሰርክል ስእልታት (Next 4 Circle Images - Combined in One Container with Single Golden Border) */}
                   {Array.isArray(section.images) && section.images.length > 6 && (
-                    <div className="max-w-4xl mx-auto px-4 relative pt-6">
-                      <div className="space-y-12 sm:space-y-16">
+                    <div className="max-w-4xl mx-auto px-4 relative pt-4">
+                      <div className="space-y-8 sm:space-y-12">
                         {section.images.slice(6, 10).map((img, i) => {
                           const actualIdx = i + 6;
                           const isEven = i % 2 === 0;
 
                           return (
-                            <div key={i} className={`flex items-center gap-4 sm:gap-10 ${isEven ? 'flex-row-reverse text-right sm:text-left' : 'flex-row text-left sm:text-right'}`}>
+                            <div 
+                              key={i} 
+                              className={`flex items-center justify-between gap-3 sm:gap-6 p-4 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/50 shadow-2xl ${isEven ? 'flex-row-reverse text-right sm:text-left' : 'flex-row text-left sm:text-right'}`}
+                            >
                               
-                              {/* ጽሑፍ ክፍሊ ብጎልደን ቦርደር */}
-                              <div className={`flex-1 ${isEven ? 'sm:text-left text-right' : 'sm:text-right text-left'} p-4 sm:p-5 rounded-2xl bg-zinc-950/60 border border-[#dfb557]/40 shadow-xl space-y-2 w-1/2`}>
+                              {/* ጽሑፍ ክፍሊ */}
+                              <div className={`flex-1 ${isEven ? 'sm:text-left text-right' : 'sm:text-right text-left'} space-y-1.5`}>
                                 <span className="text-[8px] sm:text-[10px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
                                   Chapter 0{actualIdx}
                                 </span>
@@ -630,9 +636,9 @@ function Home() {
                                 </p>
                               </div>
 
-                              {/* ዓባይ ሰርክል ስእሊ ብጎልደን ቦርደር */}
+                              {/* ዓባይ ሰርክል ስእሊ */}
                               <div className="relative flex-shrink-0 flex justify-center">
-                                <div className="w-28 h-28 sm:w-52 sm:h-52 rounded-full overflow-hidden border-2 sm:border-4 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500 flex-shrink-0">
+                                <div className="w-24 h-24 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 sm:border-4 border-[#dfb557] shadow-xl bg-zinc-900 hover:scale-105 transition-transform duration-500 flex-shrink-0">
                                   <img src={img} alt={section.title} className="w-full h-full object-cover" />
                                 </div>
                               </div>
