@@ -385,7 +385,6 @@
 
 // export default Home;
 
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
@@ -548,7 +547,7 @@ function Home() {
                     </div>
                   )}
 
-                  {/* 2. መጀመርታ 4 ሰርክል ስእልታት (First 4 Circle Images with Zigzag Layout & Golden Border Box for Texts) */}
+                  {/* 2. መጀመርታ 4 ሰርክል ስእልታት (First 4 Circle Images with Mobile & Desktop Zigzag + Golden Border) */}
                   {Array.isArray(section.images) && section.images.length > 1 && (
                     <div className="max-w-4xl mx-auto px-4 relative">
                       <div className="space-y-12 sm:space-y-16">
@@ -557,22 +556,24 @@ function Home() {
                           const isEven = i % 2 === 0;
 
                           return (
-                            <div key={i} className={`flex flex-col sm:flex-row items-center gap-6 sm:gap-10 ${isEven ? 'sm:flex-row-reverse' : ''}`}>
+                            <div key={i} className={`flex items-center gap-4 sm:gap-10 ${isEven ? 'flex-row-reverse text-right sm:text-left' : 'flex-row text-left sm:text-right'}`}>
                               
-                              <div className={`flex-1 text-center ${isEven ? 'sm:text-left' : 'sm:text-right'} p-5 rounded-2xl bg-zinc-950/60 border border-[#dfb557]/40 shadow-xl space-y-2 w-full`}>
-                                <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-bold block">
+                              {/* ጽሑፍ ክፍሊ ብጎልደን ቦርደር */}
+                              <div className={`flex-1 ${isEven ? 'sm:text-left text-right' : 'sm:text-right text-left'} p-4 sm:p-5 rounded-2xl bg-zinc-950/60 border border-[#dfb557]/40 shadow-xl space-y-2 w-1/2`}>
+                                <span className="text-[8px] sm:text-[10px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
                                   Chapter 0{actualIdx}
                                 </span>
-                                <h4 className="text-xl sm:text-2xl font-serif text-zinc-100">
+                                <h4 className="text-sm sm:text-2xl font-serif text-zinc-100">
                                   {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
                                 </h4>
-                                <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
+                                <p className="text-[10px] sm:text-sm text-zinc-300 font-light leading-relaxed">
                                   {customDescriptions[actualIdx] || defaultDescriptions[actualIdx]}
                                 </p>
                               </div>
 
-                              <div className="relative flex-shrink-0 w-auto flex justify-center">
-                                <div className="w-40 h-40 sm:w-52 sm:h-52 rounded-full overflow-hidden border-4 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500">
+                              {/* ዓባይ ሰርክል ስእሊ ብጎልደን ቦርደር */}
+                              <div className="relative flex-shrink-0 flex justify-center">
+                                <div className="w-28 h-28 sm:w-52 sm:h-52 rounded-full overflow-hidden border-2 sm:border-4 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500 flex-shrink-0">
                                   <img src={img} alt={section.title} className="w-full h-full object-cover" />
                                 </div>
                               </div>
@@ -605,7 +606,7 @@ function Home() {
                     </div>
                   )}
 
-                  {/* 4. ካልኣይቲ ግዜ 4 ሰርክል ስእልታት (Next 4 Circle Images with Zigzag & Golden Borders) */}
+                  {/* 4. ካልኣይቲ ግዜ 4 ሰርክል ስእልታት (Next 4 Circle Images with Mobile & Desktop Zigzag + Golden Borders) */}
                   {Array.isArray(section.images) && section.images.length > 6 && (
                     <div className="max-w-4xl mx-auto px-4 relative pt-6">
                       <div className="space-y-12 sm:space-y-16">
@@ -614,22 +615,24 @@ function Home() {
                           const isEven = i % 2 === 0;
 
                           return (
-                            <div key={i} className={`flex flex-col sm:flex-row items-center gap-6 sm:gap-10 ${isEven ? 'sm:flex-row-reverse' : ''}`}>
+                            <div key={i} className={`flex items-center gap-4 sm:gap-10 ${isEven ? 'flex-row-reverse text-right sm:text-left' : 'flex-row text-left sm:text-right'}`}>
                               
-                              <div className={`flex-1 text-center ${isEven ? 'sm:text-left' : 'sm:text-right'} p-5 rounded-2xl bg-zinc-950/60 border border-[#dfb557]/40 shadow-xl space-y-2 w-full`}>
-                                <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-bold block">
+                              {/* ጽሑፍ ክፍሊ ብጎልደን ቦርደር */}
+                              <div className={`flex-1 ${isEven ? 'sm:text-left text-right' : 'sm:text-right text-left'} p-4 sm:p-5 rounded-2xl bg-zinc-950/60 border border-[#dfb557]/40 shadow-xl space-y-2 w-1/2`}>
+                                <span className="text-[8px] sm:text-[10px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
                                   Chapter 0{actualIdx}
                                 </span>
-                                <h4 className="text-xl sm:text-2xl font-serif text-zinc-100">
+                                <h4 className="text-sm sm:text-2xl font-serif text-zinc-100">
                                   {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
                                 </h4>
-                                <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
+                                <p className="text-[10px] sm:text-sm text-zinc-300 font-light leading-relaxed">
                                   {customDescriptions[actualIdx] || defaultDescriptions[actualIdx]}
                                 </p>
                               </div>
 
-                              <div className="relative flex-shrink-0 w-auto flex justify-center">
-                                <div className="w-40 h-40 sm:w-52 sm:h-52 rounded-full overflow-hidden border-4 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500">
+                              {/* ዓባይ ሰርክል ስእሊ ብጎልደን ቦርደር */}
+                              <div className="relative flex-shrink-0 flex justify-center">
+                                <div className="w-28 h-28 sm:w-52 sm:h-52 rounded-full overflow-hidden border-2 sm:border-4 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500 flex-shrink-0">
                                   <img src={img} alt={section.title} className="w-full h-full object-cover" />
                                 </div>
                               </div>
