@@ -385,6 +385,7 @@
 
 // export default Home;
 
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
@@ -524,11 +525,11 @@ function Home() {
               )}
 
               {isWedding ? (
-                <div className="w-full space-y-20 md:space-y-28">
+                <div className="w-full space-y-20 md:space-y-24">
                   
                   {Array.isArray(section.images) && section.images[0] && (
                     <div className="w-full">
-                      <div className="text-center max-w-2xl mx-auto mb-8 px-6">
+                      <div className="text-center max-w-2xl mx-auto mb-6 md:mb-8 px-6">
                         <span className="text-[10px] md:text-[11px] tracking-[0.6em] uppercase text-[#d4af37] font-bold block mb-2">
                           {customHeadings[0] || defaultHeadings[0]}
                         </span>
@@ -536,7 +537,7 @@ function Home() {
                           {customDescriptions[0] || defaultDescriptions[0]}
                         </p>
                       </div>
-                      <div className="group w-full h-[350px] sm:h-[450px] md:h-[600px] overflow-hidden shadow-2xl bg-zinc-900 border border-zinc-800/60 rounded-xl md:rounded-2xl max-w-7xl mx-auto px-4 md:px-0">
+                      <div className="group w-full h-[320px] sm:h-[400px] md:h-[550px] overflow-hidden shadow-2xl bg-zinc-900 border border-zinc-800/60 rounded-xl md:rounded-2xl max-w-7xl mx-auto px-4 md:px-0">
                         <img 
                           src={section.images[0]} 
                           alt={section.title} 
@@ -547,12 +548,12 @@ function Home() {
                   )}
 
                   {Array.isArray(section.images) && section.images.length > 1 && (
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-24 space-y-20 md:space-y-24">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-24 space-y-16 md:space-y-20">
                       {section.images.slice(1, 4).map((img, i) => {
                         const actualIdx = i + 1;
                         return (
-                          <div key={i} className={`flex ${i % 2 !== 0 ? 'flex-row-reverse md:flex-row-reverse' : 'flex-row md:flex-row'} items-center gap-6 sm:gap-10 md:gap-16`}>
-                            <div className="flex-1 space-y-3 sm:space-y-4 text-left px-1 sm:px-2">
+                          <div key={i} className={`flex ${i % 2 !== 0 ? 'flex-row-reverse md:flex-row-reverse' : 'flex-row md:flex-row'} items-center gap-4 sm:gap-8 md:gap-12`}>
+                            <div className="flex-1 space-y-2 sm:space-y-3 md:space-y-4 text-left px-1 sm:px-2">
                               <span className="text-[9px] sm:text-[10px] tracking-[0.4em] uppercase text-[#d4af37] font-bold block">
                                 Moment 0{actualIdx + 1}
                               </span>
@@ -564,7 +565,7 @@ function Home() {
                               </p>
                             </div>
                             <div className="flex-1 w-full flex justify-center">
-                              <div className="group aspect-[3/4] w-[140px] sm:w-[220px] md:max-w-md overflow-hidden rounded-t-[90px] sm:rounded-t-[130px] md:rounded-t-[160px] rounded-b-xl shadow-2xl bg-zinc-900 border border-zinc-800/80">
+                              <div className="group aspect-[3/4] w-[130px] sm:w-[200px] md:max-w-md overflow-hidden rounded-t-[80px] sm:rounded-t-[120px] md:rounded-t-[140px] rounded-b-xl shadow-2xl bg-zinc-900 border border-zinc-800/80">
                                 <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                               </div>
                             </div>
@@ -576,7 +577,7 @@ function Home() {
 
                   {Array.isArray(section.images) && section.images[4] && (
                     <div className="w-full pt-4">
-                      <div className="text-center max-w-2xl mx-auto mb-8 px-6">
+                      <div className="text-center max-w-2xl mx-auto mb-6 md:mb-8 px-6">
                         <span className="text-[10px] md:text-[11px] tracking-[0.6em] uppercase text-[#d4af37] font-bold block mb-2">
                           {customHeadings[4] || defaultHeadings[4]}
                         </span>
@@ -584,7 +585,7 @@ function Home() {
                           {customDescriptions[4] || defaultDescriptions[4]}
                         </p>
                       </div>
-                      <div className="group w-full h-[350px] sm:h-[450px] md:h-[600px] overflow-hidden shadow-2xl bg-zinc-900 border border-zinc-800/60 rounded-xl md:rounded-2xl max-w-7xl mx-auto px-4 md:px-0">
+                      <div className="group w-full h-[320px] sm:h-[400px] md:h-[550px] overflow-hidden shadow-2xl bg-zinc-900 border border-zinc-800/60 rounded-xl md:rounded-2xl max-w-7xl mx-auto px-4 md:px-0">
                         <img 
                           src={section.images[4]} 
                           alt={section.title} 
@@ -595,12 +596,12 @@ function Home() {
                   )}
 
                   {Array.isArray(section.images) && section.images.length > 5 && (
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-24 space-y-20 md:space-y-24 pt-4">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-24 space-y-16 md:space-y-20 pt-4">
                       {section.images.slice(5, 8).map((img, i) => {
                         const actualIdx = i + 5;
                         return (
-                          <div key={i} className={`flex ${i % 2 !== 0 ? 'flex-row-reverse md:flex-row-reverse' : 'flex-row md:flex-row'} items-center gap-6 sm:gap-10 md:gap-16`}>
-                            <div className="flex-1 space-y-3 sm:space-y-4 text-left px-1 sm:px-2">
+                          <div key={i} className={`flex ${i % 2 !== 0 ? 'flex-row-reverse md:flex-row-reverse' : 'flex-row md:flex-row'} items-center gap-4 sm:gap-8 md:gap-12`}>
+                            <div className="flex-1 space-y-2 sm:space-y-3 md:space-y-4 text-left px-1 sm:px-2">
                               <span className="text-[9px] sm:text-[10px] tracking-[0.4em] uppercase text-[#d4af37] font-bold block">
                                 Moment 0{actualIdx + 1}
                               </span>
@@ -612,7 +613,7 @@ function Home() {
                               </p>
                             </div>
                             <div className="flex-1 w-full flex justify-center">
-                              <div className="group aspect-[3/4] w-[140px] sm:w-[220px] md:max-w-md overflow-hidden rounded-t-[90px] sm:rounded-t-[130px] md:rounded-t-[160px] rounded-b-xl shadow-2xl bg-zinc-900 border border-zinc-800/80">
+                              <div className="group aspect-[3/4] w-[130px] sm:w-[200px] md:max-w-md overflow-hidden rounded-t-[80px] sm:rounded-t-[120px] md:rounded-t-[140px] rounded-b-xl shadow-2xl bg-zinc-900 border border-zinc-800/80">
                                 <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                               </div>
                             </div>
@@ -624,7 +625,7 @@ function Home() {
 
                   {Array.isArray(section.images) && section.images[8] && (
                     <div className="w-full pt-4">
-                      <div className="text-center max-w-2xl mx-auto mb-8 px-6">
+                      <div className="text-center max-w-2xl mx-auto mb-6 md:mb-8 px-6">
                         <span className="text-[10px] md:text-[11px] tracking-[0.6em] uppercase text-[#d4af37] font-bold block mb-2">
                           {customHeadings[8] || defaultHeadings[8]}
                         </span>
@@ -632,7 +633,7 @@ function Home() {
                           {customDescriptions[8] || defaultDescriptions[8]}
                         </p>
                       </div>
-                      <div className="group w-full h-[350px] sm:h-[450px] md:h-[600px] overflow-hidden shadow-2xl bg-zinc-900 border border-zinc-800/60 rounded-xl md:rounded-2xl max-w-7xl mx-auto px-4 md:px-0">
+                      <div className="group w-full h-[320px] sm:h-[400px] md:h-[550px] overflow-hidden shadow-2xl bg-zinc-900 border border-zinc-800/60 rounded-xl md:rounded-2xl max-w-7xl mx-auto px-4 md:px-0">
                         <img 
                           src={section.images[8]} 
                           alt={section.title} 
@@ -643,12 +644,12 @@ function Home() {
                   )}
 
                   {Array.isArray(section.images) && section.images.length > 9 && (
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-24 space-y-20 md:space-y-24 pt-4">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-24 space-y-16 md:space-y-20 pt-4">
                       {section.images.slice(9, 12).map((img, i) => {
                         const actualIdx = i + 9;
                         return (
-                          <div key={i} className={`flex ${i % 2 !== 0 ? 'flex-row-reverse md:flex-row-reverse' : 'flex-row md:flex-row'} items-center gap-6 sm:gap-10 md:gap-16`}>
-                            <div className="flex-1 space-y-3 sm:space-y-4 text-left px-1 sm:px-2">
+                          <div key={i} className={`flex ${i % 2 !== 0 ? 'flex-row-reverse md:flex-row-reverse' : 'flex-row md:flex-row'} items-center gap-4 sm:gap-8 md:gap-12`}>
+                            <div className="flex-1 space-y-2 sm:space-y-3 md:space-y-4 text-left px-1 sm:px-2">
                               <span className="text-[9px] sm:text-[10px] tracking-[0.4em] uppercase text-[#d4af37] font-bold block">
                                 Moment 0{actualIdx + 1}
                               </span>
@@ -660,7 +661,7 @@ function Home() {
                               </p>
                             </div>
                             <div className="flex-1 w-full flex justify-center">
-                              <div className="group aspect-[3/4] w-[140px] sm:w-[220px] md:max-w-md overflow-hidden rounded-t-[90px] sm:rounded-t-[130px] md:rounded-t-[160px] rounded-b-xl shadow-2xl bg-zinc-900 border border-zinc-800/80">
+                              <div className="group aspect-[3/4] w-[130px] sm:w-[200px] md:max-w-md overflow-hidden rounded-t-[80px] sm:rounded-t-[120px] md:rounded-t-[140px] rounded-b-xl shadow-2xl bg-zinc-900 border border-zinc-800/80">
                                 <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                               </div>
                             </div>
@@ -672,7 +673,7 @@ function Home() {
 
                   {Array.isArray(section.images) && section.images[12] && (
                     <div className="w-full pt-4">
-                      <div className="text-center max-w-2xl mx-auto mb-8 px-6">
+                      <div className="text-center max-w-2xl mx-auto mb-6 md:mb-8 px-6">
                         <span className="text-[10px] md:text-[11px] tracking-[0.6em] uppercase text-[#d4af37] font-bold block mb-2">
                           {customHeadings[12] || defaultHeadings[12]}
                         </span>
@@ -680,7 +681,7 @@ function Home() {
                           {customDescriptions[12] || defaultDescriptions[12]}
                         </p>
                       </div>
-                      <div className="group w-full h-[350px] sm:h-[450px] md:h-[600px] overflow-hidden shadow-2xl bg-zinc-900 border border-zinc-800/60 rounded-xl md:rounded-2xl max-w-7xl mx-auto px-4 md:px-0">
+                      <div className="group w-full h-[320px] sm:h-[400px] md:h-[550px] overflow-hidden shadow-2xl bg-zinc-900 border border-zinc-800/60 rounded-xl md:rounded-2xl max-w-7xl mx-auto px-4 md:px-0">
                         <img 
                           src={section.images[12]} 
                           alt={section.title} 
@@ -691,12 +692,12 @@ function Home() {
                   )}
 
                   {Array.isArray(section.images) && section.images.length > 13 && (
-                    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-24 space-y-20 md:space-y-24 pt-4">
+                    <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-24 space-y-16 md:space-y-20 pt-4">
                       {section.images.slice(13, 16).map((img, i) => {
                         const actualIdx = i + 13;
                         return (
-                          <div key={i} className={`flex ${i % 2 !== 0 ? 'flex-row-reverse md:flex-row-reverse' : 'flex-row md:flex-row'} items-center gap-6 sm:gap-10 md:gap-16`}>
-                            <div className="flex-1 space-y-3 sm:space-y-4 text-left px-1 sm:px-2">
+                          <div key={i} className={`flex ${i % 2 !== 0 ? 'flex-row-reverse md:flex-row-reverse' : 'flex-row md:flex-row'} items-center gap-4 sm:gap-8 md:gap-12`}>
+                            <div className="flex-1 space-y-2 sm:space-y-3 md:space-y-4 text-left px-1 sm:px-2">
                               <span className="text-[9px] sm:text-[10px] tracking-[0.4em] uppercase text-[#d4af37] font-bold block">
                                 Moment 0{actualIdx + 1}
                               </span>
@@ -708,7 +709,7 @@ function Home() {
                               </p>
                             </div>
                             <div className="flex-1 w-full flex justify-center">
-                              <div className="group aspect-[3/4] w-[140px] sm:w-[220px] md:max-w-md overflow-hidden rounded-t-[90px] sm:rounded-t-[130px] md:rounded-t-[160px] rounded-b-xl shadow-2xl bg-zinc-900 border border-zinc-800/80">
+                              <div className="group aspect-[3/4] w-[130px] sm:w-[200px] md:max-w-md overflow-hidden rounded-t-[80px] sm:rounded-t-[120px] md:rounded-t-[140px] rounded-b-xl shadow-2xl bg-zinc-900 border border-zinc-800/80">
                                 <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" />
                               </div>
                             </div>
@@ -718,20 +719,20 @@ function Home() {
                     </div>
                   )}
 
-                  <div className="text-center pt-12 px-6">
+                  <div className="text-center pt-10 px-6">
                     <Link 
                       to={`/gallery/${generateSlug(section.title)}`}
-                      className="text-[11px] md:text-[12px] font-bold uppercase tracking-[0.4em] border-2 border-[#d4af37] px-10 py-4 text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-lg shadow-[#d4af37]/10"
+                      className="text-[11px] md:text-[12px] font-bold uppercase tracking-[0.4em] border-2 border-[#d4af37] px-8 md:px-10 py-3 md:py-4 text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-lg shadow-[#d4af37]/10"
                     >
                       View Gallery
                     </Link>
                   </div>
                 </div>
               ) : (
-                <div className={`max-w-7xl mx-auto px-6 flex flex-col ${index % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center text-center md:text-left gap-12 md:gap-20 py-12`}>
+                <div className={`max-w-7xl mx-auto px-6 flex flex-col ${index % 2 !== 0 ? 'md:flex-row-reverse' : 'md:flex-row'} items-center text-center md:text-left gap-12 md:gap-16 py-12`}>
                   <div className="flex-1 flex flex-col items-center md:items-start justify-center space-y-4">
                     <span className="text-[11px] tracking-[0.6em] uppercase text-[#d4af37] font-bold">
-                      0{index + 1} — Collection
+                      0{index + 1} — Selection
                     </span>
                     <h2 className="text-3xl md:text-6xl font-light tracking-tighter leading-none text-zinc-100">
                       {section.title}
@@ -750,10 +751,10 @@ function Home() {
                       ))}
                     </div>
                     
-                    <div className="mt-10 w-full text-center md:text-left flex justify-center md:justify-start">
+                    <div className="mt-8 w-full text-center md:text-left flex justify-center md:justify-start">
                       <Link 
                         to={`/gallery/${generateSlug(section.title)}`}
-                        className="text-[11px] md:text-[12px] font-bold uppercase tracking-[0.4em] border-2 border-[#d4af37] px-9 py-4 text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-lg shadow-[#d4af37]/10"
+                        className="text-[11px] md:text-[12px] font-bold uppercase tracking-[0.4em] border-2 border-[#d4af37] px-8 py-3 text-[#d4af37] hover:bg-[#d4af37] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-lg shadow-[#d4af37]/10"
                       >
                         View Gallery
                       </Link>
