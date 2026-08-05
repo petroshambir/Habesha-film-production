@@ -1180,8 +1180,6 @@
 // }
 
 // export default Home;
-
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
@@ -1470,7 +1468,7 @@ function Home() {
                     </p>
                   </div>
 
-                  {/* 2 ስእሊ ጎኒ ንጎን ዝኾኑሉ ክፍሊ (Pairs) */}
+                  {/* 2 ስእሊ ጎኒ ንጎን (ኣብ ሞባይልን ዴስክቶፕን ብሓባር ጎኒ ንጎን ኪኾኑ grid-cols-2 ተዋሂብዎ ኣሎ) */}
                   <div className="space-y-12">
                     {Array.isArray(section.images) && (() => {
                       const pairs = [];
@@ -1478,25 +1476,26 @@ function Home() {
                         pairs.push(section.images.slice(i, i + 2));
                       }
                       return pairs.map((pair, pairIdx) => (
-                        <div key={pairIdx} className="p-4 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/40 shadow-xl space-y-6">
-                          {/* ክልተ ስእስታት ጎኒ ንጎን */}
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                        <div key={pairIdx} className="p-3 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/40 shadow-xl space-y-6">
+                          
+                          <div className="grid grid-cols-2 gap-3 sm:gap-6">
                             {pair.map((img, imgIdx) => {
                               const absoluteIdx = (pairIdx * 2) + imgIdx;
                               return (
-                                <div key={imgIdx} className="space-y-3">
-                                  <div className="w-full aspect-[4/3] rounded-xl overflow-hidden border border-[#dfb557]/50 shadow-md bg-zinc-900">
+                                <div key={imgIdx} className="space-y-2 sm:space-y-3 flex flex-col justify-between">
+                                  <div className="w-full aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden border border-[#dfb557]/50 shadow-md bg-zinc-900">
                                     <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                                   </div>
+                                  
                                   {/* ጽሑፍን ኣርእስተን ኣብ ትሕቲ ስእሊ */}
-                                  <div className="text-center space-y-1 px-2">
-                                    <span className="text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
+                                  <div className="text-center space-y-1 px-1">
+                                    <span className="text-[8px] sm:text-[10px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
                                       Moment 0{absoluteIdx + 1}
                                     </span>
-                                    <h4 className="text-base sm:text-lg font-serif text-zinc-100">
+                                    <h4 className="text-xs sm:text-lg font-serif text-zinc-100 line-clamp-1">
                                       {customHeadings[absoluteIdx] || `Precious Moment ${absoluteIdx + 1}`}
                                     </h4>
-                                    <p className="text-xs text-zinc-300 font-light leading-relaxed">
+                                    <p className="text-[10px] sm:text-xs text-zinc-300 font-light leading-relaxed line-clamp-3">
                                       {customDescriptions[absoluteIdx] || `Celebrating the joy and warmth of this special bridal shower journey.`}
                                     </p>
                                   </div>
