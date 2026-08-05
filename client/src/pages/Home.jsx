@@ -550,7 +550,7 @@ function Home() {
                   {/* 2. መጀመርታ 4 ሰርክል ስእልታት (First 4 Circle Images - Combined in One Container with Single Golden Border) */}
                   {Array.isArray(section.images) && section.images.length > 1 && (
                     <div className="max-w-4xl mx-auto px-4 relative">
-                      <div className="space-y-8 sm:space-y-12">
+                      <div className="space-y-6 sm:space-y-12">
                         {section.images.slice(1, 5).map((img, i) => {
                           const actualIdx = i + 1;
                           const isEven = i % 2 === 0;
@@ -558,25 +558,25 @@ function Home() {
                           return (
                             <div 
                               key={i} 
-                              className={`flex items-center justify-between gap-3 sm:gap-6 p-4 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/50 shadow-2xl ${isEven ? 'flex-row-reverse text-right sm:text-left' : 'flex-row text-left sm:text-right'}`}
+                              className={`flex items-center justify-between gap-3 sm:gap-6 p-3.5 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/50 shadow-2xl ${isEven ? 'flex-row-reverse text-right sm:text-left' : 'flex-row text-left sm:text-right'}`}
                             >
                               
                               {/* ጽሑፍ ክፍሊ */}
-                              <div className={`flex-1 ${isEven ? 'sm:text-left text-right' : 'sm:text-right text-left'} space-y-1.5`}>
+                              <div className={`flex-1 ${isEven ? 'sm:text-left text-right' : 'sm:text-right text-left'} space-y-1`}>
                                 <span className="text-[8px] sm:text-[10px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
                                   Chapter 0{actualIdx}
                                 </span>
-                                <h4 className="text-sm sm:text-2xl font-serif text-zinc-100">
+                                <h4 className="text-xs sm:text-2xl font-serif text-zinc-100">
                                   {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
                                 </h4>
-                                <p className="text-[10px] sm:text-sm text-zinc-300 font-light leading-relaxed">
+                                <p className="text-[9px] sm:text-sm text-zinc-300 font-light leading-relaxed">
                                   {customDescriptions[actualIdx] || defaultDescriptions[actualIdx]}
                                 </p>
                               </div>
 
-                              {/* ዓባይ ሰርክል ስእሊ */}
+                              {/* ዓባይ ሰርክል ስእሊ (ምሉእ ብምሉእ ኣብ ሞባይል ከይግጀፍ ብግቡእ ተስተኻኺሉ) */}
                               <div className="relative flex-shrink-0 flex justify-center">
-                                <div className="w-24 h-24 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 sm:border-4 border-[#dfb557] shadow-xl bg-zinc-900 hover:scale-105 transition-transform duration-500 flex-shrink-0">
+                                <div className="w-20 h-20 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 sm:border-4 border-[#dfb557] shadow-xl bg-zinc-900 hover:scale-105 transition-transform duration-500 flex-shrink-0">
                                   <img src={img} alt={section.title} className="w-full h-full object-cover" />
                                 </div>
                               </div>
@@ -612,7 +612,7 @@ function Home() {
                   {/* 4. ካልኣይቲ ግዜ 4 ሰርክል ስእልታት (Next 4 Circle Images - Combined in One Container with Single Golden Border) */}
                   {Array.isArray(section.images) && section.images.length > 6 && (
                     <div className="max-w-4xl mx-auto px-4 relative pt-4">
-                      <div className="space-y-8 sm:space-y-12">
+                      <div className="space-y-6 sm:space-y-12">
                         {section.images.slice(6, 10).map((img, i) => {
                           const actualIdx = i + 6;
                           const isEven = i % 2 === 0;
@@ -620,25 +620,25 @@ function Home() {
                           return (
                             <div 
                               key={i} 
-                              className={`flex items-center justify-between gap-3 sm:gap-6 p-4 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/50 shadow-2xl ${isEven ? 'flex-row-reverse text-right sm:text-left' : 'flex-row text-left sm:text-right'}`}
+                              className={`flex items-center justify-between gap-3 sm:gap-6 p-3.5 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/50 shadow-2xl ${isEven ? 'flex-row-reverse text-right sm:text-left' : 'flex-row text-left sm:text-right'}`}
                             >
                               
                               {/* ጽሑፍ ክፍሊ */}
-                              <div className={`flex-1 ${isEven ? 'sm:text-left text-right' : 'sm:text-right text-left'} space-y-1.5`}>
+                              <div className={`flex-1 ${isEven ? 'sm:text-left text-right' : 'sm:text-right text-left'} space-y-1`}>
                                 <span className="text-[8px] sm:text-[10px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
                                   Chapter 0{actualIdx}
                                 </span>
-                                <h4 className="text-sm sm:text-2xl font-serif text-zinc-100">
+                                <h4 className="text-xs sm:text-2xl font-serif text-zinc-100">
                                   {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
                                 </h4>
-                                <p className="text-[10px] sm:text-sm text-zinc-300 font-light leading-relaxed">
+                                <p className="text-[9px] sm:text-sm text-zinc-300 font-light leading-relaxed">
                                   {customDescriptions[actualIdx] || defaultDescriptions[actualIdx]}
                                 </p>
                               </div>
 
-                              {/* ዓባይ ሰርክል ስእሊ */}
+                              {/* ዓባይ ሰርክል ስእሊ (ምሉእ ብምሉእ ኣብ ሞባይል ከይግጀፍ ብግቡእ ተስተኻኺሉ) */}
                               <div className="relative flex-shrink-0 flex justify-center">
-                                <div className="w-24 h-24 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 sm:border-4 border-[#dfb557] shadow-xl bg-zinc-900 hover:scale-105 transition-transform duration-500 flex-shrink-0">
+                                <div className="w-20 h-20 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 sm:border-4 border-[#dfb557] shadow-xl bg-zinc-900 hover:scale-105 transition-transform duration-500 flex-shrink-0">
                                   <img src={img} alt={section.title} className="w-full h-full object-cover" />
                                 </div>
                               </div>
