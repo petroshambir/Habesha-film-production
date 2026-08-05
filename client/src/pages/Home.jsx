@@ -385,6 +385,8 @@
 
 // export default Home;
 
+
+
 // import React, { useState, useEffect } from 'react';
 // import { Link } from 'react-router-dom';
 // import Hero from '../components/Hero';
@@ -524,7 +526,6 @@
 //                 </div>
 //               )}
 
-//               {/* 1. WEDDING / BRIDAL LAYOUT (ጎኒ ጎኒ ሰርክል ስእልታት ብሓደ ወርቃማ ቦርደር) */}
 //               {isWedding ? (
 //                 <div className="w-full space-y-10 md:space-y-16">
                   
@@ -658,7 +659,6 @@
 //                   </div>
 //                 </div>
 
-//               /* 2. BABY SHOWER LAYOUT (ኣርባዕተ መኣዚን ዚግዛግ ዲዛይንን) */
 //               ) : isBabyShower ? (
 //                 <div className="w-full max-w-4xl mx-auto px-4 space-y-8">
 //                   <div className="text-center space-y-2 mb-8">
@@ -713,7 +713,6 @@
 //                   </div>
 //                 </div>
 
-//               /* 3. ካልኦት ሓፈሻዊ ፕሮጀክትታት (Default Layout) */
 //               ) : (
 //                 <div className="max-w-4xl mx-auto px-4 flex flex-col items-center text-center space-y-6 py-6">
 //                   <span className="text-[10px] tracking-[0.5em] uppercase text-[#dfb557] font-bold">
@@ -832,7 +831,8 @@ function Home() {
       <section className="py-12 md:py-24 w-full">
         {sections.map((section, index) => {
           const titleLower = section.title ? section.title.toLowerCase() : '';
-          const isWedding = titleLower.includes('wedding') || titleLower.includes('bridal');
+          const isWedding = titleLower.includes('wedding');
+          const isBridalShower = titleLower.includes('bridal') || titleLower.includes('bridal shower');
           const isBabyShower = titleLower.includes('baby') || titleLower.includes('shower');
 
           const defaultDescriptions = [
@@ -1024,6 +1024,60 @@ function Home() {
                     <Link 
                       to={`/gallery/${generateSlug(section.title)}`}
                       className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3.5 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-lg"
+                    >
+                      View Full Gallery
+                    </Link>
+                  </div>
+                </div>
+
+              ) : isBridalShower ? (
+                <div className="w-full max-w-4xl mx-auto px-4 space-y-8">
+                  <div className="text-center space-y-2 mb-8">
+                    <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block">
+                      Bridal Shower Celebration
+                    </span>
+                    <h2 className="text-3xl sm:text-4xl font-serif text-zinc-100">
+                      {section.title}
+                    </h2>
+                    <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto"></div>
+                    <p className="text-sm text-zinc-400 font-light max-w-md mx-auto">
+                      {section.desc || section.description}
+                    </p>
+                  </div>
+
+                  <div className="space-y-6 sm:space-y-10">
+                    {Array.isArray(section.images) && section.images.map((img, i) => {
+                      const isEven = i % 2 === 0;
+
+                      return (
+                        <div 
+                          key={i} 
+                          className={`flex flex-col sm:flex-row items-center gap-4 sm:gap-8 p-4 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/40 shadow-xl ${isEven ? 'sm:flex-row' : 'sm:flex-row-reverse'}`}
+                        >
+                          <div className="w-full sm:w-1/2 aspect-[4/3] rounded-xl overflow-hidden border border-[#dfb557]/50 shadow-md bg-zinc-900 flex-shrink-0">
+                            <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                          </div>
+
+                          <div className="w-full sm:w-1/2 space-y-2 text-center sm:text-left">
+                            <span className="text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
+                              Moment 0{i + 1}
+                            </span>
+                            <h4 className="text-lg sm:text-xl font-serif text-zinc-100">
+                              {customHeadings[i] || `Precious Moment ${i + 1}`}
+                            </h4>
+                            <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
+                              {customDescriptions[i] || `Celebrating the joy and warmth of this special bridal shower journey.`}
+                            </p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  <div className="text-center pt-6">
+                    <Link 
+                      to={`/gallery/${generateSlug(section.title)}`}
+                      className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md"
                     >
                       View Full Gallery
                     </Link>
