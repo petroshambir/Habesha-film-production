@@ -385,7 +385,6 @@
 
 // export default Home;
 
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
@@ -559,8 +558,8 @@ function Home() {
                           return (
                             <div key={i} className={`flex flex-col sm:flex-row items-center gap-6 sm:gap-10 ${isEven ? 'sm:flex-row-reverse' : ''}`}>
                               
-                              {/* ጽሑፍ ክፍሊ ብጎልደን ቦርደር (Golden Border Text Box) */}
-                              <div className={`flex-1 text-center ${isEven ? 'sm:text-left' : 'sm:text-right'} p-5 rounded-2xl bg-zinc-950/60 border border-[#dfb557]/40 shadow-xl space-y-2`}>
+                              {/* ጽሑፍ ክፍሊ ብጎልደን ቦርደር (Golden Border Text Box) - ኣብ ሞባይል ዝግዛግ ክኾን ተባሂሉ ተስተኻኺሉ */}
+                              <div className={`flex-1 text-center ${isEven ? 'sm:text-left' : 'sm:text-right'} p-5 rounded-2xl bg-zinc-950/60 border border-[#dfb557]/40 shadow-xl space-y-2 w-full`}>
                                 <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-bold block">
                                   Chapter 0{actualIdx}
                                 </span>
@@ -572,9 +571,9 @@ function Home() {
                                 </p>
                               </div>
 
-                              {/* ዓባይ ሰርክል ስእሊ ብጎልደን ቦርደር (Larger Circle Image with Golden Border) */}
-                              <div className="relative flex-shrink-0">
-                                <div className="w-44 h-44 sm:w-52 sm:h-52 rounded-full overflow-hidden border-4 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500">
+                              {/* ዓባይ ሰርክል ስእሊ ብጎልደን ቦርደር (Larger Circle Image with Golden Border) - ኣብ ሞባይል ዝግዛግ ክኾን ተባሂሉ ተስተኻኺሉ */}
+                              <div className="relative flex-shrink-0 w-auto flex justify-center">
+                                <div className="w-40 h-40 sm:w-52 sm:h-52 rounded-full overflow-hidden border-4 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500">
                                   <img src={img} alt={section.title} className="w-full h-full object-cover" />
                                 </div>
                               </div>
@@ -619,7 +618,7 @@ function Home() {
                             <div key={i} className={`flex flex-col sm:flex-row items-center gap-6 sm:gap-10 ${isEven ? 'sm:flex-row-reverse' : ''}`}>
                               
                               {/* ጽሑፍ ክፍሊ ብጎልደን ቦርደር */}
-                              <div className={`flex-1 text-center ${isEven ? 'sm:text-left' : 'sm:text-right'} p-5 rounded-2xl bg-zinc-950/60 border border-[#dfb557]/40 shadow-xl space-y-2`}>
+                              <div className={`flex-1 text-center ${isEven ? 'sm:text-left' : 'sm:text-right'} p-5 rounded-2xl bg-zinc-950/60 border border-[#dfb557]/40 shadow-xl space-y-2 w-full`}>
                                 <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-bold block">
                                   Chapter 0{actualIdx}
                                 </span>
@@ -632,8 +631,8 @@ function Home() {
                               </div>
 
                               {/* ዓባይ ሰርክል ስእሊ ብጎልደን ቦርደር */}
-                              <div className="relative flex-shrink-0">
-                                <div className="w-44 h-44 sm:w-52 sm:h-52 rounded-full overflow-hidden border-4 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500">
+                              <div className="relative flex-shrink-0 w-auto flex justify-center">
+                                <div className="w-40 h-40 sm:w-52 sm:h-52 rounded-full overflow-hidden border-4 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500">
                                   <img src={img} alt={section.title} className="w-full h-full object-cover" />
                                 </div>
                               </div>
@@ -676,40 +675,4 @@ function Home() {
                   <span className="text-[10px] tracking-[0.5em] uppercase text-[#dfb557] font-bold">
                     Curated Project
                   </span>
-                  <h2 className="text-3xl sm:text-4xl font-light tracking-tight text-zinc-100">
-                    {section.title}
-                  </h2>
-                  <p className="text-sm md:text-base leading-relaxed text-zinc-400 max-w-lg font-light">
-                    {section.desc || section.description}
-                  </p>
-
-                  <div className="grid grid-cols-2 gap-4 w-full pt-4 max-w-2xl">
-                    {Array.isArray(section.images) && section.images.slice(0, 2).map((img, i) => (
-                      <div key={i} className="aspect-[3/4] overflow-hidden bg-zinc-900 border border-[#dfb557]/40 rounded-xl shadow-lg">
-                        <img src={img} alt={section.title} className="w-full h-full object-cover" />
-                      </div>
-                    ))}
-                  </div>
-                  
-                  <div className="pt-4">
-                    <Link 
-                      to={`/gallery/${generateSlug(section.title)}`}
-                      className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md"
-                    >
-                      Explore Project
-                    </Link>
-                  </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </section>
-
-      <Lightbox open={open} close={() => setOpen(false)} slides={currentImages} />
-      <Footer />
-    </div>
-  );
-}
-
-export default Home;
+                  <h2 className="text-3xl sm:text-4xl font-light tracking-tight text-
