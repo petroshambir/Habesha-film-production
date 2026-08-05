@@ -385,6 +385,7 @@
 
 // export default Home;
 
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
@@ -526,7 +527,7 @@ function Home() {
               {isWedding ? (
                 <div className="w-full space-y-12 md:space-y-20">
                   
-                  {/* 1. ናይ መጀመርታ ዓባይ ስእሊ (Hero Initial Banner Image) */}
+                  {/* 1. ናይ መጀመርታ ዓባይ ስእሊ (Hero Initial Banner Image with Golden Border) */}
                   {Array.isArray(section.images) && section.images[0] && (
                     <div className="w-full max-w-4xl mx-auto px-4">
                       <div className="text-center max-w-lg mx-auto mb-6">
@@ -537,7 +538,7 @@ function Home() {
                           {customDescriptions[0] || defaultDescriptions[0]}
                         </p>
                       </div>
-                      <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border border-zinc-800 relative">
+                      <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border-2 border-[#dfb557]/40 relative">
                         <img 
                           src={section.images[0]} 
                           alt={section.title} 
@@ -547,38 +548,37 @@ function Home() {
                     </div>
                   )}
 
-                  {/* 2. ቀዳሞት 4 ሰርክል ስእልታት (First 4 Circle Images with borders and descriptions) */}
+                  {/* 2. መጀመርታ 4 ሰርክል ስእልታት (First 4 Circle Images with Zigzag Layout & Golden Border Box for Texts) */}
                   {Array.isArray(section.images) && section.images.length > 1 && (
-                    <div className="max-w-3xl mx-auto px-4 relative">
-                      <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-[#dfb557]/30 transform -translate-x-1/2 hidden sm:block"></div>
-
-                      <div className="space-y-14 sm:space-y-20">
+                    <div className="max-w-4xl mx-auto px-4 relative">
+                      <div className="space-y-12 sm:space-y-16">
                         {section.images.slice(1, 5).map((img, i) => {
                           const actualIdx = i + 1;
-                          const isEven = i % 2 === 0;
+                          const isEven = i % 2 === 0; // ዚግዛግ ንምግባር (የማን / ጸጋም)
 
                           return (
                             <div key={i} className={`flex flex-col sm:flex-row items-center gap-6 sm:gap-10 ${isEven ? 'sm:flex-row-reverse' : ''}`}>
                               
-                              <div className={`flex-1 text-center ${isEven ? 'sm:text-left' : 'sm:text-right'} space-y-2 px-2`}>
+                              {/* ጽሑፍ ክፍሊ ብጎልደን ቦርደር (Golden Border Text Box) */}
+                              <div className={`flex-1 text-center ${isEven ? 'sm:text-left' : 'sm:text-right'} p-5 rounded-2xl bg-zinc-950/60 border border-[#dfb557]/40 shadow-xl space-y-2`}>
                                 <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-bold block">
                                   Chapter 0{actualIdx}
                                 </span>
                                 <h4 className="text-xl sm:text-2xl font-serif text-zinc-100">
                                   {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
                                 </h4>
-                                <p className="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
+                                <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
                                   {customDescriptions[actualIdx] || defaultDescriptions[actualIdx]}
                                 </p>
                               </div>
 
+                              {/* ዓባይ ሰርክል ስእሊ ብጎልደን ቦርደር (Larger Circle Image with Golden Border) */}
                               <div className="relative flex-shrink-0">
-                                <div className="w-44 h-44 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500">
+                                <div className="w-44 h-44 sm:w-52 sm:h-52 rounded-full overflow-hidden border-4 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500">
                                   <img src={img} alt={section.title} className="w-full h-full object-cover" />
                                 </div>
                               </div>
 
-                              <div className="flex-1 hidden sm:block"></div>
                             </div>
                           );
                         })}
@@ -586,7 +586,7 @@ function Home() {
                     </div>
                   )}
 
-                  {/* 3. ኣብ ማእከል እትኣቱ ካልኣይቲ ዓባይ/ሰፊሕ ስእሊ (Middle Banner Image) */}
+                  {/* 3. ኣብ ማእከል እትኣቱ ካልኣይቲ ዓባይ ስእሊ (Middle Banner Image with Golden Border) */}
                   {Array.isArray(section.images) && section.images[5] && (
                     <div className="w-full max-w-4xl mx-auto px-4 pt-6">
                       <div className="text-center max-w-lg mx-auto mb-6">
@@ -597,7 +597,7 @@ function Home() {
                           {customDescriptions[5] || defaultDescriptions[5]}
                         </p>
                       </div>
-                      <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border border-zinc-800 relative">
+                      <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border-2 border-[#dfb557]/40 relative">
                         <img 
                           src={section.images[5]} 
                           alt={section.title} 
@@ -607,12 +607,10 @@ function Home() {
                     </div>
                   )}
 
-                  {/* 4. ካልኣይቲ ግዜ 4 ሰርክል ስእልታት (Next 4 Circle Images) */}
+                  {/* 4. ካልኣይቲ ግዜ 4 ሰርክል ስእልታት (Next 4 Circle Images with Zigzag & Golden Borders) */}
                   {Array.isArray(section.images) && section.images.length > 6 && (
-                    <div className="max-w-3xl mx-auto px-4 relative pt-6">
-                      <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-[#dfb557]/30 transform -translate-x-1/2 hidden sm:block"></div>
-
-                      <div className="space-y-14 sm:space-y-20">
+                    <div className="max-w-4xl mx-auto px-4 relative pt-6">
+                      <div className="space-y-12 sm:space-y-16">
                         {section.images.slice(6, 10).map((img, i) => {
                           const actualIdx = i + 6;
                           const isEven = i % 2 === 0;
@@ -620,25 +618,26 @@ function Home() {
                           return (
                             <div key={i} className={`flex flex-col sm:flex-row items-center gap-6 sm:gap-10 ${isEven ? 'sm:flex-row-reverse' : ''}`}>
                               
-                              <div className={`flex-1 text-center ${isEven ? 'sm:text-left' : 'sm:text-right'} space-y-2 px-2`}>
+                              {/* ጽሑፍ ክፍሊ ብጎልደን ቦርደር */}
+                              <div className={`flex-1 text-center ${isEven ? 'sm:text-left' : 'sm:text-right'} p-5 rounded-2xl bg-zinc-950/60 border border-[#dfb557]/40 shadow-xl space-y-2`}>
                                 <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-bold block">
                                   Chapter 0{actualIdx}
                                 </span>
                                 <h4 className="text-xl sm:text-2xl font-serif text-zinc-100">
                                   {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
                                 </h4>
-                                <p className="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
+                                <p className="text-xs sm:text-sm text-zinc-300 font-light leading-relaxed">
                                   {customDescriptions[actualIdx] || defaultDescriptions[actualIdx]}
                                 </p>
                               </div>
 
+                              {/* ዓባይ ሰርክል ስእሊ ብጎልደን ቦርደር */}
                               <div className="relative flex-shrink-0">
-                                <div className="w-44 h-44 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500">
+                                <div className="w-44 h-44 sm:w-52 sm:h-52 rounded-full overflow-hidden border-4 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500">
                                   <img src={img} alt={section.title} className="w-full h-full object-cover" />
                                 </div>
                               </div>
 
-                              <div className="flex-1 hidden sm:block"></div>
                             </div>
                           );
                         })}
@@ -646,7 +645,7 @@ function Home() {
                     </div>
                   )}
 
-                  {/* 5. ናይ መወዳእታ ገርዲ (Gallery Grid Collection) */}
+                  {/* 5. ናይ መወዳእታ ገርዲ (Gallery Grid Collection with Golden Borders) */}
                   {Array.isArray(section.images) && section.images.length > 10 && (
                     <div className="max-w-4xl mx-auto px-4 pt-12">
                       <div className="text-center mb-6">
@@ -655,7 +654,7 @@ function Home() {
                       </div>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                         {section.images.slice(10, 16).map((img, i) => (
-                          <div key={i} className="aspect-square overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800 shadow-lg">
+                          <div key={i} className="aspect-square overflow-hidden rounded-xl bg-zinc-900 border border-[#dfb557]/40 shadow-lg">
                             <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                           </div>
                         ))}
@@ -666,7 +665,7 @@ function Home() {
                   <div className="text-center pt-8 px-4">
                     <Link 
                       to={`/gallery/${generateSlug(section.title)}`}
-                      className="text-[11px] font-bold uppercase tracking-[0.3em] border border-[#dfb557] px-8 py-3.5 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-lg"
+                      className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3.5 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-lg"
                     >
                       View Full Gallery
                     </Link>
@@ -686,7 +685,7 @@ function Home() {
 
                   <div className="grid grid-cols-2 gap-4 w-full pt-4 max-w-2xl">
                     {Array.isArray(section.images) && section.images.slice(0, 2).map((img, i) => (
-                      <div key={i} className="aspect-[3/4] overflow-hidden bg-zinc-900 border border-zinc-800 rounded-xl shadow-lg">
+                      <div key={i} className="aspect-[3/4] overflow-hidden bg-zinc-900 border border-[#dfb557]/40 rounded-xl shadow-lg">
                         <img src={img} alt={section.title} className="w-full h-full object-cover" />
                       </div>
                     ))}
@@ -695,7 +694,7 @@ function Home() {
                   <div className="pt-4">
                     <Link 
                       to={`/gallery/${generateSlug(section.title)}`}
-                      className="text-[11px] font-bold uppercase tracking-[0.3em] border border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-lg shadow-md"
+                      className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md"
                     >
                       Explore Project
                     </Link>
