@@ -511,7 +511,7 @@ function Home() {
               {section.names && (
                 <div className="mb-10 md:mb-16 text-center px-4">
                   <span className="text-[9px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
-                    Love Story Timeline
+                    Love Story & Timeline
                   </span>
                   <h3 className="text-3xl sm:text-4xl md:text-6xl font-serif italic text-zinc-100 tracking-wide font-light">
                     {section.names}
@@ -547,21 +547,19 @@ function Home() {
                     </div>
                   )}
 
-                  {/* 2. በብ 4 ሰርክል እናተሓሓዘ ዝኸይድ ታይምላይን (4-Circle Timeline System with Larger Mobile Circles) */}
+                  {/* 2. ቀዳሞት 4 ሰርክል ስእልታት (First 4 Circle Images with borders and descriptions) */}
                   {Array.isArray(section.images) && section.images.length > 1 && (
                     <div className="max-w-3xl mx-auto px-4 relative">
-                      {/* ማእከላይ ቀጥታዊ መስመር (Vertical Timeline Line) */}
                       <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-[#dfb557]/30 transform -translate-x-1/2 hidden sm:block"></div>
 
                       <div className="space-y-14 sm:space-y-20">
-                        {section.images.slice(1, 13).map((img, i) => {
+                        {section.images.slice(1, 5).map((img, i) => {
                           const actualIdx = i + 1;
                           const isEven = i % 2 === 0;
 
                           return (
                             <div key={i} className={`flex flex-col sm:flex-row items-center gap-6 sm:gap-10 ${isEven ? 'sm:flex-row-reverse' : ''}`}>
                               
-                              {/* ጽሑፍ ክፍሊ */}
                               <div className={`flex-1 text-center ${isEven ? 'sm:text-left' : 'sm:text-right'} space-y-2 px-2`}>
                                 <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-bold block">
                                   Chapter 0{actualIdx}
@@ -574,7 +572,6 @@ function Home() {
                                 </p>
                               </div>
 
-                              {/* ዓባይ ሰርክል ስእሊ (Larger Circle Image for Mobile & Desktop) */}
                               <div className="relative flex-shrink-0">
                                 <div className="w-44 h-44 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500">
                                   <img src={img} alt={section.title} className="w-full h-full object-cover" />
@@ -589,15 +586,75 @@ function Home() {
                     </div>
                   )}
 
-                  {/* 3. ናይ መወዳእታ ገርዲ (Gallery Grid Collection) */}
-                  {Array.isArray(section.images) && section.images.length > 13 && (
+                  {/* 3. ኣብ ማእከል እትኣቱ ካልኣይቲ ዓባይ/ሰፊሕ ስእሊ (Middle Banner Image) */}
+                  {Array.isArray(section.images) && section.images[5] && (
+                    <div className="w-full max-w-4xl mx-auto px-4 pt-6">
+                      <div className="text-center max-w-lg mx-auto mb-6">
+                        <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-1">
+                          {customHeadings[5] || defaultHeadings[5]}
+                        </span>
+                        <p className="text-sm md:text-base text-zinc-300 font-light">
+                          {customDescriptions[5] || defaultDescriptions[5]}
+                        </p>
+                      </div>
+                      <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border border-zinc-800 relative">
+                        <img 
+                          src={section.images[5]} 
+                          alt={section.title} 
+                          className="w-full h-full object-cover" 
+                        />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 4. ካልኣይቲ ግዜ 4 ሰርክል ስእልታት (Next 4 Circle Images) */}
+                  {Array.isArray(section.images) && section.images.length > 6 && (
+                    <div className="max-w-3xl mx-auto px-4 relative pt-6">
+                      <div className="absolute left-1/2 top-0 bottom-0 w-[1px] bg-[#dfb557]/30 transform -translate-x-1/2 hidden sm:block"></div>
+
+                      <div className="space-y-14 sm:space-y-20">
+                        {section.images.slice(6, 10).map((img, i) => {
+                          const actualIdx = i + 6;
+                          const isEven = i % 2 === 0;
+
+                          return (
+                            <div key={i} className={`flex flex-col sm:flex-row items-center gap-6 sm:gap-10 ${isEven ? 'sm:flex-row-reverse' : ''}`}>
+                              
+                              <div className={`flex-1 text-center ${isEven ? 'sm:text-left' : 'sm:text-right'} space-y-2 px-2`}>
+                                <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-bold block">
+                                  Chapter 0{actualIdx}
+                                </span>
+                                <h4 className="text-xl sm:text-2xl font-serif text-zinc-100">
+                                  {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
+                                </h4>
+                                <p className="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
+                                  {customDescriptions[actualIdx] || defaultDescriptions[actualIdx]}
+                                </p>
+                              </div>
+
+                              <div className="relative flex-shrink-0">
+                                <div className="w-44 h-44 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 border-[#dfb557] shadow-2xl bg-zinc-900 hover:scale-105 transition-transform duration-500">
+                                  <img src={img} alt={section.title} className="w-full h-full object-cover" />
+                                </div>
+                              </div>
+
+                              <div className="flex-1 hidden sm:block"></div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 5. ናይ መወዳእታ ገርዲ (Gallery Grid Collection) */}
+                  {Array.isArray(section.images) && section.images.length > 10 && (
                     <div className="max-w-4xl mx-auto px-4 pt-12">
                       <div className="text-center mb-6">
                         <h3 className="text-2xl font-serif text-zinc-100 uppercase tracking-widest">More Memories</h3>
                         <div className="w-8 h-[1px] bg-[#dfb557] mx-auto mt-2"></div>
                       </div>
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-                        {section.images.slice(13, 19).map((img, i) => (
+                        {section.images.slice(10, 16).map((img, i) => (
                           <div key={i} className="aspect-square overflow-hidden rounded-xl bg-zinc-900 border border-zinc-800 shadow-lg">
                             <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                           </div>
