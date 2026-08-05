@@ -452,12 +452,12 @@ function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-[#030305] text-zinc-100 font-sans selection:bg-[#dfb557]/30 selection:text-[#dfb557] overflow-x-hidden">
+    <div className="min-h-screen bg-[#050505] text-zinc-100 font-sans selection:bg-[#dfb557]/30 selection:text-[#dfb557] overflow-x-hidden">
       <Hero videoSrc={heroVideo} buttonText="Explore Our Work" />
 
-      {title && <h1 className="text-center text-3xl md:text-5xl mt-12 text-zinc-100 px-4">{title}</h1>}
+      {title && <h1 className="text-center text-3xl md:text-4xl mt-10 text-zinc-100 px-4">{title}</h1>}
 
-      <section className="py-20 md:py-32 w-full">
+      <section className="py-12 md:py-24 w-full">
         {sections.map((section, index) => {
           const isWedding = section.title && section.title.toLowerCase().includes('wedding');
 
@@ -506,67 +506,65 @@ function Home() {
             : defaultHeadings;
 
           return (
-            <div key={section.id || index} className="mb-32 md:mb-52 w-full border-b border-zinc-900 pb-20 md:pb-40 last:border-b-0">
+            <div key={section.id || index} className="mb-20 md:mb-36 w-full border-b border-zinc-900 pb-16 md:pb-28 last:border-b-0">
               
               {section.names && (
-                <div className="mb-16 md:mb-28 text-center px-6">
-                  <span className="text-[10px] md:text-xs tracking-[0.8em] uppercase text-[#dfb557] font-semibold block mb-3">
-                    Cinematic Portfolio Story
+                <div className="mb-10 md:mb-16 text-center px-4">
+                  <span className="text-[9px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
+                    Love Story & Portfolio
                   </span>
-                  <h3 className="text-4xl sm:text-6xl md:text-8xl font-serif italic text-zinc-100 tracking-wide font-normal">
+                  <h3 className="text-3xl sm:text-4xl md:text-6xl font-serif italic text-zinc-100 tracking-wide font-light">
                     {section.names}
                   </h3>
-                  <div className="w-20 h-[1px] bg-[#dfb557]/60 mx-auto my-6"></div>
-                  <p className="text-[11px] md:text-[13px] uppercase tracking-[0.5em] text-zinc-400 font-light">
+                  <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto my-3"></div>
+                  <p className="text-[10px] md:text-[11px] uppercase tracking-[0.4em] text-zinc-400 font-light">
                     {section.date}
                   </p>
                 </div>
               )}
 
               {isWedding ? (
-                <div className="w-full space-y-24 md:space-y-40">
+                <div className="w-full space-y-12 md:space-y-20">
                   
-                  {/* Hero Full-Screen Cinematic Showcase (Index 0) */}
+                  {/* Hero Banner Style (ክብክብ ከምቲ ኣብ ቪድዮ ዘሎ ሞባይል ቭዩ) */}
                   {Array.isArray(section.images) && section.images[0] && (
-                    <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6">
-                      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-end mb-10">
-                        <div className="lg:col-span-5 space-y-3">
-                          <span className="text-[10px] tracking-[0.6em] uppercase text-[#dfb557] font-bold block">
-                            Chapter I — {customHeadings[0] || defaultHeadings[0]}
-                          </span>
-                          <p className="text-lg md:text-2xl font-serif text-zinc-200 leading-snug font-light">
-                            {customDescriptions[0] || defaultDescriptions[0]}
-                          </p>
-                        </div>
+                    <div className="w-full max-w-4xl mx-auto px-4">
+                      <div className="text-center max-w-lg mx-auto mb-6">
+                        <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-1">
+                          {customHeadings[0] || defaultHeadings[0]}
+                        </span>
+                        <p className="text-sm md:text-base text-zinc-300 font-light">
+                          {customDescriptions[0] || defaultDescriptions[0]}
+                        </p>
                       </div>
-                      <div className="group w-full aspect-[16/9] md:aspect-[21/9] overflow-hidden rounded-3xl shadow-2xl bg-zinc-900 border border-zinc-800/80 relative">
+                      <div className="w-full aspect-[16/9] overflow-hidden rounded-xl shadow-xl bg-zinc-900 border border-zinc-800 relative">
                         <img 
                           src={section.images[0]} 
                           alt={section.title} 
-                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
+                          className="w-full h-full object-cover" 
                         />
                       </div>
                     </div>
                   )}
 
-                  {/* Asymmetrical Multi-Column Grid for Moments 1, 2, 3 */}
+                  {/* Timeline / Vertical List Layout (ብጣዕሚ ንጹር ንሞባይል) */}
                   {Array.isArray(section.images) && section.images.length > 1 && (
-                    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12">
-                      {section.images.slice(1, 4).map((img, i) => {
+                    <div className="max-w-3xl mx-auto px-4 space-y-10">
+                      {section.images.slice(1, 7).map((img, i) => {
                         const actualIdx = i + 1;
                         return (
-                          <div key={i} className="space-y-4 flex flex-col">
-                            <div className="group w-full aspect-[3/4] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border border-zinc-800/80 relative">
-                              <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                          <div key={i} className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-4 sm:p-6 flex flex-col sm:flex-row items-center gap-6 shadow-lg">
+                            <div className="w-28 h-28 sm:w-36 sm:h-36 flex-shrink-0 rounded-full overflow-hidden border-2 border-[#dfb557]/50 shadow-md">
+                              <img src={img} alt={section.title} className="w-full h-full object-cover" />
                             </div>
-                            <div className="space-y-1.5 pt-2">
-                              <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block">
-                                0{actualIdx + 1}
+                            <div className="text-center sm:text-left space-y-1.5 flex-1">
+                              <span className="text-[9px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
+                                Milestone 0{actualIdx}
                               </span>
-                              <h4 className="text-xl md:text-2xl font-serif text-zinc-100">
+                              <h4 className="text-xl font-serif text-zinc-100">
                                 {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
                               </h4>
-                              <p className="text-xs md:text-sm text-zinc-400 font-light leading-relaxed">
+                              <p className="text-xs sm:text-sm text-zinc-400 font-light leading-relaxed">
                                 {customDescriptions[actualIdx] || defaultDescriptions[actualIdx]}
                               </p>
                             </div>
@@ -576,128 +574,59 @@ function Home() {
                     </div>
                   )}
 
-                  {/* Wide Banner Image (Index 4) */}
-                  {Array.isArray(section.images) && section.images[4] && (
-                    <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 pt-10">
-                      <div className="text-center max-w-2xl mx-auto mb-10 px-4">
-                        <span className="text-[10px] tracking-[0.6em] uppercase text-[#dfb557] font-bold block mb-2">
-                          {customHeadings[4] || defaultHeadings[4]}
-                        </span>
-                        <p className="text-base md:text-xl font-serif text-zinc-200 font-light leading-relaxed">
-                          {customDescriptions[4] || defaultDescriptions[4]}
-                        </p>
+                  {/* Gallery Grid (ልክዕ ከምቲ ኣብ ቪድዮ ዘሎ 3x3 Grid) */}
+                  {Array.isArray(section.images) && section.images.length > 7 && (
+                    <div className="max-w-4xl mx-auto px-4 pt-6">
+                      <div className="text-center mb-6">
+                        <h3 className="text-2xl font-serif text-zinc-100 uppercase tracking-widest">Gallery Collection</h3>
+                        <div className="w-8 h-[1px] bg-[#dfb557] mx-auto mt-2"></div>
                       </div>
-                      <div className="group w-full aspect-[16/9] overflow-hidden rounded-3xl shadow-2xl bg-zinc-900 border border-zinc-800/80 relative">
-                        <img 
-                          src={section.images[4]} 
-                          alt={section.title} 
-                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
-                        />
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Dual Grid Layout for Moments 5, 6, 7, 8 */}
-                  {Array.isArray(section.images) && section.images.length > 5 && (
-                    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
-                      {section.images.slice(5, 9).map((img, i) => {
-                        const actualIdx = i + 5;
-                        return (
-                          <div key={i} className={`space-y-4 ${i % 2 !== 0 ? 'md:mt-24' : ''}`}>
-                            <div className="group w-full aspect-[4/5] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border border-zinc-800/80 relative">
-                              <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-                            </div>
-                            <div className="space-y-1.5 pt-2">
-                              <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block">
-                                Chapter 0{actualIdx + 1}
-                              </span>
-                              <h4 className="text-xl md:text-2xl font-serif text-zinc-100">
-                                {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
-                              </h4>
-                              <p className="text-xs md:text-sm text-zinc-400 font-light leading-relaxed">
-                                {customDescriptions[actualIdx] || defaultDescriptions[actualIdx]}
-                              </p>
-                            </div>
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
+                        {section.images.slice(7, 13).map((img, i) => (
+                          <div key={i} className="aspect-square overflow-hidden rounded-lg bg-zinc-900 border border-zinc-800 shadow-md">
+                            <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                           </div>
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  {/* Full Banner (Index 9) */}
-                  {Array.isArray(section.images) && section.images[9] && (
-                    <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 pt-10">
-                      <div className="group w-full aspect-[21/9] overflow-hidden rounded-3xl shadow-2xl bg-zinc-900 border border-zinc-800/80 relative">
-                        <img 
-                          src={section.images[9]} 
-                          alt={section.title} 
-                          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" 
-                        />
+                        ))}
                       </div>
                     </div>
                   )}
 
-                  {/* Triple Grid for Remaining Images */}
-                  {Array.isArray(section.images) && section.images.length > 10 && (
-                    <div className="max-w-[1400px] mx-auto px-4 sm:px-6 grid grid-cols-1 md:grid-cols-3 gap-8">
-                      {section.images.slice(10, 16).map((img, i) => {
-                        const actualIdx = i + 10;
-                        return (
-                          <div key={i} className="space-y-3">
-                            <div className="group w-full aspect-[4/5] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border border-zinc-800/80 relative">
-                              <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
-                            </div>
-                            <div className="space-y-1 pt-1">
-                              <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block">
-                                0{actualIdx + 1}
-                              </span>
-                              <h4 className="text-lg font-serif text-zinc-100">
-                                {customHeadings[actualIdx] || defaultHeadings[actualIdx]}
-                              </h4>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-
-                  <div className="text-center pt-16 px-6">
+                  <div className="text-center pt-6 px-4">
                     <Link 
                       to={`/gallery/${generateSlug(section.title)}`}
-                      className="text-[11px] md:text-[12px] font-bold uppercase tracking-[0.5em] border-2 border-[#dfb557] px-12 py-4 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-full shadow-2xl shadow-[#dfb557]/15"
+                      className="text-[11px] font-bold uppercase tracking-[0.3em] border border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-lg shadow-md"
                     >
-                      View Full Gallery Collection
+                      View Full Gallery
                     </Link>
                   </div>
                 </div>
               ) : (
-                <div className="max-w-[1400px] mx-auto px-6 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center py-12">
-                  <div className="lg:col-span-5 space-y-6 text-center lg:text-left">
-                    <span className="text-[11px] tracking-[0.6em] uppercase text-[#dfb557] font-bold block">
-                      0{index + 1} — Curated Collection
-                    </span>
-                    <h2 className="text-4xl md:text-6xl font-light tracking-tight leading-none text-zinc-100">
-                      {section.title}
-                    </h2>
-                    <p className="text-base md:text-lg leading-relaxed text-zinc-400 font-light">
-                      {section.desc || section.description}
-                    </p>
-                    <div className="pt-4">
-                      <Link 
-                        to={`/gallery/${generateSlug(section.title)}`}
-                        className="text-[11px] md:text-[12px] font-bold uppercase tracking-[0.4em] border-2 border-[#dfb557] px-10 py-4 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-full shadow-xl"
-                      >
-                        Explore Project
-                      </Link>
-                    </div>
-                  </div>
+                <div className="max-w-4xl mx-auto px-4 flex flex-col items-center text-center space-y-6 py-6">
+                  <span className="text-[10px] tracking-[0.5em] uppercase text-[#dfb557] font-bold">
+                    Curated Project
+                  </span>
+                  <h2 className="text-3xl sm:text-4xl font-light tracking-tight text-zinc-100">
+                    {section.title}
+                  </h2>
+                  <p className="text-sm md:text-base leading-relaxed text-zinc-400 max-w-lg font-light">
+                    {section.desc || section.description}
+                  </p>
 
-                  <div className="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6 w-full">
+                  <div className="grid grid-cols-2 gap-4 w-full pt-4 max-w-2xl">
                     {Array.isArray(section.images) && section.images.slice(0, 2).map((img, i) => (
-                      <div key={i} className={`group aspect-[3/4] overflow-hidden bg-zinc-900 border border-zinc-800/80 rounded-2xl shadow-2xl relative ${i === 1 ? 'sm:mt-20' : ''}`}>
-                        <img src={img} alt={section.title} className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-105" />
+                      <div key={i} className="aspect-[3/4] overflow-hidden bg-zinc-900 border border-zinc-800 rounded-xl shadow-lg">
+                        <img src={img} alt={section.title} className="w-full h-full object-cover" />
                       </div>
                     ))}
+                  </div>
+                  
+                  <div className="pt-4">
+                    <Link 
+                      to={`/gallery/${generateSlug(section.title)}`}
+                      className="text-[11px] font-bold uppercase tracking-[0.3em] border border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-lg shadow-md"
+                    >
+                      Explore Project
+                    </Link>
                   </div>
                 </div>
               )}
