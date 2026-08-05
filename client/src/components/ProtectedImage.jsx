@@ -1,30 +1,29 @@
-import React, { useState } from 'react';
+import React from 'react';
 
 const ProtectedImage = ({ src, alt, className }) => {
-  const [isProtected, setIsProtected] = useState(false);
-
-  // ሰባት ስክሪንሹት ንምግባር ሰለ ዝሓስቡ ወይ ኮፒ ንምግባር ክጽዕሩ ከለዉ ዋተርማርክ ንምርኣይ
-  const handleMouseEnter = () => {
-    // ኣብዚ ንእሽቶ ጸቕጢ ወይ ድማ ኣንጻር ቅዳሕ (Blur) ንምግባር ክለዋወጥ ይኽእል
-  };
-
   return (
     <div 
-      className="relative overflow-hidden group select-none"
-      onContextMenu={(e) => e.preventDefault()} // የማናይ ጸወታ ከልከል
+      className={`relative overflow-hidden select-none group ${className || ''}`}
+      onContextMenu={(e) => e.preventDefault()} // የማናይ ጸወታ (Right-Click) ብጽኑዕ ይኽልክል
+      onDragStart={(e) => e.preventDefault()}    // ብማውስ ሰሒብካ ንምውጻእ ይኽልክል
     >
-      {/* እቲ ዋና ስእሊ */}
-      <img 
-        src={src} 
-        alt={alt || "Protected Image"} 
-        className={`${className} pointer-events-none`} // ብቐጻሊ ብማውስ ድራግ ወይ ሴቭ ንኸይግበር
-        onDragStart={(e) => e.preventDefault()}
+      {/* 1. እቲ ትክክለኛ ምስሊ ብ Background መልክዕ ይቕመጥ (Save ክግበር ከሎ ምስሊ ንኸይወርድ) */}
+      <div 
+        className="absolute inset-0 w-full h-full bg-cover bg-center transition-transform duration-500 group-hover:scale-105 pointer-events-none"
+        style={{ backgroundImage: `url(${src})` }}
       />
 
-      {/* ዋተርማርክ - ስክሪንሹት ወይ መጥቃዕቲ ቅዳሕ ምስ ዝህሉ ጥራይ ብግልጽ ንምውጻእ 
-          ብ CSS print / screenshot detection ወይ ድማ ብማውስ Hover ግዜ ክረአ እንተደሊኻ ክዕረ ይኽእል */}
-      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-10 transition-opacity duration-300 pointer-events-none">
-        <span className="text-white text-lg font-bold tracking-widest rotate-[-30deg] uppercase drop-shadow-md">
+      {/* 2. መከላኸሊ ባዶ ምስሊ (Transparent Image) - ሰባት Save Image ክሉ እዚ ባዶ ባእታ እዩ ዝወርድ */}
+      <img 
+        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" 
+        alt={alt || "Protected Image"} 
+        className="w-full h-full opacity-0 pointer-events-none relative z-10"
+      />
+
+      {/* 3. ዋተርማርክ - ማውስ ናብቲ ስእሊ ኣብ ዝመጸሉ እዋን (Hover) ወይ ድማ ስክሪንሹት ንምውሳድ 
+          ፈተነ ምስ ዝግበር ብግልጺ (opacity-50 ወይ opacity-80) ንርኢሉ ዓቕሚ */}
+      <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-40 transition-opacity duration-300 pointer-events-none z-20">
+        <span className="text-white text-base md:text-2xl font-bold tracking-widest rotate-[-30deg] uppercase drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
           Habesha Film Production
         </span>
       </div>
