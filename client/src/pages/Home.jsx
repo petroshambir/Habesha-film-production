@@ -524,7 +524,7 @@ function Home() {
                 </div>
               )}
 
-              {/* 1. WEDDING / BRIDAL LAYOUT (ጎኒ ጎኒ ሰርክል ስእልታት) */}
+              {/* 1. WEDDING / BRIDAL LAYOUT (ጎኒ ጎኒ ሰርክል ስእልታት ብሓደ ወርቃማ ቦርደር) */}
               {isWedding ? (
                 <div className="w-full space-y-10 md:space-y-16">
                   
@@ -554,7 +554,7 @@ function Home() {
                           return (
                             <div 
                               key={i} 
-                              className={`flex items-center justify-between gap-3 sm:gap-6 p-4 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/50 shadow-2xl ${isEven ? 'flex-row-reverse text-right sm:text-left' : 'flex-row text-left sm:text-right'}`}
+                              className={`flex items-center justify-between gap-4 sm:gap-6 p-4 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/50 shadow-2xl ${isEven ? 'flex-row-reverse text-right sm:text-left' : 'flex-row text-left sm:text-right'}`}
                             >
                               <div className={`flex-1 ${isEven ? 'sm:text-left text-right' : 'sm:text-right text-left'} space-y-1.5`}>
                                 <span className="text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
@@ -606,7 +606,7 @@ function Home() {
                           return (
                             <div 
                               key={i} 
-                              className={`flex items-center justify-between gap-3 sm:gap-6 p-4 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/50 shadow-2xl ${isEven ? 'flex-row-reverse text-right sm:text-left' : 'flex-row text-left sm:text-right'}`}
+                              className={`flex items-center justify-between gap-4 sm:gap-6 p-4 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/50 shadow-2xl ${isEven ? 'flex-row-reverse text-right sm:text-left' : 'flex-row text-left sm:text-right'}`}
                             >
                               <div className={`flex-1 ${isEven ? 'sm:text-left text-right' : 'sm:text-right text-left'} space-y-1.5`}>
                                 <span className="text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
@@ -674,7 +674,6 @@ function Home() {
                     </p>
                   </div>
 
-                  {/* ዚግዛግ ካርድ ዲዛይን (Zigzag Layout with Rectangular/Square Images) */}
                   <div className="space-y-6 sm:space-y-10">
                     {Array.isArray(section.images) && section.images.map((img, i) => {
                       const isEven = i % 2 === 0;
@@ -684,12 +683,10 @@ function Home() {
                           key={i} 
                           className={`flex flex-col sm:flex-row items-center gap-4 sm:gap-8 p-4 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/40 shadow-xl ${isEven ? 'sm:flex-row' : 'sm:flex-row-reverse'}`}
                         >
-                          {/* ኣርባዕተ መኣዚ ዘለዎ ስእሊ (Square/Rectangular Image Box) */}
                           <div className="w-full sm:w-1/2 aspect-[4/3] rounded-xl overflow-hidden border border-[#dfb557]/50 shadow-md bg-zinc-900 flex-shrink-0">
                             <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                           </div>
 
-                          {/* ጽሑፍ ክፍሊ */}
                           <div className="w-full sm:w-1/2 space-y-2 text-center sm:text-left">
                             <span className="text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
                               Moment 0{i + 1}
