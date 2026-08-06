@@ -33,7 +33,6 @@
 
 // export default ProtectedImage;
 
-
 import React from 'react';
 
 const ProtectedImage = ({ src, alt, className }) => {
