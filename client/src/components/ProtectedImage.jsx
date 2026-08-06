@@ -44,7 +44,6 @@
 
 // export default ProtectedImage;
 
-
 import React, { useEffect } from 'react';
 
 const ProtectedImage = ({ src, alt, className }) => {
@@ -72,11 +71,12 @@ const ProtectedImage = ({ src, alt, className }) => {
       onContextMenu={(e) => e.preventDefault()}
       onDragStart={(e) => e.preventDefault()}
     >
-      {/* 1. እቲ ትክክለኛ ምስሊ */}
+      {/* 1. እቲ ትክክለኛ ምስሊ 
+          - ኣብ ሞባይል ሰባት ክትንከፍ (active) ከሎ ምስሊ ብምሉእ ክድብዘዝን ብርሃኑ ክወርድን ተገይሩ ኣሎ (active:blur-md active:opacity-20) */}
       <img 
         src={src} 
         alt={alt || "Protected Image"} 
-        className="w-full h-full object-cover pointer-events-none"
+        className="w-full h-full object-cover pointer-events-none transition-all duration-200 active:blur-md active:opacity-20"
       />
 
       {/* 2. መከላኸሊ ባዶ ምስሊ (Transparent Layer) */}
