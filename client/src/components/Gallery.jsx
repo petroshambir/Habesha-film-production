@@ -464,6 +464,7 @@
 
 // export default Gallery;
 
+
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Lightbox from "yet-another-react-lightbox";
@@ -578,7 +579,7 @@ function Gallery() {
         )}
       </div>
 
-      {/* Lightbox ምስ ProtectedImage ከም ዝጥቀም ተገይሩ ኣሎ */}
+      {/* Lightbox ንምርኢት ስእሊ ብትኽክልን ብምክልኻልን (Protected) ክሰርሕ ተገይሩ ኣሎ */}
       <Lightbox 
         open={open} 
         close={() => setOpen(false)} 
@@ -586,12 +587,16 @@ function Gallery() {
         index={currentIndex}
         render={{
           slide: ({ slide }) => (
-            <div className="relative w-full h-full flex items-center justify-center p-4">
-              <ProtectedImage 
+            <div className="relative w-full h-full flex items-center justify-center p-4 select-none">
+              <img 
                 src={slide.src} 
-                alt="Protected Lightbox Image" 
-                className="max-h-[85vh] max-w-[85vw] object-contain rounded-lg shadow-2xl" 
+                alt="Lightbox Protected" 
+                onContextMenu={(e) => e.preventDefault()}
+                draggable="false"
+                className="max-h-[85vh] max-w-[85vw] object-contain rounded-lg shadow-2xl pointer-events-none" 
               />
+              {/* ንስእሊ ዳውንሎድ ከይግበር ካብ ላዕሊ ንዝሽፍን ከልካሊ */}
+              <div className="absolute inset-0 z-10 bg-transparent"></div>
             </div>
           )
         }}
@@ -599,4 +604,5 @@ function Gallery() {
     </div>
   );
 }
+
 export default Gallery;
