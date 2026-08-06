@@ -44,9 +44,28 @@
 
 // export default ProtectedImage;
 
-import React from 'react';
+
+import React, { useEffect } from 'react';
 
 const ProtectedImage = ({ src, alt, className }) => {
+  // ኣብ ፒሲ ስክሪንሹት ንምሕዛዝ ዝሕግዝ (PrintScreen ወይ Ctrl+Shift+S)
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (
+        e.key === 'PrintScreen' || 
+        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's')
+      ) {
+        e.preventDefault();
+        alert("⚠️ Screenshots are protected on this gallery!");
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
   return (
     <div 
       className={`relative overflow-hidden select-none group ${className || ''}`}
