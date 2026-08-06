@@ -607,6 +607,7 @@
 
 // export default Gallery;
 
+
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Lightbox from "yet-another-react-lightbox";
@@ -694,7 +695,7 @@ function Gallery() {
         </p>
       </div>
 
-      {/* ስእልታት Grid - ብ ProtectedImage ተሸፊኑ ኣሎ */}
+      {/* ስእልታት Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
         {projectData?.images && projectData.images.length > 0 ? (
           projectData.images.map((img, index) => (
@@ -703,6 +704,7 @@ function Gallery() {
               onClick={() => { setCurrentIndex(index); setOpen(true); }}
               className="group aspect-[2/3] overflow-hidden bg-zinc-900 rounded-lg cursor-pointer border border-zinc-800 shadow-lg relative select-none"
             >
+              {/* ንቡር img ብ ProtectedImage ተኪኤዮ ኣለኹ */}
               <ProtectedImage 
                 src={img} 
                 alt={`${projectData.title} ${index + 1}`} 
@@ -720,7 +722,7 @@ function Gallery() {
         )}
       </div>
 
-      {/* Lightbox ምስ ሙሉእ ሓለዋን መከላኸልን (Protected) */}
+      {/* Lightbox ንምርኢት ስእሊ ብትኽክልን ብምክልኻልን (Protected) ክሰርሕ ተገይሩ ኣሎ */}
       <Lightbox 
         open={open} 
         close={() => setOpen(false)} 
@@ -729,13 +731,12 @@ function Gallery() {
         render={{
           slide: ({ slide }) => (
             <div className="relative w-full h-full flex items-center justify-center p-4 select-none">
-              {/* ኣብ ውሽጢ Lightbox ዝርከብ ስእሊ ብ ProtectedImage መልክዕ ተተኪኡ ኣሎ */}
               <ProtectedImage 
                 src={slide.src} 
                 alt="Lightbox Protected" 
                 className="max-h-[85vh] max-w-[85vw] object-contain rounded-lg shadow-2xl pointer-events-none" 
               />
-              {/* ንስእሊ ዳውንሎድ ከይግበር ካብ ላዕሊ ንዝሽፍን ከልካሊ overlay */}
+              {/* ንስእሊ ዳውንሎድ ከይግበር ካብ ላዕሊ ንዝሽፍን ከልካሊ */}
               <div className="absolute inset-0 z-10 bg-transparent pointer-events-auto" onContextMenu={(e) => e.preventDefault()}></div>
             </div>
           )
