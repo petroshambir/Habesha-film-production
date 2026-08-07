@@ -135,7 +135,6 @@
 // };
 
 // export default ProtectedImage;
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -424,11 +423,7 @@ function ClientSelection() {
               </div>
             </div>
 
-            {/* 
-              Grid Layout የተስተካከለበት:
-              - ሞባይል (Mobile): 2 ስእሊ ጎን ንጎን (grid-cols-2) ብዕዙዝ ዝዓበየ ሳይዝ 
-              - ላፕቶፕ (Laptop): 3 ስእሊ ብሰለስተ (lg:grid-cols-3) ብዓቢ ሳይዝ
-            */}
+            {/* Grid Layout: Mobile 2 columns, Laptop 3 columns */}
             <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {project.images && project.images.length > 0 ? (
                 project.images.map((imgUrl, index) => {
@@ -440,7 +435,6 @@ function ClientSelection() {
                       key={index} 
                       onDoubleClick={() => setLightboxImage(displayUrl)}
                       onTouchEnd={(e) => {
-                        // ንሞባይል ዝኸውን Double Tap / Double Click logic
                         const now = new Date().getTime();
                         const lastTouch = e.currentTarget.dataset.lastTouch || 0;
                         if (now - lastTouch < 300) {
@@ -458,14 +452,14 @@ function ClientSelection() {
                         className="w-full h-full object-cover"
                       />
 
-                      {/* ዋተርማርክ (Habesha Pictures Watermark) ኣብ ነፍስወከፍ ስእሊ */}
+                      {/* Habesha Pictures Watermark */}
                       <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-30 select-none z-10">
                         <span className="text-xs sm:text-sm md:text-base font-serif font-bold tracking-wider text-[#dfb557] uppercase transform -rotate-12 px-3 py-1 border border-[#dfb557]/60 rounded-md bg-black/40 backdrop-blur-[1px]">
                           Habesha Pictures
                         </span>
                       </div>
                       
-                      {/* ቲክቦክስ (Checkbox) ንምርጫ ስእሊ */}
+                      {/* Checkbox button */}
                       <div 
                         onClick={(e) => {
                           e.stopPropagation();
@@ -481,7 +475,6 @@ function ClientSelection() {
                         />
                       </div>
 
-                      {/* ክሊክ እንተዘይተደልዩ፡ ኣብ ታሕተዋይ ክፋል ቱቶርያል ሓጺር መዘኻኸሪ (Double click to zoom) */}
                       <div className="absolute bottom-2 left-2 right-2 text-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20">
                         <span className="bg-black/80 text-zinc-300 text-[9px] uppercase tracking-wider px-2 py-1 rounded border border-white/10 backdrop-blur-sm">
                           Double click to enlarge
