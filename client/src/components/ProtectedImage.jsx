@@ -136,7 +136,6 @@
 
 // export default ProtectedImage;
 
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -156,6 +155,9 @@ function ClientSelection() {
   const [enteredPasscode, setEnteredPasscode] = useState('');
   const [passcodeError, setPasscodeError] = useState('');
   const [verifying, setVerifying] = useState(false);
+
+  // ንስእሊ ብዓቢዩ ንምርኣይ (Modal / Lightbox) ዝድለ ስቴት
+  const [lightboxImage, setLightboxImage] = useState(null);
 
   useEffect(() => {
     fetchPortals();
@@ -259,6 +261,45 @@ function ClientSelection() {
       <Navbar />
 
       <div className="flex-grow flex flex-col items-center justify-center px-4 py-24">
+        {/* ንስእሊ ብዓቢዩ ንምርኣይ ዝሕግዝ ሞዳል (Lightbox Modal) */}
+        {lightboxImage && (
+          <div 
+            className="fixed inset-0 bg-black/95 backdrop-blur-md flex items-center justify-center z-50 p-2 sm:p-4"
+            onClick={() => setLightboxImage(null)}
+          >
+            <div 
+              className="relative max-w-5xl w-full max-h-[90vh] flex flex-col items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <button 
+                onClick={() => setLightboxImage(null)}
+                className="absolute -top-10 right-0 text-zinc-400 hover:text-white text-sm uppercase tracking-widest bg-zinc-900 px-4 py-1.5 rounded-lg border border-zinc-800 transition-colors z-50"
+              >
+                ✕ Close
+              </button>
+              
+              <div className="relative overflow-hidden rounded-2xl border-2 border-[#dfb557]/40 shadow-2xl bg-zinc-950 max-h-[80vh] flex items-center justify-center w-full">
+                <ProtectedImage 
+                  src={lightboxImage} 
+                  alt="Enlarged view" 
+                  className="max-h-[75vh] w-auto object-contain"
+                />
+                
+                {/* ኣብ ውሽጢ ዓቢ ስእሊ ዝርአ ዋተርማርክ */}
+                <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-25 select-none">
+                  <span className="text-2xl sm:text-4xl md:text-5xl font-serif font-bold tracking-widest text-[#dfb557] uppercase transform -rotate-12 px-6 py-3 border-2 border-[#dfb557] rounded-xl bg-black/40 backdrop-blur-[2px]">
+                    Habesha Pictures
+                  </span>
+                </div>
+              </div>
+
+              <p className="text-xs text-zinc-400 mt-3 font-light">
+                እዚ ስእሊ ንምርጫ ድዩ ክዕዘብዎ መረጸዎ። ኣብ ዝደለዩዎ ቦታ ክልተ ግዜ ብምጥዋቕ (Double Click/Double Tap) ክዓብይ ይኽእል።
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* ፓስኮድ መእተዊ ፕላትፎርም (Modal) */}
         {selectedPortalForPasscode && (
           <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
@@ -383,7 +424,12 @@ function ClientSelection() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+            {/* 
+              Grid Layout የተስተካከለበት:
+              - ሞባይል (Mobile): 2 ስእሊ ጎን ንጎን (grid-cols-2) ብዕዙዝ ዝዓበየ ሳይዝ 
+              - ላፕቶፕ (Laptop): 3 ስእሊ ብሰለስተ (lg:grid-cols-3) ብዓቢ ሳይዝ
+            */}
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
               {project.images && project.images.length > 0 ? (
                 project.images.map((imgUrl, index) => {
                   const isSelected = selectedImages.includes(imgUrl);
@@ -392,29 +438,59 @@ function ClientSelection() {
                   return (
                     <div 
                       key={index} 
-                      onClick={() => handleCheckboxChange(imgUrl)}
-                      className={`relative group cursor-pointer overflow-hidden border-2 rounded-xl transition-all aspect-square bg-zinc-900 select-none ${
-                        isSelected ? 'border-[#dfb557] shadow-2xl scale-[0.98]' : 'border-zinc-800 hover:border-zinc-600'
+                      onDoubleClick={() => setLightboxImage(displayUrl)}
+                      onTouchEnd={(e) => {
+                        // ንሞባይል ዝኸውን Double Tap / Double Click logic
+                        const now = new Date().getTime();
+                        const lastTouch = e.currentTarget.dataset.lastTouch || 0;
+                        if (now - lastTouch < 300) {
+                          setLightboxImage(displayUrl);
+                        }
+                        e.currentTarget.dataset.lastTouch = now;
+                      }}
+                      className={`relative group cursor-pointer overflow-hidden border-2 rounded-2xl transition-all aspect-[4/5] sm:aspect-square bg-zinc-900 select-none shadow-xl ${
+                        isSelected ? 'border-[#dfb557] shadow-[#dfb557]/20 scale-[0.98]' : 'border-zinc-800 hover:border-[#dfb557]/50'
                       }`}
                     >
                       <ProtectedImage 
                         src={displayUrl} 
                         alt={`Client photo ${index + 1}`} 
-                        className="w-full h-full"
+                        className="w-full h-full object-cover"
                       />
+
+                      {/* ዋተርማርክ (Habesha Pictures Watermark) ኣብ ነፍስወከፍ ስእሊ */}
+                      <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-30 select-none z-10">
+                        <span className="text-xs sm:text-sm md:text-base font-serif font-bold tracking-wider text-[#dfb557] uppercase transform -rotate-12 px-3 py-1 border border-[#dfb557]/60 rounded-md bg-black/40 backdrop-blur-[1px]">
+                          Habesha Pictures
+                        </span>
+                      </div>
                       
-                      <div className="absolute top-2 right-2 z-30 bg-black/60 rounded-lg p-1.5 backdrop-blur-md border border-white/10 pointer-events-none">
+                      {/* ቲክቦክስ (Checkbox) ንምርጫ ስእሊ */}
+                      <div 
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCheckboxChange(imgUrl);
+                        }}
+                        className="absolute top-3 right-3 z-30 bg-black/70 hover:bg-black rounded-xl p-2 backdrop-blur-md border border-white/20 transition-all cursor-pointer shadow-lg"
+                      >
                         <input 
                           type="checkbox" 
                           checked={isSelected}
                           onChange={() => {}}
-                          className="w-4 h-4 accent-[#dfb557] cursor-pointer pointer-events-none"
+                          className="w-5 h-5 accent-[#dfb557] cursor-pointer"
                         />
                       </div>
 
+                      {/* ክሊክ እንተዘይተደልዩ፡ ኣብ ታሕተዋይ ክፋል ቱቶርያል ሓጺር መዘኻኸሪ (Double click to zoom) */}
+                      <div className="absolute bottom-2 left-2 right-2 text-center pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20">
+                        <span className="bg-black/80 text-zinc-300 text-[9px] uppercase tracking-wider px-2 py-1 rounded border border-white/10 backdrop-blur-sm">
+                          Double click to enlarge
+                        </span>
+                      </div>
+
                       {isSelected && (
-                        <div className="absolute inset-0 bg-[#dfb557]/20 pointer-events-none flex items-center justify-center backdrop-blur-[1px] z-30">
-                          <span className="bg-[#dfb557] text-black text-[10px] uppercase font-bold px-2.5 py-1 tracking-widest shadow-md rounded-md">
+                        <div className="absolute inset-0 bg-[#dfb557]/20 pointer-events-none flex items-center justify-center backdrop-blur-[1px] z-20">
+                          <span className="bg-[#dfb557] text-black text-xs uppercase font-bold px-3.5 py-1.5 tracking-widest shadow-xl rounded-lg">
                             Selected
                           </span>
                         </div>
