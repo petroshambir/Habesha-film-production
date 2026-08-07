@@ -611,7 +611,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import ProtectedImage from '../components/ProtectedImage'; // ሕልፈት ስእሊ (Protected Image) ኣእቲናዮ ኣለና
+import ProtectedImage from '../components/ProtectedImage';
 
 function Gallery() {
   const { category } = useParams(); 
@@ -627,14 +627,15 @@ function Gallery() {
       .then(res => res.json())
       .then(data => {
         const found = data.find(item => {
-          const formattedItemTitle = item.title
+          const rawTitle = (item.title || "").replace(/"/g, '');
+          const formattedItemTitle = rawTitle
             .toLowerCase()
-            .replace(/"/g, '')
-            .replace(/&/g, 'and')
             .trim()
+            .replace(/&/g, 'and')
+            .replace(/[^\w\s-]/g, '')
             .replace(/\s+/g, '-');
             
-          return formattedItemTitle === category.toLowerCase().trim();
+          return formattedItemTitle === (category || "").toLowerCase().trim();
         });
 
         setProjectData(found || null);
@@ -672,7 +673,6 @@ function Gallery() {
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white px-6 py-12 md:px-20">
-      {/* ናብ Home ንምምላስ ዝሕግዝ ቁልፊ */}
       <div className="mb-10 pt-16 md:pt-4">
         <Link 
           to="/" 
@@ -682,7 +682,6 @@ function Gallery() {
         </Link>
       </div>
 
-      {/* ርእሲ ጋለሪ */}
       <div className="text-center mb-16">
         <h1 className="text-4xl md:text-6xl font-serif italic text-amber-300 capitalize mb-4">
           {projectData?.names || projectData?.title}
@@ -694,7 +693,6 @@ function Gallery() {
         </p>
       </div>
 
-      {/* ስእልታት Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
         {projectData?.images && projectData.images.length > 0 ? (
           projectData.images.map((img, index) => (
@@ -703,7 +701,6 @@ function Gallery() {
               onClick={() => { setCurrentIndex(index); setOpen(true); }}
               className="group aspect-[2/3] overflow-hidden bg-zinc-900 rounded-lg cursor-pointer border border-zinc-800 shadow-lg relative select-none"
             >
-              {/* ንቡር img ብ ProtectedImage ተኪኤዮ ኣለኹ */}
               <ProtectedImage 
                 src={img} 
                 alt={`${projectData.title} ${index + 1}`} 
@@ -716,12 +713,11 @@ function Gallery() {
           ))
         ) : (
           <div className="col-span-full text-center py-20 text-zinc-500">
-            <p>No images uploaded in this gallery yet.</p>
+            <p>No images uploaded in this gallery yet. (Or project not found)</p>
           </div>
         )}
       </div>
 
-      {/* Lightbox ንምርኢት ስእሊ ብትኽክልን ብምክልኻልን (Protected) ክሰርሕ ተገይሩ ኣሎ */}
       <Lightbox 
         open={open} 
         close={() => setOpen(false)} 
@@ -735,7 +731,6 @@ function Gallery() {
                 alt="Lightbox Protected" 
                 className="max-h-[85vh] max-w-[85vw] object-contain rounded-lg shadow-2xl pointer-events-none" 
               />
-              {/* ንስእሊ ዳውንሎድ ከይግበር ካብ ላዕሊ ንዝሽፍን ከልካሊ */}
               <div className="absolute inset-0 z-10 bg-transparent pointer-events-auto" onContextMenu={(e) => e.preventDefault()}></div>
             </div>
           )
