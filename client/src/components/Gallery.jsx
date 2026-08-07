@@ -746,6 +746,7 @@
 // }
 
 // export default Gallery;
+
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Lightbox from "yet-another-react-lightbox";

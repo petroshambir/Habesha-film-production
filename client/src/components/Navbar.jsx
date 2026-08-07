@@ -390,6 +390,46 @@ function Navbar() {
         <Link to="/about" className="hover:text-zinc-400 transition-colors">About</Link>
        
         {/* Gallery Dropdown */}
+        {/* <div 
+          className="relative py-2 md:py-0"
+          onMouseEnter={() => setWorkOpen(true)}
+          onMouseLeave={() => setWorkOpen(false)}
+        >
+          <button 
+            className="hover:text-zinc-400 flex items-center gap-1 transition-colors w-full justify-between md:justify-start" 
+            onClick={() => setWorkOpen(!workOpen)}
+          >
+            Gallery <span>▾</span>
+          </button>
+          
+          {workOpen && (
+            <div className="absolute top-full left-0 w-full h-3 bg-transparent md:block hidden"></div>
+          )}
+
+          {workOpen && (
+            <div className="md:absolute md:top-[calc(100%+0.75rem)] md:right-0 bg-black/95 backdrop-blur-md py-3 px-4 w-full md:w-56 border border-white/10 shadow-2xl transition-all duration-300 animate-fadeIn space-y-2">
+              {galleryLinks.length > 0 ? (
+                galleryLinks.map((item, index) => {
+                  const rawTitle = item.title ? item.title.replace(/"/g, '') : '';
+                  const slug = generateSlug(item.title);
+                  
+                  return (
+                    <Link 
+                      key={item._id || index}
+                      to={`/gallery/${slug}`} 
+                      onClick={() => { setWorkOpen(false); setIsOpen(false); }}
+                      className="block py-2 text-zinc-300 hover:text-amber-300 transition-colors border-b border-white/5 last:border-none capitalize"
+                    >
+                      {rawTitle}
+                    </Link>
+                  );
+                })
+              ) : (
+                <span className="block py-2 text-zinc-500 text-xs">Loading...</span>
+              )}
+            </div>
+          )}
+        </div> */}
         <div 
           className="relative py-2 md:py-0"
           onMouseEnter={() => setWorkOpen(true)}
