@@ -1258,6 +1258,7 @@
 // }
 
 // export default Home;
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
@@ -1663,8 +1664,7 @@ function Home() {
                   <div className="grid grid-cols-2 gap-4 w-full pt-4 max-w-2xl">
                     {Array.isArray(section.images) && section.images.slice(0, 2).map((img, i) => (
                       <div key={i} className="aspect-[3/4] overflow-hidden bg-zinc-900 border border-[#dfb557]/40 rounded-xl shadow-lg">
-                        {/* ንቡር img ናብ ProtectedImage ተኪኤዮ ኣለኹ */}
-                        <ProtectedImage src={img} alt={section.title} className="w-full h-full object-cover" />
+                        <img src={img} alt={section.title} className="w-full h-full object-cover" />
                       </div>
                     ))}
                   </div>
