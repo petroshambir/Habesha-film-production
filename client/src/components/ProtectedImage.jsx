@@ -136,75 +136,305 @@
 
 // export default ProtectedImage;
 
-import React, { useEffect, useState } from 'react';
 
-const ProtectedImage = ({ src, alt, className }) => {
-  // ኣብ ሞባይል ክትንከፍ ከሎ ንምፍላጥ (Touch state)
-  const [isTouched, setIsTouched] = useState(false);
+import React, { useState, useEffect } from 'react';
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import ProtectedImage from '../components/ProtectedImage';
 
-  // ኣብ ፒሲ ስክሪንሹት ንምሕዛዝ ዝሕግዝ (PrintScreen ወይ Ctrl+Shift+S)
+function ClientSelection() {
+  const [portals, setPortals] = useState([]);
+  const [project, setProject] = useState(null);
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [fetchingPortals, setFetchingPortals] = useState(true);
+  const [error, setError] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+
+  // ንፓስኮድ መእተዊ ዝድለ ስቴት
+  const [selectedPortalForPasscode, setSelectedPortalForPasscode] = useState(null);
+  const [enteredPasscode, setEnteredPasscode] = useState('');
+  const [passcodeError, setPasscodeError] = useState('');
+  const [verifying, setVerifying] = useState(false);
+
   useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (
-        e.key === 'PrintScreen' || 
-        (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's')
-      ) {
-        e.preventDefault();
-        alert("⚠️ Screenshots are protected on this gallery!");
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
+    fetchPortals();
   }, []);
+
+  const fetchPortals = async () => {
+    try {
+      const response = await fetch('https://habesha-film-production-server.onrender.com/api/client/portals');
+      if (response.ok) {
+        const data = await response.json();
+        setPortals(data);
+      } else {
+        setError('ፖርታልስ ከተጽውዕ ኣይከኣለን።');
+      }
+    } catch (err) {
+      console.error("Error fetching portals:", err);
+      setError('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ።');
+    } finally {
+      setFetchingPortals(false);
+    }
+  };
+
+  const handleSelectClient = (portal) => {
+    setSelectedPortalForPasscode(portal);
+    setEnteredPasscode('');
+    setPasscodeError('');
+  };
+
+  const handleVerifyPasscode = async (e) => {
+    e.preventDefault();
+    if (!enteredPasscode.trim()) return;
+
+    setVerifying(true);
+    setPasscodeError('');
+
+    try {
+      const response = await fetch('https://habesha-film-production-server.onrender.com/api/client/verify-client-passcode', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ passcode: enteredPasscode.trim() })
+      });
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setProject(data.project);
+        setSelectedImages(data.project.selectedImages || []);
+        setSelectedPortalForPasscode(null); 
+      } else {
+        setPasscodeError(data.message || 'ዝኣተውዎ ፓስኮድ ጌጋ እዩ።');
+      }
+    } catch (err) {
+      console.error("Passcode verification error:", err);
+      setPasscodeError('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ።');
+    } finally {
+      setVerifying(false);
+    }
+  };
+
+  const handleCheckboxChange = (imageUrl) => {
+    if (selectedImages.includes(imageUrl)) {
+      setSelectedImages(selectedImages.filter(img => img !== imageUrl));
+    } else {
+      setSelectedImages([...selectedImages, imageUrl]);
+    }
+  };
+
+  const handleSubmitSelection = async () => {
+    if (selectedImages.length === 0) {
+      alert('ብዘይውሕድ ሓደ ስእሊ ክትመርጽ ኣለካ!');
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch(`https://habesha-film-production-server.onrender.com/api/client/submit-selection/${project._id}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ selectedImages }),
+      });
+
+      const data = await response.json();
+      if (response.ok && data.success) {
+        setSubmitted(true);
+      } else {
+        alert('ምልኣክ ኣይከኣለን። ደጊምካ ፈትን።');
+      }
+    } catch (err) {
+      console.error("Submit error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div 
-      className={`relative overflow-hidden select-none group ${className || ''}`}
+      className="min-h-screen bg-[#050505] text-zinc-100 font-sans selection:bg-[#dfb557]/30 selection:text-[#dfb557] overflow-x-hidden flex flex-col justify-between"
       onContextMenu={(e) => e.preventDefault()}
       onDragStart={(e) => e.preventDefault()}
-      // ሞባይል ክትንከፍ ከሎ
-      onTouchStart={() => setIsTouched(true)}
-      onTouchEnd={() => setTimeout(() => setIsTouched(false), 1500)} // ድሕሪ 1.5 ካልኢት ናብ ንቡር ይመልሶ
     >
-      {/* 1. እቲ ትክክለኛ ምስሊ 
-          - ኣብ ሞባይል (isTouched) ምስ ዝኸውን ወይ ኣብ ፒሲ (group-hover) ከሎ ይድብዘዝ */}
-      <img 
-        src={src} 
-        alt={alt || "Protected Image"} 
-        className={`w-full h-full object-cover pointer-events-none transition-all duration-300 ${
-          isTouched ? 'blur-lg opacity-30 scale-105' : ''
-        }`}
-      />
+      <Navbar />
 
-      {/* 2. መከላኸሊ ባዶ ምስሊ (Transparent Layer) */}
-      <img 
-        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" 
-        alt="Protection Layer" 
-        className="absolute inset-0 w-full h-full opacity-0 z-10"
-      />
+      <div className="flex-grow flex flex-col items-center justify-center px-4 py-24">
+        {/* ፓስኮድ መእተዊ ፕላትፎርም (Modal) */}
+        {selectedPortalForPasscode && (
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+            <div className="bg-zinc-950 p-8 rounded-2xl shadow-2xl max-w-md w-full border-2 border-[#dfb557]/40 text-center relative">
+              <span className="text-[9px] md:text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-2">
+                Secure Portal
+              </span>
+              <h3 className="text-2xl font-serif font-bold text-zinc-100 mb-2">Enter Portal Passcode</h3>
+              <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-3"></div>
+              <p className="text-xs md:text-sm text-zinc-400 mb-6 font-light">
+                ናብ <b className="text-zinc-200">{selectedPortalForPasscode.clientName}</b> ፖርታል ንምእታው በጃኹም እቲ ካብ ስቱድዮ ዝተዋህበኩም 4-ቁጽሪ ኮድ ኣእትዉ።
+              </p>
 
-      {/* 3. ዋተርማርክ 
-          - ኣብ ሞባይል ክትንከፍ ከሎ (isTouched) ወይ ኣብ ፒሲ ማውስ ክቐርብ ከሎ (group-hover:opacity-100) ብግልጺ ይርአ */}
-      <div className={`absolute inset-0 flex items-center justify-center transition-opacity duration-300 pointer-events-none z-20 bg-black/60 ${
-        isTouched ? 'opacity-100' : 'opacity-40 group-hover:opacity-100'
-      }`}>
-        <div className="flex flex-col items-center text-white rotate-[-30deg] drop-shadow-[0_4px_8px_rgba(0,0,0,0.9)] p-4 text-center">
-          <svg className="w-16 h-16 mb-2 text-white/90" fill="currentColor" viewBox="0 0 20 20">
-            <path d="M10.394 2.08a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5 7.71v2.99l-.893 1.786a1 1 0 00.447 1.344l3 1.5a1 1 0 00.893 0l3-1.5a1 1 0 00.447-1.344L15 10.7V7.71l2.394-1.79a1 1 0 000-1.84l-7-3zM12 11.476L9 12.976l-3-1.5v-1.8l2.606-1.954 3.606 2.705L12 11.476zM6 15.976v-1.8l.893-1.786L9 13.476l3 1.5v1.8l-2.606-1.954L6 15.976zM11 13.976l3-1.5v-1.8l2.394-1.79a1 1 0 000-1.84l-7-3a1 1 0 00-.788 0l-7 3a1 1 0 000 1.84L5 7.71v2.99l-.893 1.786a1 1 0 00.447 1.344l3 1.5a1 1 0 00.893 0l3-1.5a1 1 0 00.447-1.344L15 10.7V7.71l2.394-1.79a1 1 0 000-1.84l-7-3z" />
-          </svg>
-          <span className="text-lg md:text-2xl font-bold tracking-widest uppercase">
-            Habesha Film
-          </span>
-          <span className="text-xs md:text-sm tracking-wider uppercase text-white/90">
-            Production - Protected
-          </span>
-        </div>
+              <form onSubmit={handleVerifyPasscode} className="space-y-4">
+                <input 
+                  type="password"
+                  maxLength="4"
+                  value={enteredPasscode}
+                  onChange={(e) => setEnteredPasscode(e.target.value)}
+                  placeholder="****"
+                  className="bg-zinc-900 border border-[#dfb557]/50 p-3 rounded-xl w-full text-center text-2xl tracking-widest text-zinc-100 font-mono focus:outline-none focus:border-[#dfb557] shadow-inner placeholder-zinc-600"
+                  required
+                />
+                {passcodeError && <p className="text-red-400 text-xs font-medium">{passcodeError}</p>}
+                
+                <div className="flex gap-3 pt-2">
+                  <button 
+                    type="button"
+                    onClick={() => setSelectedPortalForPasscode(null)}
+                    className="bg-zinc-900 border border-zinc-800 text-zinc-300 px-4 py-3 rounded-xl text-xs uppercase font-bold tracking-[0.2em] hover:bg-zinc-800 hover:text-white transition-all w-1/2"
+                  >
+                    Cancel
+                  </button>
+                  <button 
+                    type="submit"
+                    disabled={verifying}
+                    className="bg-[#dfb557] text-black px-4 py-3 rounded-xl text-xs uppercase font-bold tracking-[0.2em] hover:bg-[#c99f45] transition-all w-1/2 disabled:opacity-50 shadow-lg"
+                  >
+                    {verifying ? 'Checking...' : 'Verify & Enter'}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {!project ? (
+          <div className="bg-zinc-950 p-8 md:p-12 shadow-2xl border-2 border-[#dfb557]/30 rounded-2xl max-w-xl w-full text-center">
+            <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-2">
+              Client Portal
+            </span>
+            <h2 className="text-2xl md:text-3xl font-serif mb-2 text-zinc-100">Client Photo Selection Portals</h2>
+            <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-3"></div>
+            <p className="text-xs md:text-sm text-zinc-400 mb-6 font-light">በጃኹም ንምርጫ ስእሊታት ናይቲ ስቱድዮ ሽምኩም ጠውቑ።</p>
+
+            {fetchingPortals ? (
+              <p className="text-sm text-zinc-500 py-6 font-light">Loading portals...</p>
+            ) : error ? (
+              <p className="text-red-400 text-xs py-4 font-medium">{error}</p>
+            ) : portals.length === 0 ? (
+              <p className="text-sm text-zinc-500 py-6 font-light">ዝተዳለወ ፖርታል የለን።</p>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-96 overflow-y-auto p-1 scrollbar-thin">
+                {portals.map((portal) => (
+                  <button
+                    key={portal._id}
+                    onClick={() => handleSelectClient(portal)}
+                    className="p-4 border border-[#dfb557]/20 bg-zinc-900/50 hover:bg-[#dfb557] hover:text-black transition-all text-left flex flex-col justify-between rounded-xl group shadow-sm"
+                  >
+                    <div>
+                      <span className="text-[10px] uppercase font-bold tracking-widest text-[#dfb557] group-hover:text-black/70">Portal #{portal.portalNumber}</span>
+                      <h3 className="text-base font-serif font-bold text-zinc-100 group-hover:text-black mt-1">{portal.clientName}</h3>
+                    </div>
+                    <span className="text-xs text-zinc-400 group-hover:text-black mt-3 flex items-center gap-1 font-semibold">
+                      Enter Passcode &rarr;
+                    </span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : submitted ? (
+          <div className="bg-zinc-950 p-10 shadow-2xl border-2 border-[#dfb557]/40 rounded-2xl max-w-md w-full text-center">
+            <div className="w-16 h-16 bg-[#dfb557]/20 text-[#dfb557] border border-[#dfb557]/40 rounded-full flex items-center justify-center mx-auto mb-4 text-2xl shadow-inner">✓</div>
+            <h2 className="text-2xl font-serif mb-2 text-zinc-100">ምርጫኹም ብዕወት ተሰዲዱ ኣሎ!</h2>
+            <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-3"></div>
+            <p className="text-xs md:text-sm text-zinc-400 mb-6 font-light">
+              ንሕና ነቲ ዝመረጽኩዎም <b className="text-zinc-200">{selectedImages.length}</b> ስእሊታት ተቐቢልና ኤዲቲንግ ክንጅምር ኢና።
+            </p>
+            <button 
+              onClick={() => { setProject(null); setSubmitted(false); }}
+              className="bg-[#dfb557] text-black px-6 py-3 text-xs uppercase font-bold tracking-[0.2em] hover:bg-[#c99f45] transition-all rounded-xl shadow-lg"
+            >
+              Back to Portals
+            </button>
+          </div>
+        ) : (
+          <div className="max-w-7xl w-full mx-auto px-4">
+            <div className="flex flex-col md:flex-row justify-between items-center mb-8 border-b border-zinc-800 pb-6 sticky top-20 bg-[#050505]/95 backdrop-blur-md z-10 py-4">
+              <div>
+                <button 
+                  onClick={() => setProject(null)}
+                  className="text-xs uppercase font-bold tracking-widest text-zinc-400 hover:text-[#dfb557] mb-2 flex items-center gap-1 transition-colors"
+                >
+                  &larr; Back to Client List
+                </button>
+                <span className="text-[10px] uppercase font-bold tracking-widest text-[#dfb557] block">Welcome, {project.clientName}</span>
+                <h1 className="text-2xl md:text-3xl font-serif text-zinc-100">Portal #{project.portalNumber} - Photo Selection</h1>
+              </div>
+              
+              <div className="mt-4 md:mt-0 flex items-center gap-4">
+                <div className="bg-zinc-900 border border-[#dfb557]/30 text-zinc-200 px-6 py-3 rounded-xl shadow-inner text-sm font-medium">
+                  Selected Images: <span className="text-[#dfb557] font-bold text-lg">{selectedImages.length}</span>
+                </div>
+                <button 
+                  onClick={handleSubmitSelection}
+                  disabled={loading || selectedImages.length === 0}
+                  className="bg-[#dfb557] text-black px-6 py-3 text-xs uppercase font-bold tracking-[0.2em] hover:bg-[#c99f45] transition-all disabled:opacity-50 shadow-lg rounded-xl flex items-center gap-2"
+                >
+                  {loading ? 'Sending...' : 'Send to Studio'}
+                </button>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
+              {project.images && project.images.length > 0 ? (
+                project.images.map((imgUrl, index) => {
+                  const isSelected = selectedImages.includes(imgUrl);
+                  const displayUrl = imgUrl;
+
+                  return (
+                    <div 
+                      key={index} 
+                      onClick={() => handleCheckboxChange(imgUrl)}
+                      className={`relative group cursor-pointer overflow-hidden border-2 rounded-xl transition-all aspect-square bg-zinc-900 select-none ${
+                        isSelected ? 'border-[#dfb557] shadow-2xl scale-[0.98]' : 'border-zinc-800 hover:border-zinc-600'
+                      }`}
+                    >
+                      <ProtectedImage 
+                        src={displayUrl} 
+                        alt={`Client photo ${index + 1}`} 
+                        className="w-full h-full"
+                      />
+                      
+                      <div className="absolute top-2 right-2 z-30 bg-black/60 rounded-lg p-1.5 backdrop-blur-md border border-white/10 pointer-events-none">
+                        <input 
+                          type="checkbox" 
+                          checked={isSelected}
+                          onChange={() => {}}
+                          className="w-4 h-4 accent-[#dfb557] cursor-pointer pointer-events-none"
+                        />
+                      </div>
+
+                      {isSelected && (
+                        <div className="absolute inset-0 bg-[#dfb557]/20 pointer-events-none flex items-center justify-center backdrop-blur-[1px] z-30">
+                          <span className="bg-[#dfb557] text-black text-[10px] uppercase font-bold px-2.5 py-1 tracking-widest shadow-md rounded-md">
+                            Selected
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })
+              ) : (
+                <div className="col-span-full text-center py-12 text-zinc-500 font-light">
+                  <p className="text-sm">ኣብዚ ፖርታል እዚ ዝተሰቐለ ስእሊ የለን።</p>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </div>
+
+      <Footer />
     </div>
   );
-};
+}
 
-export default ProtectedImage;
+export default ClientSelection;
