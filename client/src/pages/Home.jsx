@@ -430,6 +430,7 @@
 
 // export default Home;
 
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
@@ -561,8 +562,6 @@ function Home() {
   );
 }
 
-/* Sub-components for cleaner readability */
-
 function WeddingSection({ section, customHeadings, customDescriptions }) {
   const images = Array.isArray(section.images) ? section.images : [];
 
@@ -624,22 +623,6 @@ function WeddingSection({ section, customHeadings, customDescriptions }) {
                 <ChapterRow key={i} img={img} actualIdx={actualIdx} isEven={isEven} sectionTitle={section.title} customHeadings={customHeadings} customDescriptions={customDescriptions} />
               );
             })}
-          </div>
-        </div>
-      )}
-
-      {images.length > 10 && (
-        <div className="max-w-4xl mx-auto px-4 pt-12">
-          <div className="text-center mb-6">
-            <h3 className="text-2xl font-serif text-zinc-100 uppercase tracking-widest">More Memories</h3>
-            <div className="w-8 h-[1px] bg-[#dfb557] mx-auto mt-2"></div>
-          </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
-            {images.slice(10, 16).map((img, i) => (
-              <div key={i} className="aspect-square overflow-hidden rounded-xl bg-zinc-900 border border-[#dfb557]/40 shadow-lg">
-                <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
-              </div>
-            ))}
           </div>
         </div>
       )}
