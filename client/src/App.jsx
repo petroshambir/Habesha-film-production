@@ -118,11 +118,13 @@ function App() {
         <Route path="/contact" element={<Contact />} />    
         
         {/* ሓደ ኮይኑ ንኩሉ ዓይነት ጋለሪ ብቑዕ ዝዀነ Route */}
-        <Route path="/gallery/:category" element={<Gallery />} /> 
+        {/* <Route path="/gallery/:category" element={<Gallery />} />  */}
 
         <Route path="/admin-login" element={<AdminLogin />} />
         <Route path="/admin-panel" element={<AdminDashboard />} />
+        {/* <Route path="/client-selection" element={<ClientSelection />} /> */}
         <Route path="/client-selection" element={<ClientSelection />} />
+<Route path="/gallery/:category" element={<Gallery />} />
       </Routes>
     </BrowserRouter>
   );
