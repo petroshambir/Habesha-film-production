@@ -76,15 +76,6 @@ function Home() {
           const isBridalShower = titleLower.includes('bridal') || titleLower.includes('bridal shower');
           const isBabyShower = titleLower.includes('baby') || titleLower.includes('shower');
 
-          // ፍሉይ መንገዲ ንነፍስወከፍ ጋለሪ ንምፍላይ
-          const getGalleryPath = () => {
-            const slug = generateSlug(section.title);
-            if (isWedding) return `/gallery/wedding/${slug}`;
-            if (isBridalShower) return `/gallery/bridal-shower/${slug}`;
-            if (isBabyShower) return `/gallery/baby-shower/${slug}`;
-            return `/gallery/${slug}`;
-          };
-
           const defaultDescriptions = [
             "01. The Beginning of Forever — Our First Look",
             "02. A Tender Moment Caught in Time",
@@ -272,7 +263,7 @@ function Home() {
 
                   <div className="text-center pt-8 px-4">
                     <Link 
-                      to={getGalleryPath()}
+                      to={`/gallery/${generateSlug(section.title)}`}
                       className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3.5 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-lg"
                     >
                       View Full Gallery
@@ -334,7 +325,7 @@ function Home() {
 
                   <div className="text-center pt-6">
                     <Link 
-                      to={getGalleryPath()}
+                      to={`/gallery/${generateSlug(section.title)}`}
                       className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md"
                     >
                       View Full Gallery
@@ -388,7 +379,7 @@ function Home() {
 
                   <div className="text-center pt-6">
                     <Link 
-                      to={getGalleryPath()}
+                      to={`/gallery/${generateSlug(section.title)}`}
                       className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md"
                     >
                       View Full Gallery
@@ -418,7 +409,7 @@ function Home() {
                   
                   <div className="pt-4">
                     <Link 
-                      to={getGalleryPath()}
+                      to={`/gallery/${generateSlug(section.title)}`}
                       className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md"
                     >
                       Explore Project
