@@ -136,7 +136,6 @@
 
 // export default ProtectedImage;
 
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -425,8 +424,8 @@ function ClientSelection() {
               </div>
             </div>
 
-            {/* Grid Layout: Mobile 2 columns, Laptop 3 columns */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            {/* Grid Layout: Mobile 2 columns, Laptop 3 columns with enhanced image size and spacing */}
+            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
               {project.images && project.images.length > 0 ? (
                 project.images.map((imgUrl, index) => {
                   const isSelected = selectedImages.includes(imgUrl);
@@ -444,7 +443,7 @@ function ClientSelection() {
                         }
                         e.currentTarget.dataset.lastTouch = now;
                       }}
-                      className={`relative group cursor-pointer overflow-hidden border-2 rounded-2xl transition-all aspect-[4/5] sm:aspect-square bg-zinc-900 select-none shadow-xl ${
+                      className={`relative group cursor-pointer overflow-hidden border-2 rounded-2xl transition-all aspect-[3/4] sm:aspect-[4/5] bg-zinc-900 select-none shadow-xl ${
                         isSelected ? 'border-[#dfb557] shadow-[#dfb557]/20 scale-[0.98]' : 'border-zinc-800 hover:border-[#dfb557]/50'
                       }`}
                     >
@@ -456,7 +455,7 @@ function ClientSelection() {
 
                       {/* Habesha Pictures Watermark */}
                       <div className="absolute inset-0 pointer-events-none flex items-center justify-center opacity-30 select-none z-10">
-                        <span className="text-xs sm:text-sm md:text-base font-serif font-bold tracking-wider text-[#dfb557] uppercase transform -rotate-12 px-3 py-1 border border-[#dfb557]/60 rounded-md bg-black/40 backdrop-blur-[1px]">
+                        <span className="text-sm sm:text-base md:text-lg font-serif font-bold tracking-widest text-[#dfb557] uppercase transform -rotate-12 px-4 py-1.5 border-2 border-[#dfb557]/70 rounded-lg bg-black/50 backdrop-blur-[2px]">
                           Habesha Pictures
                         </span>
                       </div>
