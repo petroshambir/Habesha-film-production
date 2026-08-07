@@ -295,6 +295,7 @@ function Home() {
                       }
                       return pairs.map((pair, pairIdx) => (
                         <div key={pairIdx} className="p-2 sm:p-6 rounded-2xl bg-zinc-950/75 border-2 border-[#dfb557]/40 shadow-xl space-y-4">
+                          
                           <div className="grid grid-cols-2 gap-2 sm:gap-6">
                             {pair.map((img, imgIdx) => {
                               const absoluteIdx = (pairIdx * 2) + imgIdx;
@@ -403,7 +404,7 @@ function Home() {
                   <div className="grid grid-cols-2 gap-4 w-full pt-4 max-w-2xl">
                     {Array.isArray(section.images) && section.images.slice(0, 2).map((img, i) => (
                       <div key={i} className="aspect-[3/4] overflow-hidden bg-zinc-900 border border-[#dfb557]/40 rounded-xl shadow-lg">
-                        <img src={img} alt={section.title} className="w-full h-full object-cover" />
+                        <ProtectedImage src={img} alt={section.title} className="w-full h-full object-cover" />
                       </div>
                     ))}
                   </div>
