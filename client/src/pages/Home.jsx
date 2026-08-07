@@ -1259,12 +1259,12 @@
 
 // export default Home;
 
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
 import heroVideo from '../assets/videos/robi-v1.mp4';
 import Footer from "../components/Footer";
-import ProtectedImage from '../components/ProtectedImage'; 
 
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
@@ -1414,7 +1414,7 @@ function Home() {
                         </p>
                       </div>
                       <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border-2 border-[#dfb557]/40 relative">
-                        <ProtectedImage src={section.images[0]} alt={section.title} className="w-full h-full object-cover" />
+                        <img src={section.images[0]} alt={section.title} className="w-full h-full object-cover" />
                       </div>
                     </div>
                   )}
@@ -1445,7 +1445,7 @@ function Home() {
 
                               <div className="relative flex-shrink-0 flex justify-center">
                                 <div className="w-32 h-32 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 sm:border-4 border-[#dfb557] shadow-xl bg-zinc-900 hover:scale-105 transition-transform duration-500 flex-shrink-0">
-                                  <ProtectedImage src={img} alt={section.title} className="w-full h-full object-cover" />
+                                  <img src={img} alt={section.title} className="w-full h-full object-cover" />
                                 </div>
                               </div>
                             </div>
@@ -1466,7 +1466,7 @@ function Home() {
                         </p>
                       </div>
                       <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border-2 border-[#dfb557]/40 relative">
-                        <ProtectedImage src={section.images[5]} alt={section.title} className="w-full h-full object-cover" />
+                        <img src={section.images[5]} alt={section.title} className="w-full h-full object-cover" />
                       </div>
                     </div>
                   )}
@@ -1497,7 +1497,7 @@ function Home() {
 
                               <div className="relative flex-shrink-0 flex justify-center">
                                 <div className="w-32 h-32 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 sm:border-4 border-[#dfb557] shadow-xl bg-zinc-900 hover:scale-105 transition-transform duration-500 flex-shrink-0">
-                                  <ProtectedImage src={img} alt={section.title} className="w-full h-full object-cover" />
+                                  <img src={img} alt={section.title} className="w-full h-full object-cover" />
                                 </div>
                               </div>
                             </div>
@@ -1516,7 +1516,7 @@ function Home() {
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                         {section.images.slice(10, 16).map((img, i) => (
                           <div key={i} className="aspect-square overflow-hidden rounded-xl bg-zinc-900 border border-[#dfb557]/40 shadow-lg">
-                            <ProtectedImage src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                            <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                           </div>
                         ))}
                       </div>
@@ -1562,7 +1562,7 @@ function Home() {
                               return (
                                 <div key={imgIdx} className="space-y-2 flex flex-col justify-between">
                                   <div className="w-full aspect-[3/4] sm:aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden border-2 border-[#dfb557]/60 shadow-lg bg-zinc-900">
-                                    <ProtectedImage src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                    <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                                   </div>
                                   
                                   <div className="text-center space-y-1 px-1">
@@ -1620,7 +1620,7 @@ function Home() {
                           className={`flex flex-col sm:flex-row items-center gap-4 sm:gap-8 p-4 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/40 shadow-xl ${isEven ? 'sm:flex-row' : 'sm:flex-row-reverse'}`}
                         >
                           <div className="w-full sm:w-1/2 aspect-[4/3] rounded-xl overflow-hidden border border-[#dfb557]/50 shadow-md bg-zinc-900 flex-shrink-0">
-                            <ProtectedImage src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                            <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                           </div>
 
                           <div className="w-full sm:w-1/2 space-y-2 text-center sm:text-left">
