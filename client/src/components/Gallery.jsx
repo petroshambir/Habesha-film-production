@@ -746,23 +746,21 @@
 // }
 
 // export default Gallery;
-
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import ProtectedImage from '../components/ProtectedImage'; // ሕልፈት ስእሊ (Protected Image) ኣእቲናዮ ኣለና
+import ProtectedImage from './ProtectedImage'; 
 
 function Gallery() {
-  const { category } = useParams(); 
+  const { category } = useParams(); // እቲ ካብ URL ዝመጽእ ዘሎ ስሉግ (slug)
   const [projectData, setProjectData] = useState(null);
   const [loading, setLoading] = useState(true);
   
   const [open, setOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // ስሉግ ንምፍጣር ዝሕግዝ ሓፈሻዊ ተግባር (Helper Function)
+  // ስሉግ ንምፍጣርን ንምውድዳርን ዝሕግዝ ሓፈሻዊ ተግባር
   const generateSlug = (title) => {
     if (!title) return '';
     return title
@@ -778,9 +776,11 @@ function Gallery() {
     fetch('https://habesha-film-production-server.onrender.com/api/projects')
       .then(res => res.json())
       .then(data => {
+        // ኩሎም ፕሮጀክትታት ካብ ሰርቨር ምስ መጹ፡ ነቲ ዝሰማማዕ ንደሊ
         const found = data.find(item => {
-          const formattedItemTitle = generateSlug(item.title);
-          return formattedItemTitle === category.toLowerCase().trim();
+          const itemSlug = generateSlug(item.title);
+          // ንብጻይ (category) ካብ URL ዝመጸ ምስቲ ዝተሰርሐ ስሉግ ነወዳድሮ
+          return itemSlug === category?.toLowerCase().trim() || item._id === category;
         });
 
         setProjectData(found || null);
@@ -800,7 +800,23 @@ function Gallery() {
     );
   }
 
-  // Descriptions ካብቲ ፍሉይ ቅርጺ (||DESCS||) ንምውጻእ ወይ ብቐጥታ ንምርኣይ
+  // እቲ ፕሮጀክት እንተዘይተረኺቡ ዝወጽእ መልእኽቲ (ናብ ሆም ከይተመልሰ ንክጸንሕ)
+  if (!projectData) {
+    return (
+      <div className="min-h-screen bg-[#0a0a0a] text-white flex flex-col items-center justify-center px-4">
+        <h2 className="text-2xl font-serif text-amber-300 mb-4">Gallery Not Found</h2>
+        <p className="text-zinc-400 mb-8 text-center">Sorry, the gallery you are looking for does not exist or was removed.</p>
+        <Link 
+          to="/" 
+          className="text-xs uppercase tracking-[0.3em] text-zinc-300 border border-zinc-700 px-6 py-3 rounded hover:bg-white hover:text-black transition"
+        >
+          &larr; Back to Home
+        </Link>
+      </div>
+    );
+  }
+
+  // Descriptions ካብቲ ፍሉይ ቅርጺ (||DESCS||) ንምውጻእ
   let descriptions = [];
   try {
     if (projectData?.description && projectData.description.includes('||DESCS||')) {
@@ -866,7 +882,7 @@ function Gallery() {
         )}
       </div>
 
-      {/* Lightbox ንምርኢት ስእሊ ብትኽክልን ብምክልኻልን (Protected) ክሰርሕ ተገይሩ ኣሎ */}
+      {/* Lightbox */}
       <Lightbox 
         open={open} 
         close={() => setOpen(false)} 
