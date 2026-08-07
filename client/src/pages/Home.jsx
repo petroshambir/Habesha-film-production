@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
 import heroVideo from '../assets/videos/robi-v1.mp4';
 import Footer from "../components/Footer";
-import ProtectedImage from '../components/ProtectedImage'; 
 
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
@@ -76,6 +75,15 @@ function Home() {
           const isWedding = titleLower.includes('wedding');
           const isBridalShower = titleLower.includes('bridal') || titleLower.includes('bridal shower');
           const isBabyShower = titleLower.includes('baby') || titleLower.includes('shower');
+
+          // ፍሉይ መንገዲ ንነፍስወከፍ ጋለሪ ንምፍላይ
+          const getGalleryPath = () => {
+            const slug = generateSlug(section.title);
+            if (isWedding) return `/gallery/wedding/${slug}`;
+            if (isBridalShower) return `/gallery/bridal-shower/${slug}`;
+            if (isBabyShower) return `/gallery/baby-shower/${slug}`;
+            return `/gallery/${slug}`;
+          };
 
           const defaultDescriptions = [
             "01. The Beginning of Forever — Our First Look",
@@ -153,7 +161,7 @@ function Home() {
                         </p>
                       </div>
                       <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border-2 border-[#dfb557]/40 relative">
-                        <ProtectedImage src={section.images[0]} alt={section.title} className="w-full h-full object-cover" />
+                        <img src={section.images[0]} alt={section.title} className="w-full h-full object-cover" />
                       </div>
                     </div>
                   )}
@@ -184,7 +192,7 @@ function Home() {
 
                               <div className="relative flex-shrink-0 flex justify-center">
                                 <div className="w-32 h-32 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 sm:border-4 border-[#dfb557] shadow-xl bg-zinc-900 hover:scale-105 transition-transform duration-500 flex-shrink-0">
-                                  <ProtectedImage src={img} alt={section.title} className="w-full h-full object-cover" />
+                                  <img src={img} alt={section.title} className="w-full h-full object-cover" />
                                 </div>
                               </div>
                             </div>
@@ -205,7 +213,7 @@ function Home() {
                         </p>
                       </div>
                       <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border-2 border-[#dfb557]/40 relative">
-                        <ProtectedImage src={section.images[5]} alt={section.title} className="w-full h-full object-cover" />
+                        <img src={section.images[5]} alt={section.title} className="w-full h-full object-cover" />
                       </div>
                     </div>
                   )}
@@ -236,7 +244,7 @@ function Home() {
 
                               <div className="relative flex-shrink-0 flex justify-center">
                                 <div className="w-32 h-32 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 sm:border-4 border-[#dfb557] shadow-xl bg-zinc-900 hover:scale-105 transition-transform duration-500 flex-shrink-0">
-                                  <ProtectedImage src={img} alt={section.title} className="w-full h-full object-cover" />
+                                  <img src={img} alt={section.title} className="w-full h-full object-cover" />
                                 </div>
                               </div>
                             </div>
@@ -255,7 +263,7 @@ function Home() {
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4">
                         {section.images.slice(10, 16).map((img, i) => (
                           <div key={i} className="aspect-square overflow-hidden rounded-xl bg-zinc-900 border border-[#dfb557]/40 shadow-lg">
-                            <ProtectedImage src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                            <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                           </div>
                         ))}
                       </div>
@@ -264,7 +272,7 @@ function Home() {
 
                   <div className="text-center pt-8 px-4">
                     <Link 
-                      to={`/gallery/${generateSlug(section.title)}`}
+                      to={getGalleryPath()}
                       className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3.5 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-lg"
                     >
                       View Full Gallery
@@ -295,14 +303,13 @@ function Home() {
                       }
                       return pairs.map((pair, pairIdx) => (
                         <div key={pairIdx} className="p-2 sm:p-6 rounded-2xl bg-zinc-950/75 border-2 border-[#dfb557]/40 shadow-xl space-y-4">
-                          
                           <div className="grid grid-cols-2 gap-2 sm:gap-6">
                             {pair.map((img, imgIdx) => {
                               const absoluteIdx = (pairIdx * 2) + imgIdx;
                               return (
                                 <div key={imgIdx} className="space-y-2 flex flex-col justify-between">
                                   <div className="w-full aspect-[3/4] sm:aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden border-2 border-[#dfb557]/60 shadow-lg bg-zinc-900">
-                                    <ProtectedImage src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                                    <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                                   </div>
                                   
                                   <div className="text-center space-y-1 px-1">
@@ -327,7 +334,7 @@ function Home() {
 
                   <div className="text-center pt-6">
                     <Link 
-                      to={`/gallery/${generateSlug(section.title)}`}
+                      to={getGalleryPath()}
                       className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md"
                     >
                       View Full Gallery
@@ -360,7 +367,7 @@ function Home() {
                           className={`flex flex-col sm:flex-row items-center gap-4 sm:gap-8 p-4 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/40 shadow-xl ${isEven ? 'sm:flex-row' : 'sm:flex-row-reverse'}`}
                         >
                           <div className="w-full sm:w-1/2 aspect-[4/3] rounded-xl overflow-hidden border border-[#dfb557]/50 shadow-md bg-zinc-900 flex-shrink-0">
-                            <ProtectedImage src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                            <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                           </div>
 
                           <div className="w-full sm:w-1/2 space-y-2 text-center sm:text-left">
@@ -381,7 +388,7 @@ function Home() {
 
                   <div className="text-center pt-6">
                     <Link 
-                      to={`/gallery/${generateSlug(section.title)}`}
+                      to={getGalleryPath()}
                       className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md"
                     >
                       View Full Gallery
@@ -404,14 +411,14 @@ function Home() {
                   <div className="grid grid-cols-2 gap-4 w-full pt-4 max-w-2xl">
                     {Array.isArray(section.images) && section.images.slice(0, 2).map((img, i) => (
                       <div key={i} className="aspect-[3/4] overflow-hidden bg-zinc-900 border border-[#dfb557]/40 rounded-xl shadow-lg">
-                        <ProtectedImage src={img} alt={section.title} className="w-full h-full object-cover" />
+                        <img src={img} alt={section.title} className="w-full h-full object-cover" />
                       </div>
                     ))}
                   </div>
                   
                   <div className="pt-4">
                     <Link 
-                      to={`/gallery/${generateSlug(section.title)}`}
+                      to={getGalleryPath()}
                       className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md"
                     >
                       Explore Project
