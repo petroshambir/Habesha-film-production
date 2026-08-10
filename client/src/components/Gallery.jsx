@@ -117,11 +117,11 @@ function Gallery() {
               onClick={() => { setCurrentIndex(index); setOpen(true); }}
               className="group aspect-[2/3] overflow-hidden bg-zinc-900 rounded-lg cursor-pointer border border-zinc-800 shadow-lg relative"
             >
-              <ProtectedImage 
+              {/* <ProtectedImage 
                 src={img} 
                 alt={`${projectData.title} ${index + 1}`} 
                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
-              />
+              /> */}
               <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
                 <span className="text-white text-xs uppercase tracking-widest bg-black/60 px-3 py-1 rounded">View</span>
               </div>
