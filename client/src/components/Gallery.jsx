@@ -337,7 +337,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-// import ProtectedImage from './ProtectedImage'; 
+
 
 
 function Gallery() {
