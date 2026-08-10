@@ -144,7 +144,7 @@
 // export default ProtectedImage;
 
 import React, { useState, useEffect } from 'react';
-import adalLogo from '../assets/adal-ogo.png'; // ኣብዚ ሎጎ ፋይል ኣብ assets ፎልደር ኣትዩ
+import adalLogo from '../assets/adal-logo.png'; // ኣብዚ ሎጎ ፋይል ኣብ assets ፎልደር ኣትዩ
 
 const ProtectedImage = ({ src, alt, className, onClick }) => {
   const [isTouched, setIsTouched] = useState(false);
