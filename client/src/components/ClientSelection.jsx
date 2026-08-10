@@ -100,11 +100,7 @@
 
 //     setLoading(true);
 //     try {
-//       // ኣብዚ ተጠቃሚ ዝመረጾ ምስሊ ናብ ናይ ዳታቤዝ/ሰርቨር ንጹሕ ኦርጅናል ዩአርኤል ንምቕያር (Watermark/Logo ንምእላይ) 
-//       // ንኣብነት ኣብ ProtectedImage ዝወሓጠ ስእሊ እንተሎ ካብቲ project.images ኦርጅናል ሊንክ ይውሰድ፡
-//       // ወይ ድማ እቲ ዝተመርጸ ሊንክ ብቐጥታ ንጹሕ እንተድኣ ኰይኑ ብግቡእ ይልኣክ።
 //       const cleanImages = selectedImages.map(img => {
-//         // ንውሕስነት ካብቲ ኦርጅናል project.images ዝመጸ ንጹሕ ዩአርኤል ምትሓዝ
 //         const originalMatch = project.images.find(orig => orig === img || orig.includes(img) || img.includes(orig));
 //         return originalMatch || img;
 //       });
@@ -273,22 +269,19 @@
 //                         isSelected ? 'border-[#dfb557] shadow-2xl scale-[0.98]' : 'border-zinc-800 hover:border-zinc-600'
 //                       }`}
 //                     >
-//                       {/* Protected Image (ንጠውቂ ንኽዓብይ/Lightbox ክኽፈት Double Click/Tap) */}
+//                       {/* Protected Image (ብሉጽ ዋተርማርክ ዘለዎ - showLogoOnly ሓሶት (false) ተጌሩ ኣሎ) */}
 //                       <div 
 //                         className="w-full h-full cursor-pointer"
 //                         onDoubleClick={() => {
 //                           setCurrentIndex(index);
 //                           setLightboxOpen(true);
 //                         }}
-//                         onClick={() => {
-//                           // ንተጠቃሚታት ሞባይል ብቐሊሉ ሰለክት ንምግባር ኣብ ከባቢ እቲ ስእሊ ክንክኩ እንተደለዩ (ወይ ድማ ቼክቦክስ ጠውቕ)
-//                         }}
 //                       >
 //                         <ProtectedImage
 //                           src={imgUrl}
 //                           alt={`Client photo ${index + 1}`}
 //                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-//                           showLogoOnly={true}
+//                           showLogoOnly={false} 
 //                         />
 //                       </div>
                      
@@ -354,7 +347,7 @@
 //                     src={slide.src}
 //                     alt="Lightbox Protected"
 //                     className="max-w-[90vw] max-h-[80vh] w-auto h-auto object-contain rounded-lg shadow-2xl mx-auto"
-//                     showLogoOnly={true}
+//                     showLogoOnly={false}
 //                   />
 //                 </div>
 //                 {/* ኣብ ውሽጢ Lightbox ኮንካ ሰለክት/ኣንሰለክት ንምግባር */}
@@ -383,6 +376,7 @@
 
 // export default ClientSelection;
 
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -408,6 +402,9 @@ function ClientSelection() {
   // Lightbox ዚድለ ስቴት
   const [lightboxOpen, setLightboxOpen] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+
+  // 🔍 ንዙም ዝድለ ስቴት (Zoom In / Zoom Out)
+  const [isZoomed, setIsZoomed] = useState(false);
 
   useEffect(() => {
     fetchPortals();
@@ -652,11 +649,12 @@ function ClientSelection() {
                         isSelected ? 'border-[#dfb557] shadow-2xl scale-[0.98]' : 'border-zinc-800 hover:border-zinc-600'
                       }`}
                     >
-                      {/* Protected Image (ብሉጽ ዋተርማርክ ዘለዎ - showLogoOnly ሓሶት (false) ተጌሩ ኣሎ) */}
+                      {/* Protected Image */}
                       <div 
                         className="w-full h-full cursor-pointer"
                         onDoubleClick={() => {
                           setCurrentIndex(index);
+                          setIsZoomed(false); // Reset zoom on open
                           setLightboxOpen(true);
                         }}
                       >
@@ -682,6 +680,7 @@ function ClientSelection() {
                       <div 
                         onClick={() => {
                           setCurrentIndex(index);
+                          setIsZoomed(false); // Reset zoom on open
                           setLightboxOpen(true);
                         }}
                         className="absolute bottom-2 left-2 z-10 bg-black/60 hover:bg-black text-[9px] uppercase tracking-wider text-zinc-300 px-2 py-1 rounded backdrop-blur-md cursor-pointer border border-white/10"
@@ -715,26 +714,43 @@ function ClientSelection() {
       {/* Lightbox ንምዕባይ ምስሊ */}
       <Lightbox
         open={lightboxOpen}
-        close={() => setLightboxOpen(false)}
+        close={() => { setLightboxOpen(false); setIsZoomed(false); }}
         slides={lightboxSlides}
         index={currentIndex}
         carousel={{ finite: false }}
         controller={{ closeOnBackdropClick: true }}
+        on={{
+          view: () => setIsZoomed(false) // Reset zoom when switching images
+        }}
         render={{
           slide: ({ slide }) => {
             const isCurrentSelected = selectedImages.includes(slide.src);
             return (
-              <div className="relative w-full h-full flex flex-col items-center justify-center p-2 md:p-6 select-none" onContextMenu={(e) => e.preventDefault()}>
-                <div className="relative flex items-center justify-center w-full h-full max-w-[90vw] max-h-[80vh]">
-                  <ProtectedImage
-                    src={slide.src}
-                    alt="Lightbox Protected"
-                    className="max-w-[90vw] max-h-[80vh] w-auto h-auto object-contain rounded-lg shadow-2xl mx-auto"
-                    showLogoOnly={false}
-                  />
+              <div className="relative w-full h-full flex flex-col items-center justify-center p-2 md:p-6 select-none overflow-auto" onContextMenu={(e) => e.preventDefault()}>
+                <div className="relative flex items-center justify-center w-full h-full max-w-[90vw] max-h-[75vh]">
+                  <div 
+                    className="cursor-pointer transition-transform duration-300 flex items-center justify-center"
+                    style={{ transform: isZoomed ? 'scale(1.8)' : 'scale(1)' }}
+                    onClick={() => setIsZoomed(!isZoomed)}
+                  >
+                    <ProtectedImage
+                      src={slide.src}
+                      alt="Lightbox Protected"
+                      className="max-w-[90vw] max-h-[75vh] w-auto h-auto object-contain rounded-lg shadow-2xl mx-auto"
+                      showLogoOnly={false}
+                    />
+                  </div>
                 </div>
-                {/* ኣብ ውሽጢ Lightbox ኮንካ ሰለክት/ኣንሰለክት ንምግባር */}
-                <div className="mt-4 z-50">
+
+                {/* 🔍 Zoom In / Zoom Out and Select Buttons */}
+                <div className="mt-4 z-50 flex items-center gap-3 flex-wrap justify-center">
+                  <button
+                    onClick={() => setIsZoomed(!isZoomed)}
+                    className="bg-zinc-800 text-zinc-200 hover:bg-zinc-700 px-4 py-2.5 rounded-xl text-xs uppercase font-bold tracking-widest transition-all shadow-lg border border-white/10 flex items-center gap-1.5"
+                  >
+                    {isZoomed ? '➖ Zoom Out' : '➕ Zoom In'}
+                  </button>
+
                   <button
                     onClick={() => handleCheckboxChange(slide.src)}
                     className={`px-6 py-2.5 rounded-xl text-xs uppercase font-bold tracking-widest transition-all shadow-lg ${
@@ -758,3 +774,5 @@ function ClientSelection() {
 }
 
 export default ClientSelection;
+
+
