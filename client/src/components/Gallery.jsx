@@ -4,6 +4,7 @@
 // import { useParams, Link } from 'react-router-dom';
 // import Lightbox from "yet-another-react-lightbox";
 // import "yet-another-react-lightbox/styles.css";
+// import ProtectedImage from '../components/ProtectedImage'; // 🔒 መከላኸሊ ኮምፖነንት
 
 // function Gallery() {
 //   const { category } = useParams();
@@ -82,7 +83,10 @@
 //   })) || [];
 
 //   return (
-//     <div className="min-h-screen bg-[#0a0a0a] text-white px-6 py-12 md:px-20">
+//     <div 
+//       className="min-h-screen bg-[#0a0a0a] text-white px-6 py-12 md:px-20 select-none"
+//       onContextMenu={(e) => e.preventDefault()} // 🔒 ኣብ መላእ ገጽ ራይት-ክሊክ ምዕጻው
+//     >
 //       <div className="mb-10 pt-16 md:pt-4">
 //         <Link 
 //           to="/" 
@@ -106,17 +110,18 @@
 //       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
 //         {projectData?.images && projectData.images.length > 0 ? (
 //           projectData.images.map((img, index) => (
-//             <div 
-//               key={index} 
-//               onClick={() => { setCurrentIndex(index); setOpen(true); }}
-//               className="group aspect-[2/3] overflow-hidden bg-zinc-900 rounded-lg cursor-pointer border border-zinc-800 shadow-lg relative"
-//             >
-//               <img 
+//             <div key={index} className="aspect-[2/3] overflow-hidden bg-zinc-900 rounded-lg border border-zinc-800 shadow-lg relative group">
+//               {/* 🔒 ProtectedImage ዝጥቀም ዘሎ ሎጎ ዋተርማርክን ራይት-ክሊክ ምክልኻልን ንምግባር እዩ */}
+//               <ProtectedImage 
 //                 src={img} 
 //                 alt={`${projectData.title} ${index + 1}`} 
-//                 className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" 
+//                 className="w-full h-full cursor-pointer"
+//                 onClick={() => { setCurrentIndex(index); setOpen(true); }}
 //               />
-//               <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+//               <div 
+//                 onClick={() => { setCurrentIndex(index); setOpen(true); }}
+//                 className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer pointer-events-auto z-30"
+//               >
 //                 <span className="text-white text-xs uppercase tracking-widest bg-black/60 px-3 py-1 rounded">View</span>
 //               </div>
 //             </div>
@@ -128,6 +133,7 @@
 //         )}
 //       </div>
 
+//       {/* 🔒 Lightbox ምስ ዝኽፈት እውን ብ ProtectedImage ተሸፊኑ ዋተርማርክን ምክልኻልን ክህልዎ ጌርናዮ ኣለና */}
 //       <Lightbox 
 //         open={open} 
 //         close={() => setOpen(false)} 
@@ -135,15 +141,14 @@
 //         index={currentIndex}
 //         render={{
 //           slide: ({ slide }) => (
-//             <div className="relative w-full h-full flex items-center justify-center p-4 select-none">
-//               <img 
-//                 src={slide.src} 
-//                 alt="Lightbox Protected" 
-//                 onContextMenu={(e) => e.preventDefault()}
-//                 draggable="false"
-//                 className="max-h-[85vh] max-w-[85vw] object-contain rounded-lg shadow-2xl pointer-events-none" 
-//               />
-//               <div className="absolute inset-0 z-10 bg-transparent"></div>
+//             <div className="relative w-full h-full flex items-center justify-center p-4 select-none" onContextMenu={(e) => e.preventDefault()}>
+//               <div className="relative max-h-[85vh] max-w-[85vw] w-full h-full flex items-center justify-center">
+//                 <ProtectedImage 
+//                   src={slide.src} 
+//                   alt="Lightbox Protected" 
+//                   className="max-h-[85vh] max-w-[85vw] object-contain rounded-lg shadow-2xl"
+//                 />
+//               </div>
 //             </div>
 //           )
 //         }}
@@ -238,7 +243,7 @@ function Gallery() {
 
   return (
     <div 
-      className="min-h-screen bg-[#0a0a0a] text-white px-6 py-12 md:px-20 select-none"
+      className="min-h-screen bg-[#0a0a0a] text-white px-3 py-12 md:px-20 select-none"
       onContextMenu={(e) => e.preventDefault()} // 🔒 ኣብ መላእ ገጽ ራይት-ክሊክ ምዕጻው
     >
       <div className="mb-10 pt-16 md:pt-4">
@@ -261,11 +266,11 @@ function Gallery() {
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+      {/* 📱 ሞባይል ሓዊሱ ብሰለስተ (3 columns) ክጸንሕ ግሪድ ተስተኻኺሉ ኣሎ */}
+      <div className="grid grid-cols-3 gap-2 md:gap-6">
         {projectData?.images && projectData.images.length > 0 ? (
           projectData.images.map((img, index) => (
-            <div key={index} className="aspect-[2/3] overflow-hidden bg-zinc-900 rounded-lg border border-zinc-800 shadow-lg relative group">
-              {/* 🔒 ProtectedImage ዝጥቀም ዘሎ ሎጎ ዋተርማርክን ራይት-ክሊክ ምክልኻልን ንምግባር እዩ */}
+            <div key={index} className="aspect-[2/3] overflow-hidden bg-zinc-900 rounded-md md:rounded-lg border border-zinc-800 shadow-lg relative group">
               <ProtectedImage 
                 src={img} 
                 alt={`${projectData.title} ${index + 1}`} 
@@ -276,7 +281,7 @@ function Gallery() {
                 onClick={() => { setCurrentIndex(index); setOpen(true); }}
                 className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer pointer-events-auto z-30"
               >
-                <span className="text-white text-xs uppercase tracking-widest bg-black/60 px-3 py-1 rounded">View</span>
+                <span className="text-white text-[10px] md:text-xs uppercase tracking-widest bg-black/60 px-2 py-1 rounded">View</span>
               </div>
             </div>
           ))
@@ -287,7 +292,7 @@ function Gallery() {
         )}
       </div>
 
-      {/* 🔒 Lightbox ምስ ዝኽፈት እውን ብ ProtectedImage ተሸፊኑ ዋተርማርክን ምክልኻልን ክህልዎ ጌርናዮ ኣለና */}
+      {/* 🔍 Lightbox (ብዘይ ዙም-ኢን ሙሉእ ምስሊ ብግቡእ ክርአ ተስተኻኺሉ) */}
       <Lightbox 
         open={open} 
         close={() => setOpen(false)} 
@@ -295,12 +300,12 @@ function Gallery() {
         index={currentIndex}
         render={{
           slide: ({ slide }) => (
-            <div className="relative w-full h-full flex items-center justify-center p-4 select-none" onContextMenu={(e) => e.preventDefault()}>
-              <div className="relative max-h-[85vh] max-w-[85vw] w-full h-full flex items-center justify-center">
+            <div className="relative w-full h-full flex items-center justify-center p-2 md:p-6 select-none" onContextMenu={(e) => e.preventDefault()}>
+              <div className="relative w-full h-full flex items-center justify-center max-w-4xl max-h-[85vh]">
                 <ProtectedImage 
                   src={slide.src} 
                   alt="Lightbox Protected" 
-                  className="max-h-[85vh] max-w-[85vw] object-contain rounded-lg shadow-2xl"
+                  className="w-auto h-auto max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl"
                 />
               </div>
             </div>
