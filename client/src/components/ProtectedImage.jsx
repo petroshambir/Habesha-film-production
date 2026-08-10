@@ -144,6 +144,7 @@
 // export default ProtectedImage;
 
 import React, { useState, useEffect } from 'react';
+import adalLogo from '../assets/adal-ogo.png'; // ኣብዚ ሎጎ ፋይል ኣብ assets ፎልደር ኣትዩ
 
 const ProtectedImage = ({ src, alt, className, onClick }) => {
   const [isTouched, setIsTouched] = useState(false);
@@ -194,7 +195,7 @@ const ProtectedImage = ({ src, alt, className, onClick }) => {
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 p-4">
         <div className="flex flex-col items-center text-center transform -rotate-12 select-none opacity-40 group-hover:opacity-75 transition-opacity duration-300">
           <img 
-            src="/adal-ogo.png" 
+            src={adalLogo} 
             alt="Habesha Logo" 
             className="w-6 h-6 md:w-8 md:h-8 object-contain mb-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]"
           />
