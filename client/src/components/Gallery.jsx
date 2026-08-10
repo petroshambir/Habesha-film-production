@@ -403,7 +403,7 @@ function Gallery() {
   return (
     <div 
       className="min-h-screen bg-[#0a0a0a] text-white px-3 py-12 md:px-20 select-none"
-      onContextMenu={(e) => e.preventDefault()} // 🔒 ኣብ መላእ ገጽ ራይት-ክሊክ ምዕጻው
+      onContextMenu={(e) => e.preventDefault()} 
     >
       <div className="mb-10 pt-16 md:pt-4">
         <Link 
@@ -425,7 +425,7 @@ function Gallery() {
         </p>
       </div>
 
-      {/* 📱 ሞባይል 3 ኮሎም | 🖥️ ዓቢ ስክሪን (Desktop) 4 ኮሎም ጌርናዮ ኣለና */}
+      {/* 📱 ሞባይል 3 ኮሎም | 🖥️ ላፕቶፕ/ዓቢ ስክሪን 4 ኮሎም */}
       <div className="grid grid-cols-3 md:grid-cols-4 gap-2 md:gap-6">
         {projectData?.images && projectData.images.length > 0 ? (
           projectData.images.map((img, index) => (
@@ -451,7 +451,7 @@ function Gallery() {
         )}
       </div>
 
-      {/* 🔍 Lightbox (ኣብ ዓቢ ስክሪን ብዘይ ዙም-ኢን ሙሉእ ምስሊ ብግቡእ ክርአ ተስተኻኺሉ) */}
+      {/* 🔍 Lightbox (ኣብ ላፕቶፕ ብግቡእ ብዘይ ዝኾነ ዙም-ኢን ምሉእ ምስሊ ንክረአ ተስተኻኺሉ) */}
       <Lightbox 
         open={open} 
         close={() => setOpen(false)} 
@@ -461,12 +461,12 @@ function Gallery() {
         controller={{ closeOnBackdropClick: true }}
         render={{
           slide: ({ slide }) => (
-            <div className="relative w-full h-full flex items-center justify-center p-4 md:p-10 select-none" onContextMenu={(e) => e.preventDefault()}>
-              <div className="relative w-full h-full flex items-center justify-center max-w-7xl max-h-[90vh]">
+            <div className="relative w-full h-full flex items-center justify-center p-2 md:p-6 select-none" onContextMenu={(e) => e.preventDefault()}>
+              <div className="relative flex items-center justify-center w-full h-full max-w-[90vw] max-h-[85vh]">
                 <ProtectedImage 
                   src={slide.src} 
                   alt="Lightbox Protected" 
-                  className="w-full h-full max-w-[90vw] max-h-[85vh] object-contain rounded-lg shadow-2xl"
+                  className="max-w-[90vw] max-h-[85vh] w-auto h-auto object-contain rounded-lg shadow-2xl mx-auto"
                 />
               </div>
             </div>
