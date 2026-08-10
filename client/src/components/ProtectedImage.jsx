@@ -141,7 +141,7 @@ import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProtectedImage from '../components/ProtectedImage';
 
-function ProtectedImagePage() {
+function ProtectedImage() {
   const [portals, setPortals] = useState([]);
   const [project, setProject] = useState(null);
   const [selectedImages, setSelectedImages] = useState([]);
@@ -507,4 +507,4 @@ function ProtectedImagePage() {
   );
 }
 
-export default ProtectedImagePage;
+export default ProtectedImage;
