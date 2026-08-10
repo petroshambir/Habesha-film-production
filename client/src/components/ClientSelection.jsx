@@ -378,6 +378,7 @@
 
 
 import React, { useState, useEffect } from 'react';
+
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProtectedImage from '../components/ProtectedImage'; // 🔒 መከላኸሊ ኮምፖነንት
