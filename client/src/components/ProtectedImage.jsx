@@ -143,10 +143,80 @@
 
 // export default ProtectedImage;
 
-import React, { useState, useEffect } from 'react';
-import adalLogo from '../assets/images/adal-logo.png'; // ኣብዚ ሎጎ ፋይል ኣብ assets ፎልደር ኣትዩ
+// import React, { useState, useEffect } from 'react';
+// import adalLogo from '../assets/images/adal-logo.png'; // ኣብዚ ሎጎ ፋይል ኣብ assets ፎልደር ኣትዩ
 
-const ProtectedImage = ({ src, alt, className, onClick }) => {
+// const ProtectedImage = ({ src, alt, className, onClick }) => {
+//   const [isTouched, setIsTouched] = useState(false);
+
+//   useEffect(() => {
+//     const handleKeyDown = (e) => {
+//       if (
+//         e.key === 'PrintScreen' || 
+//         (e.ctrlKey && e.shiftKey && e.key.toLowerCase() === 's')
+//       ) {
+//         e.preventDefault();
+//         alert("⚠️ Screenshots are protected on this gallery!");
+//       }
+//     };
+
+//     window.addEventListener('keydown', handleKeyDown);
+//     return () => {
+//       window.removeEventListener('keydown', handleKeyDown);
+//     };
+//   }, []);
+
+//   return (
+//     <div 
+//       onClick={onClick}
+//       className={`relative overflow-hidden select-none group ${className || ''}`}
+//       onContextMenu={(e) => e.preventDefault()}
+//       onDragStart={(e) => e.preventDefault()}
+//       onTouchStart={() => setIsTouched(true)}
+//       onTouchEnd={() => setTimeout(() => setIsTouched(false), 1500)}
+//     >
+//       {/* 1. እቲ ትክክለኛ ምስሊ */}
+//       <img 
+//         src={src} 
+//         alt={alt || "Protected Image"} 
+//         className={`w-full h-full object-cover pointer-events-none transition-all duration-300 ${
+//           isTouched ? 'blur-sm brightness-75' : '' 
+//         }`}
+//       />
+
+//       {/* 2. መከላኸሊ ባዶ ምስሊ (Transparent Layer) */}
+//       <img 
+//         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" 
+//         alt="Protection Layer" 
+//         className="absolute inset-0 w-full h-full opacity-0 z-10"
+//       />
+
+//       {/* 3. ማእከላይ ዋተርማርክ (ሎጎን ጽሑፍን ብማእከል) */}
+//       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 p-4">
+//         <div className="flex flex-col items-center text-center transform -rotate-12 select-none opacity-40 group-hover:opacity-75 transition-opacity duration-300">
+//           <img 
+//             src={adalLogo} 
+//             alt="Habesha Logo" 
+//             className="w-6 h-6 md:w-8 md:h-8 object-contain mb-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]"
+//           />
+//           <h2 className="text-lg md:text-2xl font-serif font-bold tracking-[0.3em] uppercase text-white/80 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+//             Habesha Pictures
+//           </h2>
+//           <p className="text-[9px] md:text-[11px] tracking-[0.5em] uppercase text-amber-400/90 font-semibold mt-1">
+//             Protected Gallery
+//           </p>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ProtectedImage;
+
+import React, { useState, useEffect } from 'react';
+import adalLogo from '../assets/images/adal-logo.png'; 
+
+const ProtectedImage = ({ src, alt, className, onClick, showLogoOnly = false }) => {
   const [isTouched, setIsTouched] = useState(false);
 
   useEffect(() => {
@@ -175,7 +245,6 @@ const ProtectedImage = ({ src, alt, className, onClick }) => {
       onTouchStart={() => setIsTouched(true)}
       onTouchEnd={() => setTimeout(() => setIsTouched(false), 1500)}
     >
-      {/* 1. እቲ ትክክለኛ ምስሊ */}
       <img 
         src={src} 
         alt={alt || "Protected Image"} 
@@ -184,28 +253,38 @@ const ProtectedImage = ({ src, alt, className, onClick }) => {
         }`}
       />
 
-      {/* 2. መከላኸሊ ባዶ ምስሊ (Transparent Layer) */}
       <img 
         src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" 
         alt="Protection Layer" 
         className="absolute inset-0 w-full h-full opacity-0 z-10"
       />
 
-      {/* 3. ማእከላይ ዋተርማርክ (ሎጎን ጽሑፍን ብማእከል) */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-20 p-4">
-        <div className="flex flex-col items-center text-center transform -rotate-12 select-none opacity-40 group-hover:opacity-75 transition-opacity duration-300">
-          <img 
-            src={adalLogo} 
-            alt="Habesha Logo" 
-            className="w-6 h-6 md:w-8 md:h-8 object-contain mb-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]"
-          />
-          <h2 className="text-lg md:text-2xl font-serif font-bold tracking-[0.3em] uppercase text-white/80 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
-            Habesha Pictures
-          </h2>
-          <p className="text-[9px] md:text-[11px] tracking-[0.5em] uppercase text-amber-400/90 font-semibold mt-1">
-            Protected Gallery
-          </p>
-        </div>
+        {showLogoOnly ? (
+          /* ኣብ Home ዝጥቀመሉ - ሎጎ ጥራሕ */
+          <div className="flex flex-col items-center justify-center select-none opacity-40 group-hover:opacity-75 transition-opacity duration-300">
+            <img 
+              src={adalLogo} 
+              alt="Habesha Logo" 
+              className="w-12 h-12 md:w-16 md:h-16 object-contain drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]"
+            />
+          </div>
+        ) : (
+          /* ኣብ ካልእ ቦታታት ዝጥቀመሉ - ሙሉእ ዋተርማርክ (ሎጎን ጽሑፍን) */
+          <div className="flex flex-col items-center text-center transform -rotate-12 select-none opacity-40 group-hover:opacity-75 transition-opacity duration-300">
+            <img 
+              src={adalLogo} 
+              alt="Habesha Logo" 
+              className="w-6 h-6 md:w-8 md:h-8 object-contain mb-1.5 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]"
+            />
+            <h2 className="text-lg md:text-2xl font-serif font-bold tracking-[0.3em] uppercase text-white/80 drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)]">
+              Habesha Pictures
+            </h2>
+            <p className="text-[9px] md:text-[11px] tracking-[0.5em] uppercase text-amber-400/90 font-semibold mt-1">
+              Protected Gallery
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
