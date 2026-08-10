@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import ProtectedImage from './ProtectedImage'; 
+// import ProtectedImage from './ProtectedImage'; 
+import ProtectedImage from './ProtectedImage'; // ኣብዚ ኮምፖነንት ኣሎ
 
 function Gallery() {
   const { category } = useParams(); // እቲ ካብ URL ዝመጽእ ዘሎ ስሉግ (slug)
