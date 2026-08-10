@@ -1524,13 +1524,14 @@
 // //
 // export default ClientSelection;
 
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import ProtectedImage from '../components/ProtectedImage';
 import Lightbox from "yet-another-react-lightbox";
-import "yet-another-react-lightbox/styles.css";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
+import "yet-another-react-lightbox/styles.css";
 import "yet-another-react-lightbox/plugins/zoom.css";
 
 const fixImageUrl = (url) => {
