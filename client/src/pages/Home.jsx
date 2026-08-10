@@ -966,11 +966,11 @@ function WeddingSection({ section, customHeadings, customDescriptions }) {
         </div>
       )}
 
-      <div className="text-center pt-8 px-4">
+{/*       <div className="text-center pt-8 px-4">
         <Link to={`/gallery/${section._id || generateSlug(section.title)}`} className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3.5 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-lg">
           View Full Gallery
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }
@@ -1046,11 +1046,11 @@ function BridalShowerSection({ section, customHeadings, customDescriptions }) {
         ))}
       </div>
 
-      <div className="text-center pt-6">
+{/*       <div className="text-center pt-6">
         <Link to={`/gallery/${section._id || generateSlug(section.title)}`} className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md">
           View Full Gallery
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }
@@ -1093,11 +1093,11 @@ function BabyShowerSection({ section, customHeadings, customDescriptions }) {
         })}
       </div>
 
-      <div className="text-center pt-6">
+{/*       <div className="text-center pt-6">
         <Link to={`/gallery/${section._id || generateSlug(section.title)}`} className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md">
           View Full Gallery
         </Link>
-      </div>
+      </div> */}
     </div>
   );
 }
