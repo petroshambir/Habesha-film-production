@@ -158,7 +158,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-import ProtectedImage from '../components/ProtectedImage'; // ነቲ ዝተዳለወ ኮምፖነንት ጸውዖ
+import ProtectedImage from '../components/ProtectedImage'; // 🔒 መከላኸሊ ኮምፖነንት
 
 function Gallery() {
   const { category } = useParams();
@@ -237,7 +237,10 @@ function Gallery() {
   })) || [];
 
   return (
-    <div className="min-h-screen bg-[#0a0a0a] text-white px-6 py-12 md:px-20">
+    <div 
+      className="min-h-screen bg-[#0a0a0a] text-white px-6 py-12 md:px-20 select-none"
+      onContextMenu={(e) => e.preventDefault()} // 🔒 ኣብ መላእ ገጽ ራይት-ክሊክ ምዕጻው
+    >
       <div className="mb-10 pt-16 md:pt-4">
         <Link 
           to="/" 
@@ -261,7 +264,8 @@ function Gallery() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
         {projectData?.images && projectData.images.length > 0 ? (
           projectData.images.map((img, index) => (
-            <div key={index} className="aspect-[2/3] overflow-hidden bg-zinc-900 rounded-lg border border-zinc-800 shadow-lg relative">
+            <div key={index} className="aspect-[2/3] overflow-hidden bg-zinc-900 rounded-lg border border-zinc-800 shadow-lg relative group">
+              {/* 🔒 ProtectedImage ዝጥቀም ዘሎ ሎጎ ዋተርማርክን ራይት-ክሊክ ምክልኻልን ንምግባር እዩ */}
               <ProtectedImage 
                 src={img} 
                 alt={`${projectData.title} ${index + 1}`} 
@@ -270,7 +274,7 @@ function Gallery() {
               />
               <div 
                 onClick={() => { setCurrentIndex(index); setOpen(true); }}
-                className="absolute inset-0 bg-black/20 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer pointer-events-auto z-30"
+                className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer pointer-events-auto z-30"
               >
                 <span className="text-white text-xs uppercase tracking-widest bg-black/60 px-3 py-1 rounded">View</span>
               </div>
@@ -283,6 +287,7 @@ function Gallery() {
         )}
       </div>
 
+      {/* 🔒 Lightbox ምስ ዝኽፈት እውን ብ ProtectedImage ተሸፊኑ ዋተርማርክን ምክልኻልን ክህልዎ ጌርናዮ ኣለና */}
       <Lightbox 
         open={open} 
         close={() => setOpen(false)} 
@@ -290,15 +295,14 @@ function Gallery() {
         index={currentIndex}
         render={{
           slide: ({ slide }) => (
-            <div className="relative w-full h-full flex items-center justify-center p-4 select-none">
-              <img 
-                src={slide.src} 
-                alt="Lightbox Protected" 
-                onContextMenu={(e) => e.preventDefault()}
-                draggable="false"
-                className="max-h-[85vh] max-w-[85vw] object-contain rounded-lg shadow-2xl pointer-events-none" 
-              />
-              <div className="absolute inset-0 z-10 bg-transparent"></div>
+            <div className="relative w-full h-full flex items-center justify-center p-4 select-none" onContextMenu={(e) => e.preventDefault()}>
+              <div className="relative max-h-[85vh] max-w-[85vw] w-full h-full flex items-center justify-center">
+                <ProtectedImage 
+                  src={slide.src} 
+                  alt="Lightbox Protected" 
+                  className="max-h-[85vh] max-w-[85vw] object-contain rounded-lg shadow-2xl"
+                />
+              </div>
             </div>
           )
         }}
