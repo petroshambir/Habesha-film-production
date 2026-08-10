@@ -378,11 +378,13 @@
 
 // export default Home;
 
+
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
 import heroVideo from '../assets/videos/robi-v1.mp4';
 import Footer from "../components/Footer";
+import ProtectedImage from '../components/ProtectedImage'; // 🔒 መከላኸሊ ኮምፖነንት
 
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
@@ -422,37 +424,6 @@ const fixImageUrl = (url) => {
     return url.replace('http://localhost:5000', 'https://habesha-film-production-server.onrender.com');
   }
   return url;
-};
-
-// 🔒 መከላኸሊ ምስሊ ኮምፖነንት (ዋተርማርክ የብሉን፡ ግና ስርቂ ይከላኸል)
-const ProtectedHomeImage = ({ src, alt, className }) => {
-  const [isTouched, setIsTouched] = useState(false);
-
-  return (
-    <div 
-      className={`relative overflow-hidden select-none group ${className || ''}`}
-      onContextMenu={(e) => e.preventDefault()}
-      onDragStart={(e) => e.preventDefault()}
-      onTouchStart={() => setIsTouched(true)}
-      onTouchEnd={() => setTimeout(() => setIsTouched(false), 1500)}
-    >
-      {/* 1. እቲ ቀንዲ ምስሊ (ሞባይል ክትንከፍ ከሎ ይድብዘዝ) */}
-      <img 
-        src={src} 
-        alt={alt || "Protected Image"} 
-        className={`w-full h-full object-cover pointer-events-none transition-all duration-300 ${
-          isTouched ? 'blur-md opacity-20' : ''
-        }`}
-      />
-
-      {/* 2. መከላኸሊ ባዶ ምስሊ (Transparent Layer - ሰብ ከይገለብጦ ንምዕጻው) */}
-      <img 
-        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" 
-        alt="Protection Layer" 
-        className="absolute inset-0 w-full h-full opacity-0 z-10"
-      />
-    </div>
-  );
 };
 
 function Home() {
@@ -570,7 +541,7 @@ function WeddingSection({ section, customHeadings, customDescriptions }) {
             </p>
           </div>
           <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border-2 border-[#dfb557]/40 relative">
-            <ProtectedHomeImage src={images[0]} alt={section.title} className="w-full h-full" />
+            <ProtectedImage src={images[0]} alt={section.title} className="w-full h-full" />
           </div>
         </div>
       )}
@@ -600,7 +571,7 @@ function WeddingSection({ section, customHeadings, customDescriptions }) {
             </p>
           </div>
           <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border-2 border-[#dfb557]/40 relative">
-            <ProtectedHomeImage src={images[5]} alt={section.title} className="w-full h-full" />
+            <ProtectedImage src={images[5]} alt={section.title} className="w-full h-full" />
           </div>
         </div>
       )}
@@ -644,7 +615,7 @@ function ChapterRow({ img, actualIdx, isEven, sectionTitle, customHeadings, cust
       </div>
       <div className="relative flex-shrink-0 flex justify-center">
         <div className="w-32 h-32 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 sm:border-4 border-[#dfb557] shadow-xl bg-zinc-900 hover:scale-105 transition-transform duration-500 flex-shrink-0">
-          <ProtectedHomeImage src={img} alt={sectionTitle} className="w-full h-full" />
+          <ProtectedImage src={img} alt={sectionTitle} className="w-full h-full" />
         </div>
       </div>
     </div>
@@ -678,7 +649,7 @@ function BridalShowerSection({ section, customHeadings, customDescriptions }) {
                 return (
                   <div key={imgIdx} className="space-y-2 flex flex-col justify-between">
                     <div className="w-full aspect-[3/4] sm:aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden border-2 border-[#dfb557]/60 shadow-lg bg-zinc-900">
-                      <ProtectedHomeImage src={img} alt={section.title} className="w-full h-full hover:scale-105 transition-transform duration-500" />
+                      <ProtectedImage src={img} alt={section.title} className="w-full h-full hover:scale-105 transition-transform duration-500" />
                     </div>
                     <div className="text-center space-y-1 px-1">
                       <span className="text-[7px] sm:text-[10px] tracking-[0.2em] uppercase text-[#dfb557] font-bold block">
@@ -728,7 +699,7 @@ function BabyShowerSection({ section, customHeadings, customDescriptions }) {
           return (
             <div key={i} className={`flex flex-col sm:flex-row items-center gap-4 sm:gap-8 p-4 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/40 shadow-xl ${isEven ? 'sm:flex-row' : 'sm:flex-row-reverse'}`}>
               <div className="w-full sm:w-1/2 aspect-[4/3] rounded-xl overflow-hidden border border-[#dfb557]/50 shadow-md bg-zinc-900 flex-shrink-0">
-                <ProtectedHomeImage src={img} alt={section.title} className="w-full h-full hover:scale-105 transition-transform duration-500" />
+                <ProtectedImage src={img} alt={section.title} className="w-full h-full hover:scale-105 transition-transform duration-500" />
               </div>
               <div className="w-full sm:w-1/2 space-y-2 text-center sm:text-left">
                 <span className="text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
@@ -771,7 +742,7 @@ function DefaultSection({ section }) {
       <div className="grid grid-cols-2 gap-4 w-full pt-4 max-w-2xl">
         {images.slice(0, 2).map((img, i) => (
           <div key={i} className="aspect-[3/4] overflow-hidden bg-zinc-900 border border-[#dfb557]/40 rounded-xl shadow-lg">
-            <ProtectedHomeImage src={img} alt={section.title} className="w-full h-full" />
+            <ProtectedImage src={img} alt={section.title} className="w-full h-full" />
           </div>
         ))}
       </div>

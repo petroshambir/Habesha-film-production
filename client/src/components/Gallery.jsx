@@ -154,43 +154,11 @@
 
 // export default Gallery;
 
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import Lightbox from "yet-another-react-lightbox";
 import "yet-another-react-lightbox/styles.css";
-
-// 🔒 መከላኸሊ ምስሊ ኮምፖነንት (ዋተርማርክ የብሉን፡ ግና ስርቂ ይከላኸል)
-const ProtectedGalleryImage = ({ src, alt, className, onClick }) => {
-  const [isTouched, setIsTouched] = useState(false);
-
-  return (
-    <div 
-      onClick={onClick}
-      className={`relative overflow-hidden select-none group ${className || ''}`}
-      onContextMenu={(e) => e.preventDefault()}
-      onDragStart={(e) => e.preventDefault()}
-      onTouchStart={() => setIsTouched(true)}
-      onTouchEnd={() => setTimeout(() => setIsTouched(false), 1500)}
-    >
-      {/* 1. እቲ ቀንዲ ምስሊ */}
-      <img 
-        src={src} 
-        alt={alt || "Protected Image"} 
-        className={`w-full h-full object-cover pointer-events-none transition-all duration-300 ${
-          isTouched ? 'blur-md opacity-20' : ''
-        }`}
-      />
-
-      {/* 2. መከላኸሊ ባዶ ምስሊ (Transparent Layer - ሰብ ከይገለብጦ ንምዕጻው) */}
-      <img 
-        src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" 
-        alt="Protection Layer" 
-        className="absolute inset-0 w-full h-full opacity-0 z-10"
-      />
-    </div>
-  );
-};
+import ProtectedImage from '../components/ProtectedImage'; // ነቲ ዝተዳለወ ኮምፖነንት ጸውዖ
 
 function Gallery() {
   const { category } = useParams();
@@ -293,15 +261,17 @@ function Gallery() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
         {projectData?.images && projectData.images.length > 0 ? (
           projectData.images.map((img, index) => (
-            <div key={index} className="aspect-[2/3] overflow-hidden bg-zinc-900 rounded-lg cursor-pointer border border-zinc-800 shadow-lg relative">
-              {/* 🛡️ ነቲ ስእሊ ብ ProtectedGalleryImage ተኪናዮ ኣለና */}
-              <ProtectedGalleryImage 
+            <div key={index} className="aspect-[2/3] overflow-hidden bg-zinc-900 rounded-lg border border-zinc-800 shadow-lg relative">
+              <ProtectedImage 
                 src={img} 
                 alt={`${projectData.title} ${index + 1}`} 
-                className="w-full h-full transition-transform duration-500 group-hover:scale-105"
+                className="w-full h-full cursor-pointer"
                 onClick={() => { setCurrentIndex(index); setOpen(true); }}
               />
-              <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center pointer-events-none">
+              <div 
+                onClick={() => { setCurrentIndex(index); setOpen(true); }}
+                className="absolute inset-0 bg-black/20 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center cursor-pointer pointer-events-auto z-30"
+              >
                 <span className="text-white text-xs uppercase tracking-widest bg-black/60 px-3 py-1 rounded">View</span>
               </div>
             </div>
