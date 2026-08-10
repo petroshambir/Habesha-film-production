@@ -754,7 +754,6 @@
 // export default Home;
 
 
-
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Hero from '../components/Hero';
@@ -785,8 +784,8 @@ const DEFAULT_HEADINGS = [
 const generateSlug = (titleText) => {
   if (!titleText) return '';
   return titleText
-    .replace(/["']/g, '')
     .toLowerCase()
+    .replace(/"/g, '')
     .replace(/&/g, 'and')
     .trim()
     .replace(/[^\w\s-]/g, '')
@@ -841,51 +840,40 @@ function Home() {
 
       <section className="py-12 md:py-24 w-full">
         {sections.map((section, index) => {
-          const cleanTitle = section.title ? section.title.replace(/["']/g, '') : '';
-          const titleLower = cleanTitle.toLowerCase();
-          
+          const titleLower = section.title ? section.title.toLowerCase() : '';
           const isWedding = titleLower.includes('wedding');
           const isBridalShower = titleLower.includes('bridal');
-          const isBabyShower = titleLower.includes('baby') || titleLower.includes('baptism') || titleLower.includes('shower');
-
-          let displayCategoryTitle = "Curated Project";
-          if (isWedding) {
-            displayCategoryTitle = "Wedding Celebration";
-          } else if (isBridalShower) {
-            displayCategoryTitle = "Bridal Shower Celebration";
-          } else if (isBabyShower) {
-            displayCategoryTitle = "Baby Shower & Baptism Celebration";
-          }
+          const isBabyShower = titleLower.includes('baby') || titleLower.includes('baptism');
 
           const customDescriptions = section.descriptions?.length > 0 ? section.descriptions : DEFAULT_DESCRIPTIONS;
           const customHeadings = section.headings?.length > 0 ? section.headings : DEFAULT_HEADINGS;
 
           return (
-            <div key={section._id || index} className="mb-20 md:mb-36 w-full border-b border-zinc-900 pb-16 md:pb-28 last:border-b-0">
+            <div key={section.id || index} className="mb-20 md:mb-36 w-full border-b border-zinc-900 pb-16 md:pb-28 last:border-b-0">
               
-              <div className="mb-10 md:mb-16 text-center px-4">
-                <span className="text-[9px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
-                  {displayCategoryTitle}
-                </span>
-                <h3 className="text-3xl sm:text-4xl md:text-6xl font-serif italic text-zinc-100 tracking-wide font-light">
-                  {(section.names && section.names.trim() !== "") ? section.names : cleanTitle}
-                </h3>
-                <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto my-3"></div>
-                {section.date && (
+              {section.names && (
+                <div className="mb-10 md:mb-16 text-center px-4">
+                  <span className="text-[9px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
+                    Event Story & Timeline
+                  </span>
+                  <h3 className="text-3xl sm:text-4xl md:text-6xl font-serif italic text-zinc-100 tracking-wide font-light">
+                    {section.names}
+                  </h3>
+                  <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto my-3"></div>
                   <p className="text-[10px] md:text-[11px] uppercase tracking-[0.4em] text-zinc-400 font-light">
                     {section.date}
                   </p>
-                )}
-              </div>
+                </div>
+              )}
 
               {isWedding ? (
-                <WeddingSection section={section} cleanTitle={cleanTitle} customHeadings={customHeadings} customDescriptions={customDescriptions} />
+                <WeddingSection section={section} customHeadings={customHeadings} customDescriptions={customDescriptions} />
               ) : isBridalShower ? (
-                <BridalShowerSection section={section} cleanTitle={cleanTitle} customHeadings={customHeadings} customDescriptions={customDescriptions} />
+                <BridalShowerSection section={section} customHeadings={customHeadings} customDescriptions={customDescriptions} />
               ) : isBabyShower ? (
-                <BabyShowerSection section={section} cleanTitle={cleanTitle} customHeadings={customHeadings} customDescriptions={customDescriptions} />
+                <BabyShowerSection section={section} customHeadings={customHeadings} customDescriptions={customDescriptions} />
               ) : (
-                <DefaultSection section={section} cleanTitle={cleanTitle} />
+                <DefaultSection section={section} />
               )}
             </div>
           );
@@ -898,7 +886,7 @@ function Home() {
   );
 }
 
-function WeddingSection({ section, cleanTitle, customHeadings, customDescriptions }) {
+function WeddingSection({ section, customHeadings, customDescriptions }) {
   const images = Array.isArray(section.images) ? section.images : [];
 
   return (
@@ -914,7 +902,7 @@ function WeddingSection({ section, cleanTitle, customHeadings, customDescription
             </p>
           </div>
           <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border-2 border-[#dfb557]/40 relative">
-            <img src={images[0]} alt={cleanTitle} className="w-full h-full object-cover" />
+            <img src={images[0]} alt={section.title} className="w-full h-full object-cover" />
           </div>
         </div>
       )}
@@ -926,7 +914,7 @@ function WeddingSection({ section, cleanTitle, customHeadings, customDescription
               const actualIdx = i + 1;
               const isEven = i % 2 === 0;
               return (
-                <ChapterRow key={i} img={img} actualIdx={actualIdx} isEven={isEven} cleanTitle={cleanTitle} customHeadings={customHeadings} customDescriptions={customDescriptions} />
+                <ChapterRow key={i} img={img} actualIdx={actualIdx} isEven={isEven} sectionTitle={section.title} customHeadings={customHeadings} customDescriptions={customDescriptions} />
               );
             })}
           </div>
@@ -944,7 +932,7 @@ function WeddingSection({ section, cleanTitle, customHeadings, customDescription
             </p>
           </div>
           <div className="w-full aspect-[16/9] overflow-hidden rounded-2xl shadow-2xl bg-zinc-900 border-2 border-[#dfb557]/40 relative">
-            <img src={images[5]} alt={cleanTitle} className="w-full h-full object-cover" />
+            <img src={images[5]} alt={section.title} className="w-full h-full object-cover" />
           </div>
         </div>
       )}
@@ -956,7 +944,7 @@ function WeddingSection({ section, cleanTitle, customHeadings, customDescription
               const actualIdx = i + 6;
               const isEven = i % 2 === 0;
               return (
-                <ChapterRow key={i} img={img} actualIdx={actualIdx} isEven={isEven} cleanTitle={cleanTitle} customHeadings={customHeadings} customDescriptions={customDescriptions} />
+                <ChapterRow key={i} img={img} actualIdx={actualIdx} isEven={isEven} sectionTitle={section.title} customHeadings={customHeadings} customDescriptions={customDescriptions} />
               );
             })}
           </div>
@@ -964,7 +952,7 @@ function WeddingSection({ section, cleanTitle, customHeadings, customDescription
       )}
 
       <div className="text-center pt-8 px-4">
-        <Link to={`/gallery/${section._id || generateSlug(cleanTitle)}`} className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3.5 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-lg">
+        <Link to={`/gallery/${section._id || generateSlug(section.title)}`} className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3.5 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-lg">
           View Full Gallery
         </Link>
       </div>
@@ -972,7 +960,7 @@ function WeddingSection({ section, cleanTitle, customHeadings, customDescription
   );
 }
 
-function ChapterRow({ img, actualIdx, isEven, cleanTitle, customHeadings, customDescriptions }) {
+function ChapterRow({ img, actualIdx, isEven, sectionTitle, customHeadings, customDescriptions }) {
   return (
     <div className={`flex items-center justify-between gap-4 sm:gap-6 p-4 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/50 shadow-2xl ${isEven ? 'flex-row-reverse text-right sm:text-left' : 'flex-row text-left sm:text-right'}`}>
       <div className={`flex-1 ${isEven ? 'sm:text-left text-right' : 'sm:text-right text-left'} space-y-1.5`}>
@@ -988,14 +976,14 @@ function ChapterRow({ img, actualIdx, isEven, cleanTitle, customHeadings, custom
       </div>
       <div className="relative flex-shrink-0 flex justify-center">
         <div className="w-32 h-32 sm:w-48 sm:h-48 rounded-full overflow-hidden border-2 sm:border-4 border-[#dfb557] shadow-xl bg-zinc-900 hover:scale-105 transition-transform duration-500 flex-shrink-0">
-          <img src={img} alt={cleanTitle} className="w-full h-full object-cover" />
+          <img src={img} alt={sectionTitle} className="w-full h-full object-cover" />
         </div>
       </div>
     </div>
   );
 }
 
-function BridalShowerSection({ section, cleanTitle, customHeadings, customDescriptions }) {
+function BridalShowerSection({ section, customHeadings, customDescriptions }) {
   const images = Array.isArray(section.images) ? section.images : [];
   const pairs = [];
   for (let i = 0; i < images.length; i += 2) {
@@ -1008,7 +996,7 @@ function BridalShowerSection({ section, cleanTitle, customHeadings, customDescri
         <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block">
           Bridal Shower Celebration
         </span>
-        <h2 className="text-3xl sm:text-4xl font-serif text-zinc-100">{cleanTitle}</h2>
+        <h2 className="text-3xl sm:text-4xl font-serif text-zinc-100">{section.title}</h2>
         <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto"></div>
         <p className="text-sm text-zinc-400 font-light max-w-md mx-auto">{section.desc || section.description}</p>
       </div>
@@ -1022,7 +1010,7 @@ function BridalShowerSection({ section, cleanTitle, customHeadings, customDescri
                 return (
                   <div key={imgIdx} className="space-y-2 flex flex-col justify-between">
                     <div className="w-full aspect-[3/4] sm:aspect-[4/3] rounded-lg sm:rounded-xl overflow-hidden border-2 border-[#dfb557]/60 shadow-lg bg-zinc-900">
-                      <img src={img} alt={cleanTitle} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                      <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
                     </div>
                     <div className="text-center space-y-1 px-1">
                       <span className="text-[7px] sm:text-[10px] tracking-[0.2em] uppercase text-[#dfb557] font-bold block">
@@ -1044,7 +1032,7 @@ function BridalShowerSection({ section, cleanTitle, customHeadings, customDescri
       </div>
 
       <div className="text-center pt-6">
-        <Link to={`/gallery/${section._id || generateSlug(cleanTitle)}`} className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md">
+        <Link to={`/gallery/${section._id || generateSlug(section.title)}`} className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md">
           View Full Gallery
         </Link>
       </div>
@@ -1052,7 +1040,7 @@ function BridalShowerSection({ section, cleanTitle, customHeadings, customDescri
   );
 }
 
-function BabyShowerSection({ section, cleanTitle, customHeadings, customDescriptions }) {
+function BabyShowerSection({ section, customHeadings, customDescriptions }) {
   const images = Array.isArray(section.images) ? section.images : [];
 
   return (
@@ -1061,7 +1049,7 @@ function BabyShowerSection({ section, cleanTitle, customHeadings, customDescript
         <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block">
           Baby Shower & Baptism Celebration
         </span>
-        <h2 className="text-3xl sm:text-4xl font-serif text-zinc-100">{cleanTitle}</h2>
+        <h2 className="text-3xl sm:text-4xl font-serif text-zinc-100">{section.title}</h2>
         <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto"></div>
         <p className="text-sm text-zinc-400 font-light max-w-md mx-auto">{section.desc || section.description}</p>
       </div>
@@ -1072,7 +1060,7 @@ function BabyShowerSection({ section, cleanTitle, customHeadings, customDescript
           return (
             <div key={i} className={`flex flex-col sm:flex-row items-center gap-4 sm:gap-8 p-4 sm:p-6 rounded-2xl bg-zinc-950/70 border-2 border-[#dfb557]/40 shadow-xl ${isEven ? 'sm:flex-row' : 'sm:flex-row-reverse'}`}>
               <div className="w-full sm:w-1/2 aspect-[4/3] rounded-xl overflow-hidden border border-[#dfb557]/50 shadow-md bg-zinc-900 flex-shrink-0">
-                <img src={img} alt={cleanTitle} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
+                <img src={img} alt={section.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" />
               </div>
               <div className="w-full sm:w-1/2 space-y-2 text-center sm:text-left">
                 <span className="text-[9px] sm:text-[10px] tracking-[0.3em] uppercase text-[#dfb557] font-bold block">
@@ -1091,7 +1079,7 @@ function BabyShowerSection({ section, cleanTitle, customHeadings, customDescript
       </div>
 
       <div className="text-center pt-6">
-        <Link to={`/gallery/${section._id || generateSlug(cleanTitle)}`} className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md">
+        <Link to={`/gallery/${section._id || generateSlug(section.title)}`} className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md">
           View Full Gallery
         </Link>
       </div>
@@ -1099,7 +1087,7 @@ function BabyShowerSection({ section, cleanTitle, customHeadings, customDescript
   );
 }
 
-function DefaultSection({ section, cleanTitle }) {
+function DefaultSection({ section }) {
   const images = Array.isArray(section.images) ? section.images : [];
 
   return (
@@ -1107,7 +1095,7 @@ function DefaultSection({ section, cleanTitle }) {
       <span className="text-[10px] tracking-[0.5em] uppercase text-[#dfb557] font-bold">
         Curated Project
       </span>
-      <h2 className="text-3xl sm:text-4xl font-light tracking-tight text-zinc-100">{cleanTitle}</h2>
+      <h2 className="text-3xl sm:text-4xl font-light tracking-tight text-zinc-100">{section.title}</h2>
       <p className="text-sm md:text-base leading-relaxed text-zinc-400 max-w-lg font-light">
         {section.desc || section.description}
       </p>
@@ -1115,13 +1103,13 @@ function DefaultSection({ section, cleanTitle }) {
       <div className="grid grid-cols-2 gap-4 w-full pt-4 max-w-2xl">
         {images.slice(0, 2).map((img, i) => (
           <div key={i} className="aspect-[3/4] overflow-hidden bg-zinc-900 border border-[#dfb557]/40 rounded-xl shadow-lg">
-            <img src={img} alt={cleanTitle} className="w-full h-full object-cover" />
+            <img src={img} alt={section.title} className="w-full h-full object-cover" />
           </div>
         ))}
       </div>
       
       <div className="pt-4">
-        <Link to={`/gallery/${section._id || generateSlug(cleanTitle)}`} className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md">
+        <Link to={`/gallery/${section._id || generateSlug(section.title)}`} className="text-[11px] font-bold uppercase tracking-[0.3em] border-2 border-[#dfb557] px-8 py-3 text-[#dfb557] hover:bg-[#dfb557] hover:text-black transition-all duration-300 inline-block rounded-xl shadow-md">
           Explore Project
         </Link>
       </div>
