@@ -817,6 +817,7 @@
 // }
 
 // export default Price;
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -984,14 +985,22 @@ function Price() {
     }
   };
 
-  // Handler to update price state locally when typing in Admin mode
-  const handlePriceChange = (id, newPrice) => {
+  // Generic Field Updater for Admin Mode
+  const handleFieldChange = (id, field, value) => {
     setPackages(prevPackages =>
-      prevPackages.map(pkg => pkg.id === id ? { ...pkg, price: newPrice } : pkg)
+      prevPackages.map(pkg => pkg.id === id ? { ...pkg, [field]: value } : pkg)
     );
   };
 
-  // Handler to Save Prices to Backend Endpoint
+  // Array Field Updater (for services and features separated by newlines)
+  const handleArrayFieldChange = (id, field, textValue) => {
+    const updatedArray = textValue.split('\n');
+    setPackages(prevPackages =>
+      prevPackages.map(pkg => pkg.id === id ? { ...pkg, [field]: updatedArray } : pkg)
+    );
+  };
+
+  // Handler to Save All Changes to Backend Endpoint
   const handleSavePrices = async () => {
     setSaving(true);
     setSaveMessage('');
@@ -1004,14 +1013,14 @@ function Price() {
         },
         body: JSON.stringify({ 
           passcode, 
-          packages: packages // ሙሉእ ዳታ ናይቶም ፓኬጃት (ዋጋን ካልኦት ሓበሬታን ሒዙ) ንሰቨር ይልእክ 
+          packages: packages 
         }),
       });
 
       const result = await response.json();
 
       if (response.ok) {
-        setSaveMessage('ዋጋታት ብዕወት ተዓኪቡሎ!');
+        setSaveMessage('ኩሉ ለውጥታት ብዕወት ተዓኪቡሎ!');
       } else {
         setSaveMessage(result.message || 'ጌጋ ተፈጢሩ፣ እንደገና ፈትን።');
       }
@@ -1029,43 +1038,98 @@ function Price() {
 
       <div className="flex-grow flex items-center justify-center px-4 py-32">
         {!isAuthenticated ? (
-          <div className="bg-zinc-950 p-8 md:p-12 shadow-2xl border-2 border-[#dfb557]/40 rounded-2xl max-w-md w-full text-center relative">
-            <span className="text-[9px] md:text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-2">
-              Secure Access
-            </span>
-            <h2 className="text-2xl md:text-3xl font-serif mb-3 text-zinc-100">Protected Price Page</h2>
-            <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
-            <p className="text-xs md:text-sm text-zinc-400 mb-6 font-light">
-              እዚ ገጽ ብሚጢራዊ ፓስኮድ ዝተዓጸወ እዩ። በጃኹም ፓስኮድ ኣእትዉ።
-            </p>
-            
-            <form onSubmit={handleLogin} className="space-y-4">
-              <input 
-                type="password"
-                placeholder="Enter Passcode"
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                className="w-full px-4 py-3 bg-zinc-900 border border-[#dfb557]/50 rounded-xl focus:outline-none focus:border-[#dfb557] text-center tracking-widest text-lg text-zinc-100 placeholder-zinc-500 shadow-inner"
-              />
-              <button 
-                type="submit"
-                disabled={loading}
-                className="w-full bg-[#dfb557] text-black py-3 uppercase text-xs font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 disabled:opacity-50 rounded-xl shadow-lg"
-              >
-                {loading ? 'Checking...' : 'Submit'}
-              </button>
-              {error && <p className="text-red-400 text-xs mt-2 font-medium">ጌጋ ፓስኮድ! ደጊምካ ፈትን።</p>}
-            </form>
+          // ==================== CUSTOMER VIEW MODE (Normal View) ====================
+          <div className="max-w-7xl mx-auto px-4 py-12 w-full">
+            <div className="text-center mb-16">
+              <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
+                Investment & Tiers
+              </span>
+              <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4 text-zinc-100">Our Packages & Prices</h1>
+              <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
+              <p className="text-zinc-400 text-sm md:text-base max-w-2xl mx-auto font-light">
+                ንመጻኢ መርዓኹምን ፍሉይ ኣጋጣሚኹምን ዝኸውን ዝተፈላለዩ ደረጃታት ዘለዎም ናይ ቀረጻ ፓኬጃት።
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+              {(packages.length > 0 ? packages : defaultPackages).map((pkg) => (
+                <div 
+                  key={pkg.id}
+                  className="bg-zinc-950 border-2 border-[#dfb557]/30 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between hover:border-[#dfb557]/70 transition-all"
+                >
+                  <div>
+                    <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">{pkg.tierName}</span>
+                    <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{pkg.name}</h3>
+                    <div className="text-2xl font-bold text-[#dfb557] mb-6">{pkg.price}</div>
+
+                    {pkg.desc && (
+                      <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
+                        {pkg.desc}
+                      </p>
+                    )}
+
+                    {pkg.services && pkg.services.length > 0 && (
+                      <div className="text-xs text-zinc-300 mb-4 font-light space-y-1 border-b border-zinc-800 pb-3">
+                        <p className="text-[#dfb557] font-semibold uppercase text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
+                        {pkg.services.map((s, idx) => (
+                          <p key={idx}>• {s}</p>
+                        ))}
+                      </div>
+                    )}
+
+                    {pkg.features && pkg.features.length > 0 && (
+                      <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
+                        {pkg.features.map((feature, idx) => (
+                          <li key={idx} className="flex items-center gap-2">
+                            {String(feature).includes('🎁') ? feature : `✓ ${feature}`}
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Login Trigger Box at the bottom for Admin access */}
+            <div className="mt-20 max-w-sm mx-auto bg-zinc-950 p-6 border border-zinc-800 rounded-2xl text-center">
+              <h3 className="text-xs uppercase tracking-widest text-zinc-400 mb-3">Admin Portal Login</h3>
+              <form onSubmit={handleLogin} className="space-y-3">
+                <input 
+                  type="password"
+                  placeholder="Enter Passcode"
+                  value={passcode}
+                  onChange={(e) => setPasscode(e.target.value)}
+                  className="w-full px-3 py-2 bg-zinc-900 border border-zinc-700 rounded-lg text-center tracking-widest text-sm text-zinc-100 focus:outline-none focus:border-[#dfb557]"
+                />
+                <button 
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-[#dfb557] text-black py-2 uppercase text-[10px] font-bold tracking-widest hover:bg-[#c99f45] transition rounded-lg"
+                >
+                  {loading ? 'Checking...' : 'Login as Admin'}
+                </button>
+                {error && <p className="text-red-400 text-xs">ጌጋ ፓስኮድ!</p>}
+              </form>
+            </div>
           </div>
         ) : (
+          // ==================== ADMIN EDIT MODE ====================
           <div className="max-w-7xl mx-auto text-center px-4 py-12 w-full">
-            <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
-              Investment & Tiers (Admin Mode)
-            </span>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4 text-zinc-100">Manage Packages & Prices</h1>
+            <div className="flex justify-between items-center mb-6 border-b border-zinc-800 pb-4">
+              <button 
+                onClick={() => { setIsAuthenticated(false); localStorage.removeItem('priceAuthData'); }}
+                className="text-xs uppercase tracking-widest bg-zinc-900 border border-zinc-700 px-4 py-2 rounded-lg text-zinc-300 hover:text-white"
+              >
+                ← Exit Admin Mode
+              </button>
+              <span className="text-xs tracking-widest uppercase text-[#dfb557] font-bold">Admin Editing Dashboard</span>
+            </div>
+
+            <h1 className="text-3xl sm:text-4xl font-serif mb-4 text-zinc-100">Edit Packages, Prices & Texts</h1>
             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
-            <p className="text-zinc-400 text-sm md:text-base mb-8 max-w-2xl mx-auto font-light">
-              ኣብዚ ዋጋታት ክትቅይሩን ናብ ሰቨር ክትዕክብዎን ትኽእሉ።
+            <p className="text-zinc-400 text-sm mb-8 max-w-2xl mx-auto font-light">
+              ኣብዚ ዝደለኻዮ ጽሑፍ፣ ዋጋ፣ ኣገልግሎትን ባህርያትን ክትቅይር ትኽእል። ምስ ወዳእካ 'Save All Changes' ጠውቕ።
             </p>
 
             {/* Save Button & Status bar */}
@@ -1084,46 +1148,77 @@ function Price() {
               {(packages.length > 0 ? packages : defaultPackages).map((pkg) => (
                 <div 
                   key={pkg.id}
-                  className="bg-zinc-950 border-2 border-[#dfb557]/60 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between"
+                  className="bg-zinc-950 border-2 border-[#dfb557]/60 p-6 rounded-2xl shadow-2xl flex flex-col justify-between space-y-4"
                 >
                   <div>
-                    <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">{pkg.tierName}</span>
-                    <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{pkg.name}</h3>
-                    
-                    {/* Admin Price Input Field */}
-                    <div className="mb-6">
-                      <label className="text-[10px] uppercase text-zinc-400 block mb-1">Edit Price:</label>
+                    {/* Tier Name */}
+                    <div className="mb-3">
+                      <label className="text-[10px] uppercase text-zinc-400 block mb-1">Tier Code / Name:</label>
                       <input 
                         type="text"
-                        value={pkg.price !== undefined ? pkg.price : ''}
-                        onChange={(e) => handlePriceChange(pkg.id, e.target.value)}
-                        className="w-full bg-zinc-900 border border-[#dfb557] text-[#dfb557] font-bold text-xl px-3 py-2 rounded-lg focus:outline-none"
+                        value={pkg.tierName || ''}
+                        onChange={(e) => handleFieldChange(pkg.id, 'tierName', e.target.value)}
+                        className="w-full bg-zinc-900 border border-zinc-700 text-xs text-[#dfb557] px-2 py-1 rounded"
                       />
                     </div>
 
-                    {pkg.desc && (
-                      <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
-                        {pkg.desc}
-                      </p>
-                    )}
+                    {/* Main Package Title */}
+                    <div className="mb-3">
+                      <label className="text-[10px] uppercase text-zinc-400 block mb-1">Package Title:</label>
+                      <input 
+                        type="text"
+                        value={pkg.name || ''}
+                        onChange={(e) => handleFieldChange(pkg.id, 'name', e.target.value)}
+                        className="w-full bg-zinc-900 border border-zinc-700 text-sm text-zinc-100 font-serif px-2 py-1 rounded"
+                      />
+                    </div>
+                    
+                    {/* Price Input Field */}
+                    <div className="mb-4">
+                      <label className="text-[10px] uppercase text-zinc-400 block mb-1">Price:</label>
+                      <input 
+                        type="text"
+                        value={pkg.price !== undefined ? pkg.price : ''}
+                        onChange={(e) => handleFieldChange(pkg.id, 'price', e.target.value)}
+                        className="w-full bg-zinc-900 border border-[#dfb557] text-[#dfb557] font-bold text-lg px-2 py-1 rounded focus:outline-none"
+                      />
+                    </div>
 
-                    {pkg.services && (
-                      <div className="text-xs text-zinc-300 mb-4 font-light space-y-1 border-b border-zinc-800 pb-3">
-                        <p className="text-[#dfb557] font-semibold uppercase text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
-                        {pkg.services.map((s, idx) => (
-                          <p key={idx}>• {s}</p>
-                        ))}
+                    {/* Description */}
+                    <div className="mb-4">
+                      <label className="text-[10px] uppercase text-zinc-400 block mb-1">Description:</label>
+                      <textarea 
+                        rows="3"
+                        value={pkg.desc || ''}
+                        onChange={(e) => handleFieldChange(pkg.id, 'desc', e.target.value)}
+                        className="w-full bg-zinc-900 border border-zinc-700 text-xs text-zinc-300 p-2 rounded focus:outline-none"
+                      />
+                    </div>
+
+                    {/* Services (if present) */}
+                    {pkg.services !== undefined && (
+                      <div className="mb-4">
+                        <label className="text-[10px] uppercase text-[#dfb557] font-semibold block mb-1">Services (One per line):</label>
+                        <textarea 
+                          rows="4"
+                          value={Array.isArray(pkg.services) ? pkg.services.join('\n') : ''}
+                          onChange={(e) => handleArrayFieldChange(pkg.id, 'services', e.target.value)}
+                          className="w-full bg-zinc-900 border border-zinc-700 text-xs text-zinc-300 p-2 rounded focus:outline-none"
+                        />
                       </div>
                     )}
 
-                    {pkg.features && (
-                      <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-                        {pkg.features.map((feature, idx) => (
-                          <li key={idx} className="flex items-center gap-2">
-                            {feature.includes('🎁') ? feature : `✓ ${feature}`}
-                          </li>
-                        ))}
-                      </ul>
+                    {/* Features */}
+                    {pkg.features !== undefined && (
+                      <div className="mb-4">
+                        <label className="text-[10px] uppercase text-zinc-400 block mb-1">Features (One per line):</label>
+                        <textarea 
+                          rows="5"
+                          value={Array.isArray(pkg.features) ? pkg.features.join('\n') : ''}
+                          onChange={(e) => handleArrayFieldChange(pkg.id, 'features', e.target.value)}
+                          className="w-full bg-zinc-900 border border-zinc-700 text-xs text-zinc-300 p-2 rounded focus:outline-none"
+                        />
+                      </div>
                     )}
                   </div>
                 </div>
