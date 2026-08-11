@@ -817,7 +817,6 @@
 // }
 
 // export default Price;
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -1003,13 +1002,18 @@ function Price() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ packages, passcode }),
+        body: JSON.stringify({ 
+          passcode, 
+          packages: packages // ሙሉእ ዳታ ናይቶም ፓኬጃት (ዋጋን ካልኦት ሓበሬታን ሒዙ) ንሰቨር ይልእክ 
+        }),
       });
+
+      const result = await response.json();
 
       if (response.ok) {
         setSaveMessage('ዋጋታት ብዕወት ተዓኪቡሎ!');
       } else {
-        setSaveMessage('ጌጋ ተፈጢሩ፣ እንደገና ፈትን።');
+        setSaveMessage(result.message || 'ጌጋ ተፈጢሩ፣ እንደገና ፈትን።');
       }
     } catch (err) {
       console.error("Error saving prices:", err);
