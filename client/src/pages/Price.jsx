@@ -206,7 +206,6 @@
 
 // export default Price;
 
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -303,7 +302,7 @@ function Price() {
             </form>
           </div>
         ) : (
-          /* ትሕዝቶ ናይ Professional Pricing Packages (ካልኣይ፣ ሳልሳይ፣ ራብዓይ ደረጃ) */
+          /* ትሕዝቶ ናይ Professional Packages (ፕሪሚየም ከምዘሎ ብምግባር፣ ካልኣይ፣ ሳልሳይ፣ ራብዓይ ደረጃ ተኸቲሎም) */
           <div className="max-w-7xl mx-auto text-center px-4 py-12">
             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
               Investment & Tiers
@@ -314,9 +313,30 @@ function Price() {
               ንመጻኢ ፕሮጀክትታትኩም ዝኸውን ዝተፈላለየ ሞያዊ ኣገልግሎታት። ካብቶም ደረጃታት እቲ ንደለይዎ ምረጹ።
             </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
               
-              {/* 1. ካልኣይ ደረጃ (2nd Tier) */}
+              {/* 1. Premium Package (ከምዘሎ ዝጸንሐ) */}
+              <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
+                <div>
+                  <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Ultimate VIP</span>
+                  <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Premium</h3>
+                  <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">$2,000+</p>
+                  <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
+                    ዝለዓለ ደረጃ ሞያዊ ክእለትን ብርክት ዝበሉ መሳርሒታትን ተጠቒምካ ዝስራሕ ቪአይፒ ኣገልግሎት።
+                  </p>
+                  <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-8 font-light">
+                    <li className="flex items-center gap-2">✓ ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)</li>
+                    <li className="flex items-center gap-2">✓ ክልተ ኤክስፐርት ካሜራማን</li>
+                    <li className="flex items-center gap-2">✓ <b className="font-semibold text-[#dfb557]">Cinematic Color Grading</b> & VFX</li>
+                    <li className="flex items-center gap-2 text-[#dfb557] font-medium">🎁 <b className="font-semibold">ቦናስ:</b> ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር</li>
+                  </ul>
+                </div>
+                <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
+                  Select Premium
+                </button>
+              </div>
+
+              {/* 2. ካልኣይ ደረጃ (2nd Tier) */}
               <div className="bg-zinc-950 border-2 border-[#dfb557] p-6 sm:p-8 rounded-2xl shadow-2xl relative flex flex-col justify-between transition-transform hover:-translate-y-1">
                 <span className="absolute -top-3 right-6 bg-[#dfb557] text-black text-[9px] uppercase font-bold tracking-[0.3em] px-3 py-1 rounded-full shadow-md">
                   Top Tier
@@ -326,9 +346,9 @@ function Price() {
                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">ካልኣይ ደረጃ</h3>
                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">300,000</p>
                   
-                  <div className="text-xs sm:text-sm text-zinc-300 mb-6 font-light space-y-2 border-b border-zinc-800 pb-4">
-                    <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[11px]">ዓይነት ንብረት / ቀረጻ:</p>
-                    <ul className="space-y-1 pl-2">
+                  <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
+                    <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ዓይነት ንብረት / ቀረጻ:</p>
+                    <ul className="space-y-1 pl-1">
                       <li>• 1. ካሜራ ኣብ መስክ ስቱዲዮ (2 ካሜራ: 1 ቪድዮ 1 ፎቶ)</li>
                       <li>• 2. ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ 1 ፎቶ)</li>
                       <li>• 3. መዓልቲ መርዓ (5 ካሜራ: 4 ንቪድዮ 1 ንፎቶ)</li>
@@ -353,16 +373,16 @@ function Price() {
                 </button>
               </div>
 
-              {/* 2. ሳልሳይ ደረጃ (3rd Tier) */}
+              {/* 3. ሳልሳይ ደረጃ (3rd Tier) */}
               <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
                 <div>
                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Advanced</span>
                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">ሳልሳይ ደረጃ</h3>
                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">240,000</p>
                   
-                  <div className="text-xs sm:text-sm text-zinc-300 mb-6 font-light space-y-2 border-b border-zinc-800 pb-4">
-                    <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[11px]">ዓይነት ንብረት / ቀረጻ:</p>
-                    <ul className="space-y-1 pl-2">
+                  <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
+                    <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ዓይነት ንብረት / ቀረጻ:</p>
+                    <ul className="space-y-1 pl-1">
                       <li>• 1. ካሜራ ኣብ መስክ ስቱዲዮ (2 ካሜራ: 1 ቪድዮ 1 ፎቶ)</li>
                       <li>• 2. ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ 1 ፎቶ)</li>
                       <li>• 3. መዓልቲ መርዓ (4 ካሜራ: 3 ንቪድዮ 1 ንፎቶ)</li>
@@ -386,16 +406,16 @@ function Price() {
                 </button>
               </div>
 
-              {/* 3. ራብዓይ ደረጃ (4th Tier) */}
+              {/* 4. ራብዓይ ደረጃ (4th Tier) */}
               <div className="bg-zinc-950/70 border-2 border-[#dfb557]/30 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col justify-between transition-transform hover:-translate-y-1">
                 <div>
                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-zinc-400">Standard</span>
                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">ራብዓይ ደረጃ</h3>
                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">190,000</p>
                   
-                  <div className="text-xs sm:text-sm text-zinc-300 mb-6 font-light space-y-2 border-b border-zinc-800 pb-4">
-                    <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[11px]">ዓይነት ንብረት / ቀረጻ:</p>
-                    <ul className="space-y-1 pl-2">
+                  <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
+                    <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ዓይነት ንብረት / ቀረጻ:</p>
+                    <ul className="space-y-1 pl-1">
                       <li>• 1. ካሜራ ኣብ መስክ ስቱዲዮ (1 ቪድዮ 1 ፎቶ)</li>
                       <li>• 2. ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ 1 ፎቶ)</li>
                       <li>• 3. መዓልቲ መርዓ (3 ካሜራ: 2 ንቪድዮ 1 ንፎቶ)</li>
