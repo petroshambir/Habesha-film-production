@@ -44,6 +44,7 @@ import connectDB from './Database Connection/DB.js';
 import projectRoutes from './Route/projectRoutes.js';
 import authRoutes from './Route/authRoutes.js';
 import clientRoutes from './Route/clientRoutes.js';
+import SitePrices from './models/sitePrices.js';
 
 // 1. መጀመርያ app ፍጠር
 const app = express(); 
@@ -67,13 +68,9 @@ app.use((req, res, next) => {
     console.log(`🔥 [${req.method}] Request made to: ${req.url}`);
     next();
 });
-
-// ንዋጋታት ብቐጥታ ንምቕባል (api/prices)
-import Project from './models/project.js'; // እንተተደልዩ ድሮ ኣብ server.js ኣሎ
-
 app.get('/api/prices', async (req, res) => {
     try {
-        let priceData = await Project.findOne({ title: 'site_prices_config' });
+        let priceData = await SitePrices.findOne({ title: 'site_prices_config' });
         if (!priceData || !priceData.packages) {
             return res.json([]);
         }
@@ -85,8 +82,11 @@ app.get('/api/prices', async (req, res) => {
 
 app.put('/api/prices', async (req, res) => {
     try {
-        const { packages } = req.body;
-        let priceData = await Project.findOneAndUpdate(
+        const { passcode, packages } = req.body;
+        
+        // (ស្រេចចិត្ត) ልክ እንደ አስፈላጊነቱ የፓስኮድ ማረጋገጫ እዚህም ማድረግ ይቻላል
+        
+        let priceData = await SitePrices.findOneAndUpdate(
             { title: 'site_prices_config' },
             { $set: { packages: packages } },
             { new: true, upsert: true }
@@ -97,7 +97,6 @@ app.put('/api/prices', async (req, res) => {
         res.status(500).json({ message: "Error updating prices" });
     }
 });
-
 // 5. Routes
 app.use('/api/projects', projectRoutes);
 app.use('/api/auth', authRoutes);
