@@ -4294,13 +4294,15 @@
 // }
 
 // export default AdminDashboard;
+
 import React, { useState, useEffect } from 'react';
 import JSZip from 'jszip';
 
 const sectionsConfig = [
   { title: 'Weddings', storageKey: 'portfolio_weddings' },
   { title: 'Bridal Shoots', storageKey: 'portfolio_bridal' },
-  { title: 'Baby Shower & Baptism', storageKey: 'portfolio_babyshower' }
+  { title: 'Baby Shower & Baptism', storageKey: 'portfolio_babyshower' },
+  { title: 'Pricing', storageKey: 'portfolio_pricing' }
 ];
 
 function AdminDashboard() {
@@ -4563,9 +4565,9 @@ function AdminDashboard() {
                 <div key={sec.title} onClick={() => setActiveTab(sec.title)} className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl cursor-pointer hover:border-amber-500/50 transition-all group">
                   <h3 className="text-lg font-bold text-amber-300 group-hover:text-amber-400 mb-1">{sec.title}</h3>
                   <p className="text-2xl font-black text-white mt-2">
-                    {sectionsData[sec.title]?.images?.length || 0} Photos
+                    {sec.title === 'Pricing' ? (sectionsData[sec.title]?.headings?.length || 0) + ' Packages' : (sectionsData[sec.title]?.images?.length || 0) + ' Photos'}
                   </p>
-                  <p className="text-xs text-zinc-500 mt-2">ናיዚ ክፍሊ መግለጫን ስእሊታትን ኣስተኻኽል</p>
+                  <p className="text-xs text-zinc-500 mt-2">ናיዚ ክፍሊ መግለጫን ትሕዝቶን ኣስተኻኽል</p>
                 </div>
               ))}
             </div>
@@ -4813,6 +4815,8 @@ function AdminDashboard() {
 }
 
 function SectionRenderer({ title, data, setData, onSave }) {
+  const isPricing = title === 'Pricing';
+
   const handleImageUpload = async (event) => {
     const file = event.target.files[0];
     if (!file) return;
@@ -4831,8 +4835,8 @@ function SectionRenderer({ title, data, setData, onSave }) {
       const result = await res.json();
       const newImages = result.images || [];
       
-      const defaultHeading = `Featured Moment ${newImages.length}`;
-      const defaultDesc = `0${newImages.length}. A wonderful captured memory of the special day.`;
+      const defaultHeading = isPricing ? `Package ${newImages.length}` : `Featured Moment ${newImages.length}`;
+      const defaultDesc = isPricing ? `Price: $500\n• Feature One\n• Feature Two\n• Feature Three\n• Feature Four` : `0${newImages.length}. A wonderful captured memory of the special day.`;
 
       const updatedHeadings = [...(data.headings || []), defaultHeading];
       const updatedDescriptions = [...(data.descriptions || []), defaultDesc];
@@ -4845,17 +4849,32 @@ function SectionRenderer({ title, data, setData, onSave }) {
       };
 
       setData(newData);
-      alert("ስእሊ ተሰቒሉ ኣሎ!");
+      alert("ተሰቒሉ ኣሎ!");
     } catch (err) {
       console.error("Upload Error:", err);
-      alert("ስእሊ ክስቀል ኣይከኣለን!");
+      alert("ክስቀል ኣይከኣለን!");
     }
   };
 
-  const deleteImage = async (imgIndex) => {
-    const updatedImages = (data.images || []).filter((_, i) => i !== imgIndex);
-    const updatedHeadings = (data.headings || []).filter((_, i) => i !== imgIndex);
-    const updatedDescriptions = (data.descriptions || []).filter((_, i) => i !== imgIndex);
+  const addPricingPackage = () => {
+    const pkgNum = (data.headings || []).length + 1;
+    const defaultHeading = `Package ${pkgNum} - $500`;
+    const defaultDesc = `• 4 Hours Coverage\n• Edited Highlights Video\n• 50 High-Res Photos\n• Online Gallery Access`;
+
+    const updatedHeadings = [...(data.headings || []), defaultHeading];
+    const updatedDescriptions = [...(data.descriptions || []), defaultDesc];
+
+    setData({
+      ...data,
+      headings: updatedHeadings,
+      descriptions: updatedDescriptions
+    });
+  };
+
+  const deleteItem = async (index) => {
+    const updatedImages = (data.images || []).filter((_, i) => i !== index);
+    const updatedHeadings = (data.headings || []).filter((_, i) => i !== index);
+    const updatedDescriptions = (data.descriptions || []).filter((_, i) => i !== index);
 
     const newData = { 
       ...data, 
@@ -4882,77 +4901,131 @@ function SectionRenderer({ title, data, setData, onSave }) {
     <div className="p-4 md:p-8 border border-zinc-700 rounded-2xl bg-zinc-900 shadow-2xl overflow-hidden">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 border-b border-zinc-700 pb-4 gap-4">
         <h2 className="text-xl md:text-3xl font-bold text-amber-300">{title} Control Panel</h2>
-        <button onClick={onSave} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-bold w-full sm:w-auto text-sm">
-          Save {title}
-        </button>
+        <div className="flex gap-2 w-full sm:w-auto">
+          {isPricing && (
+            <button onClick={addPricingPackage} className="bg-amber-500 hover:bg-amber-600 text-black px-4 py-2 rounded-lg font-bold text-sm flex-1 sm:flex-none">
+              + Add Package
+            </button>
+          )}
+          <button onClick={onSave} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-bold flex-1 sm:flex-none text-sm">
+            Save {title}
+          </button>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="flex flex-col w-full">
-          <label className="block text-zinc-400 mb-2 text-sm">Names / Title:</label>
-          <input 
-            type="text" 
-            value={data.names || ''}
-            onChange={(e) => setData({ ...data, names: e.target.value })}
-            className="bg-zinc-800 border border-zinc-600 p-3 rounded-lg w-full text-white mb-6 text-sm"
-            placeholder="ማእከላይ ሽም (ንኣብነት Sara & Robel)"
-          />
+          {!isPricing && (
+            <>
+              <label className="block text-zinc-400 mb-2 text-sm">Names / Title:</label>
+              <input 
+                type="text" 
+                value={data.names || ''}
+                onChange={(e) => setData({ ...data, names: e.target.value })}
+                className="bg-zinc-800 border border-zinc-600 p-3 rounded-lg w-full text-white mb-6 text-sm"
+                placeholder="ማእከላይ ሽም (ንኣብነት Sara & Robel)"
+              />
+            </>
+          )}
 
-          <label className="block text-zinc-400 mb-2 text-sm">Section Main Description (መግለጫ):</label>
+          <label className="block text-zinc-400 mb-2 text-sm">{isPricing ? 'Pricing Section Description (መግለጫ):' : 'Section Main Description (መግለጫ):'}</label>
           <textarea 
             rows="3"
             value={data.desc || ''}
             onChange={(e) => setData({ ...data, desc: e.target.value })}
             className="bg-zinc-800 border border-zinc-600 p-3 rounded-lg w-full text-white text-sm focus:outline-none focus:border-amber-400 transition-colors"
-            placeholder="እዚ ስራሕ እዚ ዝገልጽ ጽሑፍ ኣብዚ ጽሓፍ..."
+            placeholder={isPricing ? "ናይ  ዋጋ መግለጫ ኣብዚ ጽሓፍ..." : "እዚ ስራሕ እዚ ዝገልጽ ጽሑፍ ኣብዚ ጽሓፍ..."}
           />
         </div>
 
-        <div className="flex flex-col w-full">
-          <label className="block text-zinc-400 mb-2 text-sm">Upload Image:</label>
-          <input 
-            type="file" 
-            onChange={handleImageUpload} 
-            className="text-zinc-400 text-xs file:mr-2 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-black hover:file:bg-amber-400 w-full bg-zinc-800 p-2 rounded-lg" 
-          />
-        </div>
+        {!isPricing && (
+          <div className="flex flex-col w-full">
+            <label className="block text-zinc-400 mb-2 text-sm">Upload Image:</label>
+            <input 
+              type="file" 
+              onChange={handleImageUpload} 
+              className="text-zinc-400 text-xs file:mr-2 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-black hover:file:bg-amber-400 w-full bg-zinc-800 p-2 rounded-lg" 
+            />
+          </div>
+        )}
       </div>
 
       <div className="mt-8 space-y-4">
-        <h3 className="text-lg md:text-xl font-semibold text-amber-400 border-b border-zinc-800 pb-2">Manage Image Headings & Descriptions</h3>
-        {data.images && data.images.map((img, index) => {
-          const defaultHeading = `Featured Moment ${index + 1}`;
-          const defaultDesc = `0${index + 1}. A wonderful captured memory of the special day.`;
+        <h3 className="text-lg md:text-xl font-semibold text-amber-400 border-b border-zinc-800 pb-2">
+          {isPricing ? 'Manage Pricing Packages & 4 Tips (Features)' : 'Manage Image Headings & Descriptions'}
+        </h3>
+        
+        {isPricing ? (
+          <div className="space-y-4">
+            {(data.headings || []).map((heading, index) => {
+              const defaultDesc = `• 4 Hours Coverage\n• Edited Highlights Video\n• 50 High-Res Photos\n• Online Gallery Access`;
+              return (
+                <div key={index} className="flex flex-col gap-4 p-4 bg-zinc-800/50 border border-zinc-700 rounded-xl">
+                  <div className="flex justify-between items-center">
+                    <span className="text-amber-400 font-bold text-sm">Package #{index + 1}</span>
+                    <button onClick={() => deleteItem(index)} className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-bold">&times; Delete Package</button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs text-zinc-400 mb-1">Package Title & Price:</label>
+                      <input 
+                        type="text"
+                        value={heading}
+                        onChange={(e) => handleHeadingChange(index, e.target.value)}
+                        className="bg-zinc-900 border border-zinc-700 p-2.5 rounded w-full text-xs md:text-sm text-white"
+                        placeholder="e.g. Gold Package - $800"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs text-zinc-400 mb-1">4 Tips / Features (each on a new line with •):</label>
+                      <textarea 
+                        rows="4"
+                        value={data.descriptions && data.descriptions[index] !== undefined ? data.descriptions[index] : defaultDesc}
+                        onChange={(e) => handleDescriptionChange(index, e.target.value)}
+                        className="bg-zinc-900 border border-zinc-700 p-2.5 rounded w-full text-xs md:text-sm text-white"
+                        placeholder="• Tip 1&#10;• Tip 2&#10;• Tip 3&#10;• Tip 4"
+                      />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        ) : (
+          data.images && data.images.map((img, index) => {
+            const defaultHeading = `Featured Moment ${index + 1}`;
+            const defaultDesc = `0${index + 1}. A wonderful captured memory of the special day.`;
 
-          return (
-            <div key={index} className="flex flex-col sm:flex-row gap-4 p-4 bg-zinc-800/50 border border-zinc-700 rounded-xl items-center">
-              <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 border border-zinc-700 rounded-lg overflow-hidden w-full sm:w-auto">
-                <img src={img} className="w-full h-full object-cover" alt="upload" />
-                <button onClick={() => deleteImage(index)} className="absolute top-0 right-0 bg-red-600 text-white px-2 py-0.5 text-xs font-bold">&times;</button>
-              </div>
-              <div className="flex-1 w-full space-y-3">
-                <div>
-                  <label className="block text-xs text-zinc-400 mb-1">Image {index + 1} Heading:</label>
-                  <input 
-                    type="text"
-                    value={data.headings && data.headings[index] !== undefined ? data.headings[index] : defaultHeading}
-                    onChange={(e) => handleHeadingChange(index, e.target.value)}
-                    className="bg-zinc-900 border border-zinc-700 p-2 rounded w-full text-xs md:text-sm text-white"
-                  />
+            return (
+              <div key={index} className="flex flex-col sm:flex-row gap-4 p-4 bg-zinc-800/50 border border-zinc-700 rounded-xl items-center">
+                <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 border border-zinc-700 rounded-lg overflow-hidden w-full sm:w-auto">
+                  <img src={img} className="w-full h-full object-cover" alt="upload" />
+                  <button onClick={() => deleteItem(index)} className="absolute top-0 right-0 bg-red-600 text-white px-2 py-0.5 text-xs font-bold">&times;</button>
                 </div>
-                <div>
-                  <label className="block text-xs text-zinc-400 mb-1">Image {index + 1} Description:</label>
-                  <input 
-                    type="text"
-                    value={data.descriptions && data.descriptions[index] !== undefined ? data.descriptions[index] : defaultDesc}
-                    onChange={(e) => handleDescriptionChange(index, e.target.value)}
-                    className="bg-zinc-900 border border-zinc-700 p-2 rounded w-full text-xs md:text-sm text-white"
-                  />
+                <div className="flex-1 w-full space-y-3">
+                  <div>
+                    <label className="block text-xs text-zinc-400 mb-1">Image {index + 1} Heading:</label>
+                    <input 
+                      type="text"
+                      value={data.headings && data.headings[index] !== undefined ? data.headings[index] : defaultHeading}
+                      onChange={(e) => handleHeadingChange(index, e.target.value)}
+                      className="bg-zinc-900 border border-zinc-700 p-2 rounded w-full text-xs md:text-sm text-white"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-xs text-zinc-400 mb-1">Image {index + 1} Description:</label>
+                    <input 
+                      type="text"
+                      value={data.descriptions && data.descriptions[index] !== undefined ? data.descriptions[index] : defaultDesc}
+                      onChange={(e) => handleDescriptionChange(index, e.target.value)}
+                      className="bg-zinc-900 border border-zinc-700 p-2 rounded w-full text-xs md:text-sm text-white"
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })
+        )}
       </div>
     </div>
   );
