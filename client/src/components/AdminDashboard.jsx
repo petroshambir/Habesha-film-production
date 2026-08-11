@@ -780,8 +780,8 @@ function AdminDashboard() {
         headers: { 'Content-Type': 'application/json' }
       });
       const data = await res.json();
-      if (res.ok && data.success) {
-        alert(`ሓድሽ ፓስኮድ ተፈጢሩ ኣሎ! ኮድ: [ ${data.passcode} ]`);
+      if (res.ok && (data.success || data.passcode)) {
+        alert(`ሓድሽ ፓስኮድ ተፈጢሩ ኣሎ! ኮድ: [ ${data.passcode || data.code} ]`);
         fetchPricePasscodes();
       } else {
         alert(data.message || 'ፓስኮድ ምፍጣር ኣይከኣለን።');
@@ -1123,7 +1123,7 @@ function AdminDashboard() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {pricePasscodes.map((item, idx) => (
                   <div key={idx} className="bg-zinc-800 p-3 rounded-lg border border-zinc-700 flex justify-between items-center">
-                    <span className="font-mono text-amber-300 font-bold">{typeof item === 'string' ? item : item.passcode}</span>
+                    <span className="font-mono text-amber-300 font-bold">{typeof item === 'string' ? item : (item.passcode || item.code)}</span>
                     <span className="text-[10px] text-zinc-400">{item.active !== false ? 'Active' : 'Used'}</span>
                   </div>
                 ))}
