@@ -765,7 +765,6 @@ function AdminDashboard() {
       const res = await fetch('https://habesha-film-production-server.onrender.com/api/auth/price-passcodes');
       if (res.ok) {
         const data = await res.json();
-        // Handle array of strings or array of objects based on server response structure
         setPricePasscodes(data);
       }
     } catch (err) {
@@ -806,7 +805,7 @@ function AdminDashboard() {
         const updated = await res.json();
         alert('ፓኬጅ ብሰላም ተቕይሩ ኣሎ!');
         setPackagesList(packagesList.map(p => (p._id === packageId || p.id === packageId) ? updated : p));
-        fetchPackages(); // Refresh to ensure synchronization
+        fetchPackages();
       } else {
         alert('ክትቅይሮ ኣይከኣለን።');
       }
