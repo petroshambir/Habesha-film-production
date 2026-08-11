@@ -28,7 +28,7 @@ function Welcome() {
       />
       <button 
         onClick={handleEnter}
-        className="absolute bottom-12 text-white border border-white/50 px-8 py-3 hover:bg-white hover:text-black transition-all"
+        className="absolute bottom-12 text-zinc-900 border border-white/50 px-8 py-3 hover:bg-white hover:text-black transition-all bg-gray-800"
       >
         Enter Website
       </button>
