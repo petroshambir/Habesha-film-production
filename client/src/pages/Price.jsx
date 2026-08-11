@@ -205,7 +205,6 @@
 // }
 
 // export default Price;
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -216,7 +215,6 @@ function Price() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // ገጽ ምስ ተኸፈተ ግዜ (10 ደቓይቕ) ምርካብን ምጽራይን
   useEffect(() => {
     const authData = localStorage.getItem('priceAuthData');
     if (authData) {
@@ -248,8 +246,6 @@ function Price() {
 
       if (response.ok && data.success) {
         setIsAuthenticated(true);
-
-        // ን10 ደቓይቕ ዝጸንሕ ግዜ ቐምጥ (10 mins * 60 secs * 1000 ms)
         const expiryDuration = 10 * 60 * 1000; 
         const authData = {
           value: 'true',
@@ -302,7 +298,6 @@ function Price() {
             </form>
           </div>
         ) : (
-          /* ትሕዝቶ ናይ Professional Packages (ፕሪሚየም ከምዘሎ ብምግባር፣ ካልኣይ፣ ሳልሳይ፣ ራብዓይ ደረጃ ተኸቲሎም) */
           <div className="max-w-7xl mx-auto text-center px-4 py-12">
             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
               Investment & Tiers
@@ -315,7 +310,7 @@ function Price() {
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
               
-              {/* 1. Premium Package (ከምዘሎ ዝጸንሐ) */}
+              {/* 1. Premium Package */}
               <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
                 <div>
                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Ultimate VIP</span>
@@ -336,106 +331,106 @@ function Price() {
                 </button>
               </div>
 
-              {/* 2. ካልኣይ ደረጃ (2nd Tier) */}
+              {/* 2. Gold Package */}
               <div className="bg-zinc-950 border-2 border-[#dfb557] p-6 sm:p-8 rounded-2xl shadow-2xl relative flex flex-col justify-between transition-transform hover:-translate-y-1">
                 <span className="absolute -top-3 right-6 bg-[#dfb557] text-black text-[9px] uppercase font-bold tracking-[0.3em] px-3 py-1 rounded-full shadow-md">
                   Top Tier
                 </span>
                 <div>
                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Exclusive</span>
-                  <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">ካልኣይ ደረጃ</h3>
+                  <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Gold</h3>
                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">300,000</p>
                   
                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-                    <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ዓይነት ንብረት / ቀረጻ:</p>
+                    <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
                     <ul className="space-y-1 pl-1">
-                      <li>• 1. ካሜራ ኣብ መስክ ስቱዲዮ (2 ካሜራ: 1 ቪድዮ 1 ፎቶ)</li>
-                      <li>• 2. ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ 1 ፎቶ)</li>
-                      <li>• 3. መዓልቲ መርዓ (5 ካሜራ: 4 ንቪድዮ 1 ንፎቶ)</li>
-                      <li>• 4. ሓማውቲ (1 ንቪድዮ 1 ፎቶ)</li>
-                      <li>• 5. ኩሉ ሶፍት ኮፒ (All Soft Copy)</li>
+                      <li>• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
+                      <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
+                      <li>• መዓልቲ መርዓ (5 ካሜራ: 4 ቪድዮ፣ 1 ፎቶ)</li>
+                      <li>• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)</li>
+                      <li>• ኩሉ ሶፍት ኮፒ (All Soft Copy)</li>
                     </ul>
                   </div>
 
                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-                    <li className="flex items-center gap-2">✓ Photo -- 800 (10×15)</li>
-                    <li className="flex items-center gap-2">✓ Laminated Photo -- 2 (30×90 & 30×60)</li>
-                    <li className="flex items-center gap-2">✓ Sine Board -- 2 (30×45)</li>
-                    <li className="flex items-center gap-2">✓ Board -- 3 (50×80, 40×60, 30×45)</li>
-                    <li className="flex items-center gap-2">✓ Thank you card -- 400</li>
-                    <li className="flex items-center gap-2">✓ USB Flash -- 8 (64 GB)</li>
-                    <li className="flex items-center gap-2">✓ Banner -- 2</li>
-                    <li className="flex items-center gap-2">✓ Cap -- 2</li>
+                    <li className="flex items-center gap-2">✓ 800 ፎቶዎች (10×15)</li>
+                    <li className="flex items-center gap-2">✓ 2 ላሚኔትድ ፎቶ (30×90 & 30×60)</li>
+                    <li className="flex items-center gap-2">✓ 2 ሳይን ቦርድ (30×45)</li>
+                    <li className="flex items-center gap-2">✓ 3 ቦርድ (50×80, 40×60, 30×45)</li>
+                    <li className="flex items-center gap-2">✓ 400 ምስጋና ካርድ (Thank You Card)</li>
+                    <li className="flex items-center gap-2">✓ 8 ዩኤስቢ ፍላሽ (64 GB)</li>
+                    <li className="flex items-center gap-2">✓ 2 ባነር</li>
+                    <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
                   </ul>
                 </div>
                 <button className="w-full bg-[#dfb557] text-black py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 rounded-xl shadow-lg">
-                  Select Package
+                  Select Gold
                 </button>
               </div>
 
-              {/* 3. ሳልሳይ ደረጃ (3rd Tier) */}
+              {/* 3. Silver Package */}
               <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
                 <div>
                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Advanced</span>
-                  <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">ሳልሳይ ደረጃ</h3>
+                  <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Silver</h3>
                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">240,000</p>
                   
                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-                    <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ዓይነት ንብረት / ቀረጻ:</p>
+                    <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
                     <ul className="space-y-1 pl-1">
-                      <li>• 1. ካሜራ ኣብ መስክ ስቱዲዮ (2 ካሜራ: 1 ቪድዮ 1 ፎቶ)</li>
-                      <li>• 2. ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ 1 ፎቶ)</li>
-                      <li>• 3. መዓልቲ መርዓ (4 ካሜራ: 3 ንቪድዮ 1 ንፎቶ)</li>
-                      <li>• 4. ሓማውቲ (1 ንቪድዮ 1 ፎቶ)</li>
+                      <li>• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
+                      <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
+                      <li>• መዓልቲ መርዓ (4 ካሜራ: 3 ቪድዮ፣ 1 ፎቶ)</li>
+                      <li>• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)</li>
                     </ul>
                   </div>
 
                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-                    <li className="flex items-center gap-2">✓ Photo -- 500 (10×15)</li>
-                    <li className="flex items-center gap-2">✓ Laminated Photo -- 2 (30×90 & 40×60)</li>
-                    <li className="flex items-center gap-2">✓ Sine Board -- 1 (30×45)</li>
-                    <li className="flex items-center gap-2">✓ Board -- 2 (50×80 & 40×60)</li>
-                    <li className="flex items-center gap-2">✓ Thank you card -- 250</li>
-                    <li className="flex items-center gap-2">✓ USB Flash -- 6 (64 GB)</li>
-                    <li className="flex items-center gap-2">✓ Banner -- 2</li>
-                    <li className="flex items-center gap-2">✓ Cap -- 2</li>
+                    <li className="flex items-center gap-2">✓ 500 ፎቶዎች (10×15)</li>
+                    <li className="flex items-center gap-2">✓ 2 ላሚኔትድ ፎቶ (30×90 & 40×60)</li>
+                    <li className="flex items-center gap-2">✓ 1 ሳይን ቦርድ (30×45)</li>
+                    <li className="flex items-center gap-2">✓ 2 ቦርድ (50×80 & 40×60)</li>
+                    <li className="flex items-center gap-2">✓ 250 ምስጋና ካርድ (Thank You Card)</li>
+                    <li className="flex items-center gap-2">✓ 6 ዩኤስቢ ፍላሽ (64 GB)</li>
+                    <li className="flex items-center gap-2">✓ 2 ባነር</li>
+                    <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
                   </ul>
                 </div>
                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-                  Select Package
+                  Select Silver
                 </button>
               </div>
 
-              {/* 4. ራብዓይ ደረጃ (4th Tier) */}
+              {/* 4. Standard Package */}
               <div className="bg-zinc-950/70 border-2 border-[#dfb557]/30 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col justify-between transition-transform hover:-translate-y-1">
                 <div>
                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-zinc-400">Standard</span>
-                  <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">ራብዓይ ደረጃ</h3>
+                  <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Standard</h3>
                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">190,000</p>
                   
                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-                    <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ዓይነት ንብረት / ቀረጻ:</p>
+                    <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
                     <ul className="space-y-1 pl-1">
-                      <li>• 1. ካሜራ ኣብ መስክ ስቱዲዮ (1 ቪድዮ 1 ፎቶ)</li>
-                      <li>• 2. ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ 1 ፎቶ)</li>
-                      <li>• 3. መዓልቲ መርዓ (3 ካሜራ: 2 ንቪድዮ 1 ንፎቶ)</li>
-                      <li>• 4. ሓማውቲ (2 ካሜራ: 1 ፎቶ 1 ቪድዮ)</li>
+                      <li>• ስቱዲዮ / ኣብ መስክ (1 ቪድዮ፣ 1 ፎቶ)</li>
+                      <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
+                      <li>• መዓልቲ መርዓ (3 ካሜራ: 2 ቪድዮ፣ 1 ፎቶ)</li>
+                      <li>• ሓማውቲ (2 ካሜራ: 1 ፎቶ፣ 1 ቪድዮ)</li>
                     </ul>
                   </div>
 
                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-                    <li className="flex items-center gap-2">✓ Photo -- 300 (10×15)</li>
-                    <li className="flex items-center gap-2">✓ Laminated Photo -- 1 (30×90)</li>
-                    <li className="flex items-center gap-2">✓ Sine Board -- 1 (30×45)</li>
-                    <li className="flex items-center gap-2">✓ Board -- 1 (50×80)</li>
-                    <li className="flex items-center gap-2">✓ Thank you card -- 200</li>
-                    <li className="flex items-center gap-2">✓ USB Flash -- 4 (64 GB)</li>
-                    <li className="flex items-center gap-2">✓ Banner -- 2</li>
-                    <li className="flex items-center gap-2">✓ Cap -- 2</li>
+                    <li className="flex items-center gap-2">✓ 300 ፎቶዎች (10×15)</li>
+                    <li className="flex items-center gap-2">✓ 1 ላሚኔትድ ፎቶ (30×90)</li>
+                    <li className="flex items-center gap-2">✓ 1 ሳይን ቦርድ (30×45)</li>
+                    <li className="flex items-center gap-2">✓ 1 ቦርድ (50×80)</li>
+                    <li className="flex items-center gap-2">✓ 200 ምስጋና ካርድ (Thank You Card)</li>
+                    <li className="flex items-center gap-2">✓ 4 ዩኤስቢ ፍላሽ (64 GB)</li>
+                    <li className="flex items-center gap-2">✓ 2 ባነር</li>
+                    <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
                   </ul>
                 </div>
                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-                  Select Package
+                  Select Standard
                 </button>
               </div>
 
