@@ -516,12 +516,97 @@ function Price() {
   const [passcode, setPasscode] = useState('');
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveMessage, setSaveMessage] = useState('');
 
-  // Dynamic Packages State (from Backend/Admin)
+  // Dynamic Packages State
   const [packages, setPackages] = useState([]);
 
+  // Default fallback data
+  const defaultPackages = [
+    {
+      id: 'premium',
+      tierName: 'Ultimate VIP',
+      name: 'Premium',
+      price: '$2,000+',
+      desc: 'ዝለዓለ ደረጃ ሞያዊ ክእለትን ብርክት ዝበሉ መሳርሒታትን ተጠቒምካ ዝስራሕ ቪአይፒ ኣገልግሎት።',
+      features: [
+        'ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)',
+        'ክልተ ኤክስፐርት ካሜራማን',
+        'Cinematic Color Grading & VFX',
+        '🎁 ቦናስ: ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር'
+      ]
+    },
+    {
+      id: 'gold',
+      tierName: 'Exclusive',
+      name: 'Gold',
+      price: '300,000',
+      services: [
+        'ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+        'ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+        'መዓልቲ መርዓ (5 ካሜራ: 4 ቪድዮ፣ 1 ፎቶ)',
+        'ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)',
+        'ኵሉ ሶፍት ኮፒ (All Soft Copy)'
+      ],
+      features: [
+        '800 ፎቶዎች (10×15)',
+        '2 ላሚኔትድ ፎቶ (30×90 & 30×60)',
+        '2 ሳይን ቦርድ (30×45)',
+        '3 ቦርድ (50×80, 40×60, 30×45)',
+        '400 ምስጋና ካርድ (Thank You Card)',
+        '8 ዩኤስቢ ፍላሽ (64 GB)',
+        '2 ባነር',
+        '2 ራማ / ቆብዕ (Cap)'
+      ]
+    },
+    {
+      id: 'silver',
+      tierName: 'Advanced',
+      name: 'Silver',
+      price: '240,000',
+      services: [
+        'ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+        'ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+        'መዓልቲ መርዓ (4 ካሜራ: 3 ቪድዮ፣ 1 ፎቶ)',
+        'ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)'
+      ],
+      features: [
+        '500 ፎቶዎች (10×15)',
+        '2 ላሚኔትድ ፎቶ (30×90 & 40×60)',
+        '1 ሳይን ቦርድ (30×45)',
+        '2 ቦርድ (50×80 & 40×60)',
+        '250 ምስጋና ካርድ (Thank You Card)',
+        '6 ዩኤስቢ ፍላሽ (64 GB)',
+        '2 ባነር',
+        '2 ራማ / ቆብዕ (Cap)'
+      ]
+    },
+    {
+      id: 'standard',
+      tierName: 'Standard',
+      name: 'Standard',
+      price: '190,000',
+      services: [
+        'ስቱዲዮ / ኣብ መስክ (1 ቪድዮ፣ 1 ፎቶ)',
+        'ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+        'መዓልቲ መርዓ (3 ካሜራ: 2 ቪድዮ፣ 1 ፎቶ)',
+        'ሓማውቲ (2 ካሜራ: 1 ፎቶ፣ 1 ቪድዮ)'
+      ],
+      features: [
+        '300 ፎቶዎች (10×15)',
+        '1 ላሚኔትድ ፎቶ (30×90)',
+        '1 ሳይን ቦርድ (30×45)',
+        '1 ቦርድ (50×80)',
+        '200 ምስጋና ካርድ (Thank You Card)',
+        '4 ዩኤስቢ ፍላሽ (64 GB)',
+        '2 ባነር',
+        '2 ራማ / ቆብዕ (Cap)'
+      ]
+    }
+  ];
+
   useEffect(() => {
-    // 1. Check Passcode Authentication Cache
     const authData = localStorage.getItem('priceAuthData');
     if (authData) {
       const { expiry } = JSON.parse(authData);
@@ -533,7 +618,7 @@ function Price() {
       }
     }
 
-    // 2. Fetch Dynamic Packages from Backend (Admin Sync)
+    // Fetch Prices from Backend
     fetch('https://habesha-film-production-server.onrender.com/api/prices')
       .then(res => {
         if (res.ok) return res.json();
@@ -541,9 +626,14 @@ function Price() {
       .then(data => {
         if (data && data.length > 0) {
           setPackages(data);
+        } else {
+          setPackages(defaultPackages);
         }
       })
-      .catch(err => console.log("Using default fallback or error loading prices"));
+      .catch(err => {
+        console.log("Error loading prices, using defaults");
+        setPackages(defaultPackages);
+      });
   }, []);
 
   const handleLogin = async (e) => {
@@ -554,9 +644,7 @@ function Price() {
     try {
       const response = await fetch('https://habesha-film-production-server.onrender.com/api/auth/verify-passcode', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ passcode }),
       });
 
@@ -581,98 +669,39 @@ function Price() {
     }
   };
 
-  // Default fallback data if backend is empty
-  const defaultPackages = [
-    {
-      id: 'premium',
-      tierName: 'Ultimate VIP',
-      name: 'Premium',
-      price: '$2,000+',
-      desc: 'ዝለዓለ ደረጃ ሞያዊ ክእለትን ብርክት ዝበሉ መሳርሒታትን ተጠቒምካ ዝስራሕ ቪአይፒ ኣገልግሎት።',
-      features: [
-        'ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)',
-        'ክልተ ኤክስፐርት ካሜራማን',
-        'Cinematic Color Grading & VFX',
-        '🎁 ቦናስ: ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር'
-      ],
-      isPopular: false
-    },
-    {
-      id: 'gold',
-      tierName: 'Exclusive',
-      name: 'Gold',
-      price: '300,000',
-      servicesTitle: 'ናይ ቀረጻ ኣገልግሎታት:',
-      services: [
-        'ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
-        'ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
-        'መዓልቲ መርዓ (5 ካሜራ: 4 ቪድዮ፣ 1 ፎቶ)',
-        'ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)',
-        'ኵሉ ሶፍት ኮፒ (All Soft Copy)'
-      ],
-      features: [
-        '800 ፎቶዎች (10×15)',
-        '2 ላሚኔትድ ፎቶ (30×90 & 30×60)',
-        '2 ሳይን ቦርድ (30×45)',
-        '3 ቦርድ (50×80, 40×60, 30×45)',
-        '400 ምስጋና ካርድ (Thank You Card)',
-        '8 ዩኤስቢ ፍላሽ (64 GB)',
-        '2 ባነር',
-        '2 ራማ / ቆብዕ (Cap)'
-      ],
-      isPopular: true
-    },
-    {
-      id: 'silver',
-      tierName: 'Advanced',
-      name: 'Silver',
-      price: '240,000',
-      servicesTitle: 'ናይ ቀረጻ ኣገልግሎታት:',
-      services: [
-        'ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
-        'ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
-        'መዓልቲ መርዓ (4 ካሜራ: 3 ቪድዮ፣ 1 ፎቶ)',
-        'ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)'
-      ],
-      features: [
-        '500 ፎቶዎች (10×15)',
-        '2 ላሚኔትድ ፎቶ (30×90 & 40×60)',
-        '1 ሳይን ቦርድ (30×45)',
-        '2 ቦርድ (50×80 & 40×60)',
-        '250 ምስጋና ካርድ (Thank You Card)',
-        '6 ዩኤስቢ ፍላሽ (64 GB)',
-        '2 ባነር',
-        '2 ራማ / ቆብዕ (Cap)'
-      ],
-      isPopular: false
-    },
-    {
-      id: 'standard',
-      tierName: 'Standard',
-      name: 'Standard',
-      price: '190,000',
-      servicesTitle: 'ናይ ቀረጻ ኣገልግሎታት:',
-      services: [
-        'ስቱዲዮ / ኣብ መስክ (1 ቪድዮ፣ 1 ፎቶ)',
-        'ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
-        'መዓልቲ መርዓ (3 ካሜራ: 2 ቪድዮ፣ 1 ፎቶ)',
-        'ሓማውቲ (2 ካሜራ: 1 ፎቶ፣ 1 ቪድዮ)'
-      ],
-      features: [
-        '300 ፎቶዎች (10×15)',
-        '1 ላሚኔትድ ፎቶ (30×90)',
-        '1 ሳይን ቦርድ (30×45)',
-        '1 ቦርድ (50×80)',
-        '200 ምስጋና ካርድ (Thank You Card)',
-        '4 ዩኤስቢ ፍላሽ (64 GB)',
-        '2 ባነር',
-        '2 ራማ / ቆብዕ (Cap)'
-      ],
-      isPopular: false
-    }
-  ];
+  // Handler to update price state locally when typing in Admin mode
+  const handlePriceChange = (id, newPrice) => {
+    setPackages(prevPackages =>
+      prevPackages.map(pkg => pkg.id === id ? { ...pkg, price: newPrice } : pkg)
+    );
+  };
 
-  const displayPackages = packages.length > 0 ? packages : defaultPackages;
+  // Handler to Save Prices to Backend Endpoint
+  const handleSavePrices = async () => {
+    setSaving(true);
+    setSaveMessage('');
+
+    try {
+      const response = await fetch('https://habesha-film-production-server.onrender.com/api/prices', {
+        method: 'PUT', //ወይ POST ብሰቨርካ መሰረት
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ packages, passcode }),
+      });
+
+      if (response.ok) {
+        setSaveMessage('ዋጋታት ብዕወት ተዓኪቡሎ!');
+      } else {
+        setSaveMessage('ጌጋ ተፈጢሩ፣ እንደገና ፈትን።');
+      }
+    } catch (err) {
+      console.error("Error saving prices:", err);
+      setSaveMessage('ራይ ከይዲ ሰቨር ተቋሪጹ ኣሎ።');
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-[#050505] text-zinc-100 font-sans selection:bg-[#dfb557]/30 selection:text-[#dfb557] overflow-x-hidden flex flex-col justify-between">
@@ -709,37 +738,48 @@ function Price() {
             </form>
           </div>
         ) : (
-          <div className="max-w-7xl mx-auto text-center px-4 py-12">
+          <div className="max-w-7xl mx-auto text-center px-4 py-12 w-full">
             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
-              Investment & Tiers
+              Investment & Tiers (Admin Mode)
             </span>
-            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4 text-zinc-100">Our Professional Packages</h1>
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4 text-zinc-100">Manage Packages & Prices</h1>
             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
-            <p className="text-zinc-400 text-sm md:text-base mb-16 max-w-2xl mx-auto font-light">
-              ንመጻኢ ፕሮጀክትታትኩም ዝኸውን ዝተፈላለየ ሞያዊ ኣገልግሎታት። ካብቶም ደረጃታት እቲ ንደለይዎ ምረጹ።
+            <p className="text-zinc-400 text-sm md:text-base mb-8 max-w-2xl mx-auto font-light">
+              ኣብዚ ዋጋታት ክትቅይሩን ናብ ሰቨር ክትዕክብዎን ትኽእሉ።
             </p>
+
+            {/* Save Button & Status bar */}
+            <div className="mb-12 flex flex-col items-center justify-center gap-3">
+              <button
+                onClick={handleSavePrices}
+                disabled={saving}
+                className="bg-[#dfb557] text-black px-8 py-3 rounded-xl uppercase text-xs font-bold tracking-widest hover:bg-[#c99f45] transition shadow-lg"
+              >
+                {saving ? 'Saving Changes...' : 'Save All Changes to Server'}
+              </button>
+              {saveMessage && <p className="text-sm font-medium text-[#dfb557]">{saveMessage}</p>}
+            </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-              {displayPackages.map((pkg) => (
+              {(packages.length > 0 ? packages : defaultPackages).map((pkg) => (
                 <div 
-                  key={pkg.id || pkg.name}
-                  className={`bg-zinc-950 p-6 sm:p-8 rounded-2xl shadow-2xl relative flex flex-col justify-between transition-transform hover:-translate-y-1 ${
-                    pkg.isPopular || pkg.name === 'Gold'
-                      ? 'border-2 border-[#dfb557]' 
-                      : 'border-2 border-[#dfb557]/50'
-                  }`}
+                  key={pkg.id}
+                  className="bg-zinc-950 border-2 border-[#dfb557]/60 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between"
                 >
-                  {(pkg.isPopular || pkg.name === 'Gold') && (
-                    <span className="absolute -top-3 right-6 bg-[#dfb557] text-black text-[9px] uppercase font-bold tracking-[0.3em] px-3 py-1 rounded-full shadow-md">
-                      Top Tier
-                    </span>
-                  )}
                   <div>
                     <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">{pkg.tierName}</span>
                     <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{pkg.name}</h3>
-                    <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">
-                      {pkg.price}
-                    </p>
+                    
+                    {/* Admin Price Input Field */}
+                    <div className="mb-6">
+                      <label className="text-[10px] uppercase text-zinc-400 block mb-1">Edit Price:</label>
+                      <input 
+                        type="text"
+                        value={pkg.price}
+                        onChange={(e) => handlePriceChange(pkg.id, e.target.value)}
+                        className="w-full bg-zinc-900 border border-[#dfb557] text-[#dfb557] font-bold text-xl px-3 py-2 rounded-lg focus:outline-none"
+                      />
+                    </div>
 
                     {pkg.desc && (
                       <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
@@ -747,34 +787,23 @@ function Price() {
                       </p>
                     )}
 
-                    {pkg.services && pkg.services.length > 0 && (
-                      <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-                        <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">{pkg.servicesTitle || 'ናይ ቀረጻ ኣገልግሎታት:'}</p>
-                        <ul className="space-y-1 pl-1">
-                          {pkg.services.map((service, idx) => (
-                            <li key={idx}>• {service}</li>
-                          ))}
-                        </ul>
+                    {pkg.services && (
+                      <div className="text-xs text-zinc-300 mb-4 font-light space-y-1 border-b border-zinc-800 pb-3">
+                        <p className="text-[#dfb557] font-semibold uppercase text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
+                        {pkg.services.map((s, idx) => (
+                          <p key={idx}>• {s}</p>
+                        ))}
                       </div>
                     )}
 
-                    {pkg.features && pkg.features.length > 0 && (
-                      <ul className="text-xs sm:text-sm text-zinc-300 space-y-2.5 mb-8 font-light">
-                        {pkg.features.map((feature, idx) => (
-                          <li key={idx} className="flex items-center gap-2">
-                            {feature.includes('🎁') ? feature : `✓ ${feature}`}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
+                    <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
+                      {pkg.features.map((feature, idx) => (
+                        <li key={idx} className="flex items-center gap-2">
+                          {feature.includes('🎁') ? feature : `✓ ${feature}`}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <button className={`w-full py-3 text-[11px] uppercase font-bold tracking-[0.3em] transition-all duration-300 rounded-xl shadow-md ${
-                    pkg.isPopular || pkg.name === 'Gold'
-                      ? 'bg-[#dfb557] text-black hover:bg-[#c99f45]'
-                      : 'bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 hover:bg-[#dfb557] hover:text-black'
-                  }`}>
-                    Select {pkg.name}
-                  </button>
                 </div>
               ))}
             </div>
