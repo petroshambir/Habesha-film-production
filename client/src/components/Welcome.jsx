@@ -2,7 +2,7 @@
 
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import welcomeVideo from '../assets/videos/adl-wellcome -video.mp4'; // ከም ቫሪያብል ኢምፖርት ግበር
+import welcomeVideo from '../assets/videos/wellcome-adal-short.mp4'; // ከም ቫሪያብል ኢምፖርት ግበር
 
 function Welcome() {
   const navigate = useNavigate();
