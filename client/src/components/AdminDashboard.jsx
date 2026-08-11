@@ -685,19 +685,13 @@ function AdminDashboard() {
   const [portalsList, setPortalsList] = useState([]);
   const [creatingPortal, setCreatingPortal] = useState(false);
 
-  // ናይ ዋጋ ፓኬጃትን ፓስኮድን ዝምልከት ስቴት
-  const [packagesList, setPackagesList] = useState([]);
-  const [pricePasscodes, setPricePasscodes] = useState([]);
-  const [generatingPriceCode, setGeneratingPriceCode] = useState(false);
-
   // ሓድሽ ንዝተመረጹ ስእሊታት ዝርእየሉ ሞዳል (Modal) ዝምልከት ስቴት
   const [viewingPortalSelections, setViewingPortalSelections] = useState(null);
 
   // ናይ ሳድባር ንጡፍ ክፋል ንምምራጽ (Active Tab State)
-  const [activeTab, setActiveTab] = useState('manager'); // 'manager', 'portal', 'packages', or section title
+  const [activeTab, setActiveTab] = useState('manager'); // 'manager', 'portal', or section title
 
   useEffect(() => {
-    // 1. Load Portfolio Projects
     fetch('https://habesha-film-production-server.onrender.com/api/projects')
       .then(res => res.json())
       .then(data => {
@@ -728,12 +722,7 @@ function AdminDashboard() {
       })
       .catch(err => console.error("Error loading admin data:", err));
 
-    // 2. Load Client Portals
     fetchPortals();
-
-    // 3. Load Packages & Price Passcodes safely inside useEffect
-    fetchPackages();
-    fetchPricePasscodes();
   }, []);
 
   const fetchPortals = async () => {
@@ -745,73 +734,6 @@ function AdminDashboard() {
       }
     } catch (err) {
       console.error("Error fetching portals:", err);
-    }
-  };
-
-  const fetchPackages = async () => {
-    try {
-      const res = await fetch('https://habesha-film-production-server.onrender.com/api/packages');
-      if (res.ok) {
-        const data = await res.json();
-        setPackagesList(data);
-      }
-    } catch (err) {
-      console.error("Error loading packages:", err);
-    }
-  };
-
-  const fetchPricePasscodes = async () => {
-    try {
-      const res = await fetch('https://habesha-film-production-server.onrender.com/api/auth/price-passcodes');
-      if (res.ok) {
-        const data = await res.json();
-        setPricePasscodes(data);
-      }
-    } catch (err) {
-      console.error("Error fetching price passcodes:", err);
-    }
-  };
-
-  const handleGeneratePricePasscode = async () => {
-    setGeneratingPriceCode(true);
-    try {
-      const res = await fetch('https://habesha-film-production-server.onrender.com/api/auth/generate-price-passcode', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' }
-      });
-      const data = await res.json();
-      if (res.ok && (data.success || data.passcode)) {
-        alert(`ሓድሽ ፓስኮድ ተፈጢሩ ኣሎ! ኮድ: [ ${data.passcode || data.code} ]`);
-        fetchPricePasscodes();
-      } else {
-        alert(data.message || 'ፓስኮድ ምፍጣር ኣይከኣለን።');
-      }
-    } catch (err) {
-      console.error("Error generating price passcode:", err);
-      alert('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ።');
-    } finally {
-      setGeneratingPriceCode(false);
-    }
-  };
-
-  const handleUpdatePackage = async (packageId, updatedData) => {
-    try {
-      const res = await fetch(`https://habesha-film-production-server.onrender.com/api/packages/${packageId}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedData)
-      });
-      if (res.ok) {
-        const updated = await res.json();
-        alert('ፓኬጅ ብሰላም ተቕይሩ ኣሎ!');
-        setPackagesList(packagesList.map(p => (p._id === packageId || p.id === packageId) ? updated : p));
-        fetchPackages();
-      } else {
-        alert('ክትቅይሮ ኣይከኣለን።');
-      }
-    } catch (err) {
-      console.error("Error updating package:", err);
-      alert('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ።');
     }
   };
 
@@ -879,7 +801,7 @@ function AdminDashboard() {
       }
     } catch (err) {
       console.error("Error uploading client images:", err);
-      alert('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ።');
+      alert('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ። F12 Console ርአ።');
     }
   };
 
@@ -920,14 +842,14 @@ function AdminDashboard() {
       alert(`ብሰላም ናብ ዳታቤዝ ተዓቂቡ ኣሎ! (${title})`);
     } catch (err) {
       console.error("Error saving to DB", err);
-      alert("ዓወት ኣይተረኽበን!");
+      alert("ዓወት ኣይተረኽበን! መርመሮ (F12 Console)");
     }
   };
 
   return (
     <div className="bg-zinc-950 min-h-screen text-white flex flex-col md:flex-row relative">
       
-      {/* ─── ሳድባር (Left Sidebar) ─── */}
+      {/* ─── ጸጋማይ ወገን ፕሮፌሽናል ሳድባር (Left Sidebar) - Mobile Responsive ─── */}
       <aside className="w-full md:w-72 bg-zinc-900 border-b md:border-r border-zinc-800 p-4 md:p-6 flex flex-col justify-between shrink-0 md:sticky md:top-0 md:h-screen z-20">
         <div>
           <div className="flex items-center gap-3 mb-6 md:mb-8">
@@ -942,7 +864,9 @@ function AdminDashboard() {
             <button
               onClick={() => setActiveTab('manager')}
               className={`whitespace-nowrap px-4 py-3 rounded-xl font-medium text-sm transition-all flex items-center justify-between ${
-                activeTab === 'manager' ? 'bg-amber-500 text-black font-bold shadow-lg shadow-amber-500/20' : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
+                activeTab === 'manager' 
+                  ? 'bg-amber-500 text-black font-bold shadow-lg shadow-amber-500/20' 
+                  : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
               }`}
             >
               <span>📊 Dashboard Overview</span>
@@ -951,22 +875,15 @@ function AdminDashboard() {
             <button
               onClick={() => setActiveTab('portal')}
               className={`whitespace-nowrap px-4 py-3 rounded-xl font-medium text-sm transition-all flex items-center justify-between ${
-                activeTab === 'portal' ? 'bg-amber-500 text-black font-bold shadow-lg shadow-amber-500/20' : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
+                activeTab === 'portal' 
+                  ? 'bg-amber-500 text-black font-bold shadow-lg shadow-amber-500/20' 
+                  : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
               }`}
             >
               <span>👥 Client Portals</span>
               <span className={`text-xs px-2 py-0.5 rounded-full ml-2 ${activeTab === 'portal' ? 'bg-black text-amber-400' : 'bg-zinc-800 text-zinc-400'}`}>
                 {portalsList.length}
               </span>
-            </button>
-
-            <button
-              onClick={() => setActiveTab('packages')}
-              className={`whitespace-nowrap px-4 py-3 rounded-xl font-medium text-sm transition-all flex items-center justify-between ${
-                activeTab === 'packages' ? 'bg-amber-500 text-black font-bold shadow-lg shadow-amber-500/20' : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
-              }`}
-            >
-              <span>💳 Pricing & Passcodes</span>
             </button>
 
             <div className="hidden md:block pt-4 pb-2">
@@ -978,7 +895,9 @@ function AdminDashboard() {
                 key={sec.title}
                 onClick={() => setActiveTab(sec.title)}
                 className={`whitespace-nowrap px-4 py-3 rounded-xl font-medium text-sm transition-all flex items-center justify-between ${
-                  activeTab === sec.title ? 'bg-amber-500 text-black font-bold shadow-lg shadow-amber-500/20' : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
+                  activeTab === sec.title 
+                    ? 'bg-amber-500 text-black font-bold shadow-lg shadow-amber-500/20' 
+                    : 'text-zinc-300 hover:bg-zinc-800 hover:text-white'
                 }`}
               >
                 <span>✨ {sec.title}</span>
@@ -992,7 +911,7 @@ function AdminDashboard() {
         </div>
       </aside>
 
-      {/* ─── ማእከላይ መርአዪ ክፍሊ (Main Content Area) ─── */}
+      {/* ─── ማእከላይ መርአዪ ክፍሊ (Main Content Display Area) ─── */}
       <main className="flex-1 p-4 md:p-10 overflow-y-auto max-w-full">
         
         {/* Tab 1: Dashboard Overview */}
@@ -1004,10 +923,28 @@ function AdminDashboard() {
                 መረብካ (Website) ንምምሕዳር ካብዚ ሳድባር ዝደለኻዮ ክፍሊ ብምጥዋቕ ብቐሊሉ ክትእርምን ስእሊታት ክተሰቅልን ትኽእል።
               </p>
             </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+              <div onClick={() => setActiveTab('portal')} className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl cursor-pointer hover:border-amber-500/50 transition-all group">
+                <h3 className="text-lg font-bold text-amber-300 group-hover:text-amber-400 mb-1">Active Client Portals</h3>
+                <p className="text-2xl font-black text-white mt-2">{portalsList.length}</p>
+                <p className="text-xs text-zinc-500 mt-2">ካስተመራት ዝመረጽዎ ስእሊታትን ፓስኮድን መርመሮ</p>
+              </div>
+
+              {sectionsConfig.map(sec => (
+                <div key={sec.title} onClick={() => setActiveTab(sec.title)} className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl cursor-pointer hover:border-amber-500/50 transition-all group">
+                  <h3 className="text-lg font-bold text-amber-300 group-hover:text-amber-400 mb-1">{sec.title}</h3>
+                  <p className="text-2xl font-black text-white mt-2">
+                    {sectionsData[sec.title]?.images?.length || 0} Photos
+                  </p>
+                  <p className="text-xs text-zinc-500 mt-2">ናיዚ ክፍሊ መግለጫን ስእሊታትን ኣስተኻኽል</p>
+                </div>
+              ))}
+            </div>
           </div>
         )}
 
-        {/* Tab 2: Client Portals */}
+        {/* Tab 2: Client Selection Portals Management */}
         {activeTab === 'portal' && (
           <div className="space-y-8">
             <div className="p-4 md:p-6 border border-amber-500/50 rounded-2xl bg-zinc-900 shadow-2xl">
@@ -1048,6 +985,16 @@ function AdminDashboard() {
                   />
                   <p className="text-xs text-zinc-500 mt-1">ዝተመረጹ ስእሊታት ቑጽሪ: {clientImages.length}</p>
                 </div>
+
+                {clientImages.length > 0 && (
+                  <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 mt-4 p-3 bg-zinc-950 rounded-xl border border-zinc-800 max-h-40 overflow-y-auto">
+                    {clientImages.map((url, i) => (
+                      <div key={i} className="relative aspect-square rounded overflow-hidden border border-zinc-700">
+                        <img src={url} alt="preview" className="w-full h-full object-cover" />
+                      </div>
+                    ))}
+                  </div>
+                )}
 
                 <button 
                   type="submit" 
@@ -1105,75 +1052,6 @@ function AdminDashboard() {
           </div>
         )}
 
-        {/* Tab 3: Pricing & Passcodes Management */}
-        {activeTab === 'packages' && (
-          <div className="space-y-8">
-            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl">
-              <div className="flex justify-between items-center mb-6">
-                <h2 className="text-xl font-bold text-amber-400">Price Page Passcode Generator</h2>
-                <button 
-                  onClick={handleGeneratePricePasscode}
-                  disabled={generatingPriceCode}
-                  className="bg-amber-500 hover:bg-amber-600 text-black px-4 py-2 rounded-lg text-xs font-bold transition-colors"
-                >
-                  {generatingPriceCode ? 'Generating...' : '+ Generate New Passcode'}
-                </button>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                {pricePasscodes.map((item, idx) => (
-                  <div key={idx} className="bg-zinc-800 p-3 rounded-lg border border-zinc-700 flex justify-between items-center">
-                    <span className="font-mono text-amber-300 font-bold">{typeof item === 'string' ? item : (item.passcode || item.code)}</span>
-                    <span className="text-[10px] text-zinc-400">{item.active !== false ? 'Active' : 'Used'}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-zinc-900 border border-zinc-800 p-6 rounded-2xl shadow-xl">
-              <h2 className="text-xl font-bold text-amber-400 mb-6">Manage Packages (Standard, Silver, Gold, Premium)</h2>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {packagesList.map((pkg) => (
-                  <div key={pkg._id || pkg.id} className="bg-zinc-800/60 p-4 rounded-xl border border-zinc-700 space-y-3">
-                    <h3 className="text-lg font-bold text-amber-300">{pkg.name} ({pkg.subtitle || pkg.name})</h3>
-                    <div>
-                      <label className="text-xs text-zinc-400 block mb-1">Price:</label>
-                      <input 
-                        type="text" 
-                        value={pkg.price || ''} 
-                        onChange={(e) => {
-                          const updated = packagesList.map(p => (p._id === pkg._id || p.id === pkg.id) ? { ...p, price: e.target.value } : p);
-                          setPackagesList(updated);
-                        }}
-                        className="bg-zinc-900 border border-zinc-700 p-2 rounded w-full text-sm text-white"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs text-zinc-400 block mb-1">Features (Comma separated):</label>
-                      <input 
-                        type="text" 
-                        value={Array.isArray(pkg.features) ? pkg.features.join(', ') : (pkg.features || '')} 
-                        onChange={(e) => {
-                          const featuresArr = e.target.value.split(',').map(f => f.trim());
-                          const updated = packagesList.map(p => (p._id === pkg._id || p.id === pkg.id) ? { ...p, features: featuresArr } : p);
-                          setPackagesList(updated);
-                        }}
-                        className="bg-zinc-900 border border-zinc-700 p-2 rounded w-full text-sm text-white"
-                      />
-                    </div>
-                    <button 
-                      onClick={() => handleUpdatePackage(pkg._id || pkg.id, pkg)}
-                      className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-xs font-bold w-full transition-colors"
-                    >
-                      Save Package Changes
-                    </button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
-
         {/* Dynamic Sections */}
         {sectionsConfig.map((sec) => {
           if (activeTab !== sec.title) return null;
@@ -1196,7 +1074,7 @@ function AdminDashboard() {
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-2 md:p-4">
           <div className="bg-zinc-900 border border-zinc-700 rounded-2xl max-w-4xl w-full p-4 md:p-6 max-h-[95vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-4 border-b border-zinc-800 pb-3 gap-2">
-              <div>
+              <div className="overflow-hidden">
                 <h3 className="text-lg md:text-xl font-bold text-amber-400 truncate">{viewingPortalSelections.clientName} - Selected Photos</h3>
                 <p className="text-xs text-zinc-400">Portal #{viewingPortalSelections.portalNumber} (Total: {viewingPortalSelections.selectedImages.length})</p>
               </div>
@@ -1208,54 +1086,94 @@ function AdminDashboard() {
               </button>
             </div>
 
-            <div className="flex gap-3 mb-6 p-3 bg-zinc-800/60 rounded-xl border border-zinc-700 items-center justify-between">
-              <span className="text-xs text-zinc-300">
+            <div className="flex flex-col sm:flex-row gap-3 mb-6 p-3 md:p-4 bg-zinc-800/60 rounded-xl border border-zinc-700 items-stretch sm:items-center justify-between">
+              <div className="text-xs text-zinc-300">
                 ማዕቀብ: <span className="text-amber-400 font-bold">{viewingPortalSelections.selectedImages.length} ስእሊታት</span> ተመርጺዮም ኣለዉ።
-              </span>
-              
-              <button 
-                onClick={async () => {
-                  const defaultFolderName = `${viewingPortalSelections.clientName}_Selected_Photos`.replace(/\s+/g, '_');
-                  const folderName = prompt("ናይቲ ፎልደር ሽም ኣእቱ:", defaultFolderName);
-                  if (!folderName) return;
+              </div>
+              <div className="flex flex-col sm:flex-row gap-2">
+                <button 
+                  onClick={async () => {
+                    const defaultFolderName = `${viewingPortalSelections.clientName}_Selected_Photos`.replace(/\s+/g, '_');
+                    const folderName = prompt("ናይቲ ፎልደር ሽም ኣእቱ (Enter Folder Name):", defaultFolderName);
+                    if (!folderName) return;
 
-                  alert('ስእሊታት ተኣኪቦም ዚፕ ክሳብ ዝለኣኹ በጃኹም ቁሩብ ጽንሑ...');
-                  try {
-                    const zip = new JSZip();
-                    const folder = zip.folder(folderName);
+                    alert('ስእሊታት ተኣኪቦም ዚፕ (Zip) ክሳብ ዝለኣኹ በጃኹም ቁሩብ ጽንሑ...');
 
-                    for (let i = 0; i < viewingPortalSelections.selectedImages.length; i++) {
-                      const url = viewingPortalSelections.selectedImages[i];
-                      const response = await fetch(url);
-                      const blob = await response.blob();
-                      const extension = url.split('.').pop().split('?')[0] || 'jpg';
-                      folder.file(`photo_${i + 1}.${extension}`, blob);
+                    try {
+                      const zip = new JSZip();
+                      const folder = zip.folder(folderName);
+
+                      for (let i = 0; i < viewingPortalSelections.selectedImages.length; i++) {
+                        const url = viewingPortalSelections.selectedImages[i];
+                        try {
+                          const response = await fetch(url);
+                          const blob = await response.blob();
+                          const extension = url.split('.').pop().split('?')[0] || 'jpg';
+                          folder.file(`photo_${i + 1}.${extension}`, blob);
+                        } catch (err) {
+                          console.error(`Error fetching image ${i}:`, err);
+                        }
+                      }
+
+                      const content = await zip.generateAsync({ type: 'blob' });
+                      const blobUrl = window.URL.createObjectURL(content);
+                      const link = document.createElement('a');
+                      link.href = blobUrl;
+                      link.download = `${folderName}.zip`;
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                      window.URL.revokeObjectURL(blobUrl);
+
+                      alert('ኩሎም ስእሊታት ብሓደ ፎልደር (Zip) ብሰላም ወሪዶም!');
+                    } catch (err) {
+                      console.error("Zip generation error:", err);
+                      alert('ስእሊታት ከውርድ እንተሎ ጌጋ ኣጋጢሙ።');
+                    }
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
+                >
+                  📦 Download All as Zip
+                </button>
+
+                <button 
+                  onClick={() => {
+                    const targetSection = prompt("እዞም ስእሊታት ናበይ ክሰጋገሩ ትደሊ? (Weddings, Bridal Shoots, ወይ Baby Shower & Baptism ብትኽክል ጽሓፍ):");
+                    if (!targetSection) return;
+
+                    const currentSecData = sectionsData[targetSection];
+                    if (!currentSecData) {
+                      alert('እቲ ዝበልካዮ ሽም ክፍሊ ኣይተረኽበን። በጃኹም ብትኽክል ጽሓፍዎ።');
+                      return;
                     }
 
-                    const content = await zip.generateAsync({ type: 'blob' });
-                    const blobUrl = window.URL.createObjectURL(content);
-                    const link = document.createElement('a');
-                    link.href = blobUrl;
-                    link.download = `${folderName}.zip`;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    window.URL.revokeObjectURL(blobUrl);
-                  } catch (err) {
-                    console.error("Zip error:", err);
-                    alert('ስእሊታት ከውርድ እንተሎ ጌጋ ኣጋጢሙ።');
-                  }
-                }}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-2 rounded-lg text-xs font-bold"
-              >
-                📦 Download All as Zip
-              </button>
+                    const updatedImages = [...(currentSecData.images || []), ...viewingPortalSelections.selectedImages];
+                    setSectionsData({
+                      ...sectionsData,
+                      [targetSection]: { ...currentSecData, images: updatedImages }
+                    });
+
+                    alert(`ስእሊታት ብሰላም ናብቲ የዕሩኽ ፖርትፎሊዮ [ ${targetSection} ] ተሰጊሮም ኣለዉ! ሕጂ 'Save' ግበሮ።`);
+                  }}
+                  className="bg-amber-500 hover:bg-amber-600 text-black px-3 py-2 rounded-lg text-xs font-bold transition-colors flex items-center justify-center gap-1.5"
+                >
+                  🚀 Send to Portfolio
+                </button>
+              </div>
             </div>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
               {viewingPortalSelections.selectedImages.map((imgUrl, idx) => (
                 <div key={idx} className="aspect-square bg-zinc-800 border border-zinc-700 rounded-lg overflow-hidden relative group">
                   <img src={imgUrl} alt={`Selected ${idx}`} className="w-full h-full object-cover" />
+                  <a 
+                    href={imgUrl} 
+                    target="_blank" 
+                    rel="noreferrer" 
+                    className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs font-bold text-amber-300 underline p-1 text-center"
+                  >
+                    View Full
+                  </a>
                 </div>
               ))}
             </div>
@@ -1268,11 +1186,13 @@ function AdminDashboard() {
 
 function SectionRenderer({ title, data, setData, onSave }) {
   const handleImageUpload = async (event) => {
-    const file = event.target.files[0];
-    if (!file) return;
+    const files = Array.from(event.target.files);
+    if (files.length === 0) return;
 
     const formData = new FormData();
-    formData.append('images', file);
+    files.forEach(file => {
+      formData.append('images', file);
+    });
 
     try {
       const res = await fetch(`https://habesha-film-production-server.onrender.com/api/projects/${title}/upload`, {
@@ -1283,38 +1203,57 @@ function SectionRenderer({ title, data, setData, onSave }) {
       if (!res.ok) throw new Error("Upload failed");
       
       const result = await res.json();
-      const newImages = result.images || [];
+      const newImagesFromBackend = result.images || [];
       
-      const defaultHeading = `Featured Moment ${newImages.length}`;
-      const defaultDesc = `0${newImages.length}. A wonderful captured memory of the special day.`;
+      const updatedImages = [...(data.images || []), ...newImagesFromBackend];
+      const updatedHeadings = [...(data.headings || [])];
+      const updatedDescriptions = [...(data.descriptions || [])];
 
-      const updatedHeadings = [...(data.headings || []), defaultHeading];
-      const updatedDescriptions = [...(data.descriptions || []), defaultDesc];
+      newImagesFromBackend.forEach((_, i) => {
+        const totalIdx = (data.images || []).length + i;
+        updatedHeadings.push(`Featured Moment ${totalIdx + 1}`);
+        updatedDescriptions.push(`0${totalIdx + 1}. A wonderful captured memory of the special day.`);
+      });
 
-      setData({
+      const newData = {
         ...data,
-        images: newImages,
+        images: updatedImages,
         headings: updatedHeadings,
         descriptions: updatedDescriptions
-      });
-      alert("ስእሊ ተሰቒሉ ኣሎ!");
+      };
+
+      setData(newData);
+      alert(`${newImagesFromBackend.length} ስእሊ(ታት) ተሰቒሎም ኣለዉ!`);
     } catch (err) {
       console.error("Upload Error:", err);
       alert("ስእሊ ክስቀል ኣይከኣለን!");
     }
   };
 
-  const deleteImage = (imgIndex) => {
+  const deleteImage = async (imgIndex) => {
     const updatedImages = (data.images || []).filter((_, i) => i !== imgIndex);
     const updatedHeadings = (data.headings || []).filter((_, i) => i !== imgIndex);
     const updatedDescriptions = (data.descriptions || []).filter((_, i) => i !== imgIndex);
 
-    setData({ 
+    const newData = { 
       ...data, 
       images: updatedImages,
       headings: updatedHeadings,
       descriptions: updatedDescriptions
-    });
+    };
+    setData(newData);
+  };
+
+  const handleHeadingChange = (index, value) => {
+    const updatedHeadings = [...(data.headings || [])];
+    updatedHeadings[index] = value;
+    setData({ ...data, headings: updatedHeadings });
+  };
+
+  const handleDescriptionChange = (index, value) => {
+    const updatedDescriptions = [...(data.descriptions || [])];
+    updatedDescriptions[index] = value;
+    setData({ ...data, descriptions: updatedDescriptions });
   };
 
   return (
@@ -1334,35 +1273,65 @@ function SectionRenderer({ title, data, setData, onSave }) {
             value={data.names || ''}
             onChange={(e) => setData({ ...data, names: e.target.value })}
             className="bg-zinc-800 border border-zinc-600 p-3 rounded-lg w-full text-white mb-6 text-sm"
+            placeholder="ማእከላይ ሽም (ንኣብነት Sara & Robel)"
           />
 
-          <label className="block text-zinc-400 mb-2 text-sm">Section Main Description:</label>
+          <label className="block text-zinc-400 mb-2 text-sm">Section Main Description (መግለጫ):</label>
           <textarea 
             rows="3"
             value={data.desc || ''}
             onChange={(e) => setData({ ...data, desc: e.target.value })}
-            className="bg-zinc-800 border border-zinc-600 p-3 rounded-lg w-full text-white text-sm"
+            className="bg-zinc-800 border border-zinc-600 p-3 rounded-lg w-full text-white text-sm focus:outline-none focus:border-amber-400 transition-colors"
+            placeholder="እዚ ስራሕ እዚ ዝገልጽ ጽሑፍ ኣብዚ ጽሓፍ..."
           />
         </div>
 
         <div className="flex flex-col w-full">
-          <label className="block text-zinc-400 mb-2 text-sm">Upload Image:</label>
+          <label className="block text-zinc-400 mb-2 text-sm">Upload Images (Multiple Allowed):</label>
           <input 
             type="file" 
+            multiple
             onChange={handleImageUpload} 
-            className="text-zinc-400 text-xs file:mr-2 file:py-2 file:px-3 file:rounded-lg file:bg-amber-500 file:text-black w-full bg-zinc-800 p-2 rounded-lg" 
+            className="text-zinc-400 text-xs file:mr-2 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-black hover:file:bg-amber-400 w-full bg-zinc-800 p-2 rounded-lg" 
           />
         </div>
       </div>
 
       <div className="mt-8 space-y-4">
-        <h3 className="text-lg font-semibold text-amber-400 border-b border-zinc-800 pb-2">Manage Image Headings</h3>
-        {data.images && data.images.map((img, index) => (
-          <div key={index} className="flex gap-4 p-4 bg-zinc-800/50 border border-zinc-700 rounded-xl items-center">
-            <img src={img} className="w-20 h-20 object-cover rounded" alt="upload" />
-            <button onClick={() => deleteImage(index)} className="bg-red-600 text-white px-3 py-1 rounded text-xs">Delete</button>
-          </div>
-        ))}
+        <h3 className="text-lg md:text-xl font-semibold text-amber-400 border-b border-zinc-800 pb-2">Manage Image Headings & Descriptions</h3>
+        {data.images && data.images.map((img, index) => {
+          const defaultHeading = `Featured Moment ${index + 1}`;
+          const defaultDesc = `0${index + 1}. A wonderful captured memory of the special day.`;
+
+          return (
+            <div key={index} className="flex flex-col sm:flex-row gap-4 p-4 bg-zinc-800/50 border border-zinc-700 rounded-xl items-center">
+              <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 border border-zinc-700 rounded-lg overflow-hidden w-full sm:w-auto">
+                <img src={img} className="w-full h-full object-cover" alt="upload" />
+                <button onClick={() => deleteImage(index)} className="absolute top-0 right-0 bg-red-600 text-white px-2 py-0.5 text-xs font-bold">&times;</button>
+              </div>
+              <div className="flex-1 w-full space-y-3">
+                <div>
+                  <label className="block text-xs text-zinc-400 mb-1">Image {index + 1} Heading:</label>
+                  <input 
+                    type="text"
+                    value={data.headings && data.headings[index] !== undefined ? data.headings[index] : defaultHeading}
+                    onChange={(e) => handleHeadingChange(index, e.target.value)}
+                    className="bg-zinc-900 border border-zinc-700 p-2 rounded w-full text-xs md:text-sm text-white"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs text-zinc-400 mb-1">Image {index + 1} Description:</label>
+                  <input 
+                    type="text"
+                    value={data.descriptions && data.descriptions[index] !== undefined ? data.descriptions[index] : defaultDesc}
+                    onChange={(e) => handleDescriptionChange(index, e.target.value)}
+                    className="bg-zinc-900 border border-zinc-700 p-2 rounded w-full text-xs md:text-sm text-white"
+                  />
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
