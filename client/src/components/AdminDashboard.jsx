@@ -4452,15 +4452,28 @@ function AdminDashboard() {
 
   const handleSave = async (title, data) => {
     try {
-      const combinedPayloadString = `${data.desc || ''}||DESCS||${JSON.stringify(data.descriptions || [])}||DESCS||${JSON.stringify(data.headings || [])}`;
+      let payload = {};
 
-      const payload = {
-        ...data,
-        description: combinedPayloadString,
-        desc: data.desc,
-        descriptions: data.descriptions,
-        headings: data.headings
-      };
+      if (title === 'Pricing') {
+        payload = {
+          title: title,
+          description: data.desc || '',
+          desc: data.desc || '',
+          images: [],
+          descriptions: [],
+          headings: []
+        };
+      } else {
+        const combinedPayloadString = `${data.desc || ''}||DESCS||${JSON.stringify(data.descriptions || [])}||DESCS||${JSON.stringify(data.headings || [])}`;
+        payload = {
+          ...data,
+          title: title,
+          description: combinedPayloadString,
+          desc: data.desc,
+          descriptions: data.descriptions,
+          headings: data.headings
+        };
+      }
 
       const res = await fetch(`https://habesha-film-production-server.onrender.com/api/projects/${title}`, {
         method: 'PUT',
@@ -4816,6 +4829,23 @@ function AdminDashboard() {
 
 function SectionRenderer({ title, data, setData, onSave }) {
   const isPricing = title === 'Pricing';
+
+  // 🔄 Pricing ፕኤጅ ክትከፈት ከለዎ ካብ ሰርቨር ዳሕረዋይ ሓበሬታ ንምምጻእ (Pull / Refresh)
+  useEffect(() => {
+    if (isPricing) {
+      fetch(`https://habesha-film-production-server.onrender.com/api/projects/${title}`)
+        .then(res => res.json())
+        .then(item => {
+          if (item) {
+            setData(prev => ({
+              ...prev,
+              desc: item.desc || item.description || ''
+            }));
+          }
+        })
+        .catch(err => console.error("Error pulling latest pricing data:", err));
+    }
+  }, [title, isPricing]);
 
   const handleImageUpload = async (event) => {
     const files = Array.from(event.target.files);
