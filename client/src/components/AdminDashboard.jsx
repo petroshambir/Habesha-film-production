@@ -765,6 +765,7 @@ function AdminDashboard() {
       const res = await fetch('https://habesha-film-production-server.onrender.com/api/auth/price-passcodes');
       if (res.ok) {
         const data = await res.json();
+        // Handle array of strings or array of objects based on server response structure
         setPricePasscodes(data);
       }
     } catch (err) {
@@ -784,10 +785,11 @@ function AdminDashboard() {
         alert(`ሓድሽ ፓስኮድ ተፈጢሩ ኣሎ! ኮድ: [ ${data.passcode} ]`);
         fetchPricePasscodes();
       } else {
-        alert('ፓስኮድ ምፍጣር ኣይከኣለን።');
+        alert(data.message || 'ፓስኮድ ምፍጣር ኣይከኣለን።');
       }
     } catch (err) {
       console.error("Error generating price passcode:", err);
+      alert('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ።');
     } finally {
       setGeneratingPriceCode(false);
     }
@@ -801,14 +803,16 @@ function AdminDashboard() {
         body: JSON.stringify(updatedData)
       });
       if (res.ok) {
-        alert('ፓኬጅ ብሰላም ተቕይሩ ኣሎ!');
         const updated = await res.json();
-        setPackagesList(packagesList.map(p => p._id === packageId ? updated : p));
+        alert('ፓኬጅ ብሰላም ተቕይሩ ኣሎ!');
+        setPackagesList(packagesList.map(p => (p._id === packageId || p.id === packageId) ? updated : p));
+        fetchPackages(); // Refresh to ensure synchronization
       } else {
         alert('ክትቅይሮ ኣይከኣለን።');
       }
     } catch (err) {
       console.error("Error updating package:", err);
+      alert('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ።');
     }
   };
 
@@ -1120,8 +1124,8 @@ function AdminDashboard() {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 {pricePasscodes.map((item, idx) => (
                   <div key={idx} className="bg-zinc-800 p-3 rounded-lg border border-zinc-700 flex justify-between items-center">
-                    <span className="font-mono text-amber-300 font-bold">{item.passcode}</span>
-                    <span className="text-[10px] text-zinc-400">{item.active ? 'Active' : 'Used'}</span>
+                    <span className="font-mono text-amber-300 font-bold">{typeof item === 'string' ? item : item.passcode}</span>
+                    <span className="text-[10px] text-zinc-400">{item.active !== false ? 'Active' : 'Used'}</span>
                   </div>
                 ))}
               </div>
@@ -1131,22 +1135,35 @@ function AdminDashboard() {
               <h2 className="text-xl font-bold text-amber-400 mb-6">Manage Packages (Standard, Silver, Gold, Premium)</h2>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {packagesList.map((pkg) => (
-                  <div key={pkg._id} className="bg-zinc-800/60 p-4 rounded-xl border border-zinc-700 space-y-3">
-                    <h3 className="text-lg font-bold text-amber-300">{pkg.name} ({pkg.subtitle})</h3>
+                  <div key={pkg._id || pkg.id} className="bg-zinc-800/60 p-4 rounded-xl border border-zinc-700 space-y-3">
+                    <h3 className="text-lg font-bold text-amber-300">{pkg.name} ({pkg.subtitle || pkg.name})</h3>
                     <div>
                       <label className="text-xs text-zinc-400 block mb-1">Price:</label>
                       <input 
                         type="text" 
-                        value={pkg.price} 
+                        value={pkg.price || ''} 
                         onChange={(e) => {
-                          const updated = packagesList.map(p => p._id === pkg._id ? { ...p, price: e.target.value } : p);
+                          const updated = packagesList.map(p => (p._id === pkg._id || p.id === pkg.id) ? { ...p, price: e.target.value } : p);
+                          setPackagesList(updated);
+                        }}
+                        className="bg-zinc-900 border border-zinc-700 p-2 rounded w-full text-sm text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-xs text-zinc-400 block mb-1">Features (Comma separated):</label>
+                      <input 
+                        type="text" 
+                        value={Array.isArray(pkg.features) ? pkg.features.join(', ') : (pkg.features || '')} 
+                        onChange={(e) => {
+                          const featuresArr = e.target.value.split(',').map(f => f.trim());
+                          const updated = packagesList.map(p => (p._id === pkg._id || p.id === pkg.id) ? { ...p, features: featuresArr } : p);
                           setPackagesList(updated);
                         }}
                         className="bg-zinc-900 border border-zinc-700 p-2 rounded w-full text-sm text-white"
                       />
                     </div>
                     <button 
-                      onClick={() => handleUpdatePackage(pkg._id, pkg)}
+                      onClick={() => handleUpdatePackage(pkg._id || pkg.id, pkg)}
                       className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded text-xs font-bold w-full transition-colors"
                     >
                       Save Package Changes
@@ -1196,6 +1213,7 @@ function AdminDashboard() {
               <span className="text-xs text-zinc-300">
                 ማዕቀብ: <span className="text-amber-400 font-bold">{viewingPortalSelections.selectedImages.length} ስእሊታት</span> ተመርጺዮም ኣለዉ።
               </span>
+              
               <button 
                 onClick={async () => {
                   const defaultFolderName = `${viewingPortalSelections.clientName}_Selected_Photos`.replace(/\s+/g, '_');
