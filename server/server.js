@@ -68,6 +68,36 @@ app.use((req, res, next) => {
     next();
 });
 
+// ንዋጋታት ብቐጥታ ንምቕባል (api/prices)
+import Project from './models/project.js'; // እንተተደልዩ ድሮ ኣብ server.js ኣሎ
+
+app.get('/api/prices', async (req, res) => {
+    try {
+        let priceData = await Project.findOne({ title: 'site_prices_config' });
+        if (!priceData || !priceData.packages) {
+            return res.json([]);
+        }
+        res.json(priceData.packages);
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching prices' });
+    }
+});
+
+app.put('/api/prices', async (req, res) => {
+    try {
+        const { packages } = req.body;
+        let priceData = await Project.findOneAndUpdate(
+            { title: 'site_prices_config' },
+            { $set: { packages: packages } },
+            { new: true, upsert: true }
+        );
+        res.json({ success: true, message: 'Prices updated successfully', packages: priceData.packages });
+    } catch (err) {
+        console.error("Error updating prices:", err);
+        res.status(500).json({ message: "Error updating prices" });
+    }
+});
+
 // 5. Routes
 app.use('/api/projects', projectRoutes);
 app.use('/api/auth', authRoutes);

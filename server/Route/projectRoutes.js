@@ -73,38 +73,6 @@ router.put('/:title', async (req, res) => {
     }
 });
 
-// 3. ዋጋታት ንምንባብ (GET Prices)
-router.get('/prices', async (req, res) => {
-    try {
-        // ንዋጋታት ኣብ MongoDB ክንዕክቦ ንኽእል ኢና ወይ ብፍሉይ ሰነድ (Document) ክንሕዞ ንኽእል
-        let priceData = await Project.findOne({ title: 'site_prices_config' });
-        if (!priceData || !priceData.packages) {
-            return res.json([]); // ባዶ እንተኾይኑ 
-        }
-        res.json(priceData.packages);
-    } catch (err) {
-        res.status(500).json({ message: 'Error fetching prices' });
-    }
-});
-
-// 4. ዋጋታት ንምዕቃብ (PUT Prices - Admin)
-router.put('/prices', async (req, res) => {
-    try {
-        const { packages } = req.body;
-        
-        let priceData = await Project.findOneAndUpdate(
-            { title: 'site_prices_config' },
-            { $set: { packages: packages } },
-            { new: true, upsert: true }
-        );
-        
-        res.json({ success: true, message: 'Prices updated successfully', packages: priceData.packages });
-    } catch (err) {
-        console.error("Error updating prices:", err);
-        res.status(500).json({ message: "Error updating prices" });
-    }
-});
-
 
 // ስእሊ ንምድምساس ብ Title
 router.delete('/:title/images', async (req, res) => {
