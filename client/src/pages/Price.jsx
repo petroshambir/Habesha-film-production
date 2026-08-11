@@ -1,3 +1,212 @@
+// import React, { useState, useEffect } from 'react';
+// import Navbar from '../components/Navbar';
+// import Footer from '../components/Footer';
+
+// function Price() {
+//   const [isAuthenticated, setIsAuthenticated] = useState(false);
+//   const [passcode, setPasscode] = useState('');
+//   const [error, setError] = useState(false);
+//   const [loading, setLoading] = useState(false);
+
+//   // ገጽ ምስ ተኸፈተ ግዜ (10 ደቓይቕ) ምርካብን ምጽራይን
+//   useEffect(() => {
+//     const authData = localStorage.getItem('priceAuthData');
+//     if (authData) {
+//       const { expiry } = JSON.parse(authData);
+//       if (new Date().getTime() < expiry) {
+//         setIsAuthenticated(true);
+//       } else {
+//         localStorage.removeItem('priceAuthData');
+//         setIsAuthenticated(false);
+//       }
+//     }
+//   }, []);
+
+//   const handleLogin = async (e) => {
+//     e.preventDefault();
+//     setLoading(true);
+//     setError(false);
+
+//     try {
+//       const response = await fetch('https://habesha-film-production-server.onrender.com/api/auth/verify-passcode', {
+//         method: 'POST',
+//         headers: {
+//           'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify({ passcode }),
+//       });
+
+//       const data = await response.json();
+
+//       if (response.ok && data.success) {
+//         setIsAuthenticated(true);
+
+//         // ን10 ደቓይቕ ዝጸንሕ ግዜ ቐምጥ (10 mins * 60 secs * 1000 ms)
+//         const expiryDuration = 10 * 60 * 1000; 
+//         const authData = {
+//           value: 'true',
+//           expiry: new Date().getTime() + expiryDuration,
+//         };
+//         localStorage.setItem('priceAuthData', JSON.stringify(authData));
+//       } else {
+//         setError(true);
+//       }
+//     } catch (err) {
+//       console.error("Error verifying passcode:", err);
+//       setError(true);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   return (
+//     <div className="min-h-screen bg-[#050505] text-zinc-100 font-sans selection:bg-[#dfb557]/30 selection:text-[#dfb557] overflow-x-hidden flex flex-col justify-between">
+//       <Navbar />
+
+//       <div className="flex-grow flex items-center justify-center px-4 py-32">
+//         {!isAuthenticated ? (
+//           <div className="bg-zinc-950 p-8 md:p-12 shadow-2xl border-2 border-[#dfb557]/40 rounded-2xl max-w-md w-full text-center relative">
+//             <span className="text-[9px] md:text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-2">
+//               Secure Access
+//             </span>
+//             <h2 className="text-2xl md:text-3xl font-serif mb-3 text-zinc-100">Protected Price Page</h2>
+//             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
+//             <p className="text-xs md:text-sm text-zinc-400 mb-6 font-light">
+//               እዚ ገጽ ብሚጢራዊ ፓስኮድ ዝተዓጸወ እዩ። በጃኹም ፓስኮድ ኣእትዉ።
+//             </p>
+            
+//             <form onSubmit={handleLogin} className="space-y-4">
+//               <input 
+//                 type="password"
+//                 placeholder="Enter Passcode"
+//                 value={passcode}
+//                 onChange={(e) => setPasscode(e.target.value)}
+//                 className="w-full px-4 py-3 bg-zinc-900 border border-[#dfb557]/50 rounded-xl focus:outline-none focus:border-[#dfb557] text-center tracking-widest text-lg text-zinc-100 placeholder-zinc-500 shadow-inner"
+//               />
+//               <button 
+//                 type="submit"
+//                 disabled={loading}
+//                 className="w-full bg-[#dfb557] text-black py-3 uppercase text-xs font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 disabled:opacity-50 rounded-xl shadow-lg"
+//               >
+//                 {loading ? 'Checking...' : 'Submit'}
+//               </button>
+//               {error && <p className="text-red-400 text-xs mt-2 font-medium">ጌጋ ፓስኮድ! ደጊምካ ፈትን።</p>}
+//             </form>
+//           </div>
+//         ) : (
+//           /* ትሕዝቶ ናይ Professional Pricing Packages (4 ደረጃታት) */
+//           <div className="max-w-7xl mx-auto text-center px-4 py-12">
+//             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
+//               Investment & Tiers
+//             </span>
+//             <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4 text-zinc-100">Our Professional Packages</h1>
+//             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
+//             <p className="text-zinc-400 text-sm md:text-base mb-16 max-w-2xl mx-auto font-light">
+//               ንመጻኢ ፕሮጀክትታትኩም ዝኸውን ዝተፈላለየ ሞያዊ ኣገልግሎታት። ካብቶም ማእከላይ ደረጃታት ክሳብቲ ፍሉይ ወርቃውን ፕሪሚየምን ጽፍሕታት ምረጹ።
+//             </p>
+            
+//             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+              
+//               {/* 1. Basic Package */}
+//               <div className="bg-zinc-950/70 border-2 border-[#dfb557]/30 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col justify-between transition-transform hover:-translate-y-1">
+//                 <div>
+//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-zinc-400">Starter</span>
+//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Basic</h3>
+//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">$300</p>
+//                   <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
+//                     ንንእሽቱ ስራሕቲ ዝኸውን ቀሊልን ጽሩይን ናይ ቀረጻን ምድላውን ኣገልግሎት።
+//                   </p>
+//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-8 font-light">
+//                     <li className="flex items-center gap-2">✓ 1 ቀን ቀረጻ</li>
+//                     <li className="flex items-center gap-2">✓ ሓደ ቀሊል ቪድዮ ኤዲቲንግ</li>
+//                     <li className="flex items-center gap-2 text-zinc-500">✕ ከይዲ ድምጺ ምምሕያሽ (Advanced Audio)</li>
+//                     <li className="flex items-center gap-2 text-zinc-500">✕ ቦናስ ዲጂታል ፖስተር</li>
+//                   </ul>
+//                 </div>
+//                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
+//                   Select Package
+//                 </button>
+//               </div>
+
+//               {/* 2. Standard Package */}
+//               <div className="bg-zinc-950/70 border-2 border-[#dfb557]/40 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col justify-between transition-transform hover:-translate-y-1">
+//                 <div>
+//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Popular</span>
+//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Standard</h3>
+//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">$600</p>
+//                   <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
+//                     ንመብዛሕትኡ ስራሕቲ ዝኸውን ማእከላይ ደረጃ ዘለዎ ምሉእ ኣገልግሎት ቀረጻ።
+//                   </p>
+//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-8 font-light">
+//                     <li className="flex items-center gap-2">✓ 2 መዓልቲ ቀረጻ</li>
+//                     <li className="flex items-center gap-2">✓ ክልተ ናይ ኤዲቲንግ ሪቪዥን</li>
+//                     <li className="flex items-center gap-2">✓ ጽሩይ ናይ ስቱድዮ ድምጺ</li>
+//                     <li className="flex items-center gap-2 text-zinc-500">✕ ቦናስ ዲጂታል ፖስተር</li>
+//                   </ul>
+//                 </div>
+//                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
+//                   Select Package
+//                 </button>
+//               </div>
+
+//               {/* 3. Gold Package */}
+//               <div className="bg-zinc-950 border-2 border-[#dfb557] p-6 sm:p-8 rounded-2xl shadow-2xl relative flex flex-col justify-between transition-transform hover:-translate-y-1">
+//                 <span className="absolute -top-3 right-6 bg-[#dfb557] text-black text-[9px] uppercase font-bold tracking-[0.3em] px-3 py-1 rounded-full shadow-md">
+//                   Best Value
+//                 </span>
+//                 <div>
+//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Advanced</span>
+//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Gold</h3>
+//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">$1,200</p>
+//                   <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
+//                     ንዓበይቲ ስራሕቲን መርዓታትን ዝተዳለወ ሰፊሕ ቀረጻን ፍሉይ ትሕዝቶን።
+//                   </p>
+//                   <ul className="text-xs sm:text-sm text-zinc-200 space-y-3 mb-8 font-light">
+//                     <li className="flex items-center gap-2">✓ ምሉእ መዓልቲ ሰፊሕ ቀረጻ</li>
+//                     <li className="flex items-center gap-2">✓ 4K Ultra HD ቪድዮ ኳሊቲ</li>
+//                     <li className="flex items-center gap-2">✓ <b className="font-semibold text-[#dfb557]">Drone Footage</b> (ናይ ኣየር ቀረጻ)</li>
+//                     <li className="flex items-center gap-2 text-[#dfb557] font-medium">🎁 <b className="font-semibold">ቦናስ:</b> 2 ነጻ ሰሻል ሚድያ ማርኬቲንግ ቪድዮታት</li>
+//                   </ul>
+//                 </div>
+//                 <button className="w-full bg-[#dfb557] text-black py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 rounded-xl shadow-lg">
+//                   Select Gold
+//                 </button>
+//               </div>
+
+//               {/* 4. Premium Package */}
+//               <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
+//                 <div>
+//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Ultimate VIP</span>
+//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Premium</h3>
+//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">$2,000+</p>
+//                   <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
+//                     ዝለዓለ ደረጃ ሞያዊ ክእለትን ብርክት ዝበሉ መሳርሒታትን ተጠቒምካ ዝስራሕ ቪአይፒ ኣገልግሎት።
+//                   </p>
+//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-8 font-light">
+//                     <li className="flex items-center gap-2">✓ ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)</li>
+//                     <li className="flex items-center gap-2">✓ ክልተ ኤክስፐርት ካሜራማን</li>
+//                     <li className="flex items-center gap-2">✓ <b className="font-semibold text-[#dfb557]">Cinematic Color Grading</b> & VFX</li>
+//                     <li className="flex items-center gap-2 text-[#dfb557] font-medium">🎁 <b className="font-semibold">ቦናስ:</b> ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር</li>
+//                   </ul>
+//                 </div>
+//                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
+//                   Select Premium
+//                 </button>
+//               </div>
+
+//             </div>
+//           </div>
+//         )}
+//       </div>
+
+//       <Footer />
+//     </div>
+//   );
+// }
+
+// export default Price;
+
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -94,7 +303,7 @@ function Price() {
             </form>
           </div>
         ) : (
-          /* ትሕዝቶ ናይ Professional Pricing Packages (4 ደረጃታት) */
+          /* ትሕዝቶ ናይ Professional Pricing Packages (ካልኣይ፣ ሳልሳይ፣ ራብዓይ ደረጃ) */
           <div className="max-w-7xl mx-auto text-center px-4 py-12">
             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
               Investment & Tiers
@@ -102,95 +311,111 @@ function Price() {
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4 text-zinc-100">Our Professional Packages</h1>
             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
             <p className="text-zinc-400 text-sm md:text-base mb-16 max-w-2xl mx-auto font-light">
-              ንመጻኢ ፕሮጀክትታትኩም ዝኸውን ዝተፈላለየ ሞያዊ ኣገልግሎታት። ካብቶም ማእከላይ ደረጃታት ክሳብቲ ፍሉይ ወርቃውን ፕሪሚየምን ጽፍሕታት ምረጹ።
+              ንመጻኢ ፕሮጀክትታትኩም ዝኸውን ዝተፈላለየ ሞያዊ ኣገልግሎታት። ካብቶም ደረጃታት እቲ ንደለይዎ ምረጹ።
             </p>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
               
-              {/* 1. Basic Package */}
-              <div className="bg-zinc-950/70 border-2 border-[#dfb557]/30 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col justify-between transition-transform hover:-translate-y-1">
-                <div>
-                  <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-zinc-400">Starter</span>
-                  <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Basic</h3>
-                  <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">$300</p>
-                  <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
-                    ንንእሽቱ ስራሕቲ ዝኸውን ቀሊልን ጽሩይን ናይ ቀረጻን ምድላውን ኣገልግሎት።
-                  </p>
-                  <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-8 font-light">
-                    <li className="flex items-center gap-2">✓ 1 ቀን ቀረጻ</li>
-                    <li className="flex items-center gap-2">✓ ሓደ ቀሊል ቪድዮ ኤዲቲንግ</li>
-                    <li className="flex items-center gap-2 text-zinc-500">✕ ከይዲ ድምጺ ምምሕያሽ (Advanced Audio)</li>
-                    <li className="flex items-center gap-2 text-zinc-500">✕ ቦናስ ዲጂታል ፖስተር</li>
-                  </ul>
-                </div>
-                <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-                  Select Package
-                </button>
-              </div>
-
-              {/* 2. Standard Package */}
-              <div className="bg-zinc-950/70 border-2 border-[#dfb557]/40 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col justify-between transition-transform hover:-translate-y-1">
-                <div>
-                  <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Popular</span>
-                  <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Standard</h3>
-                  <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">$600</p>
-                  <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
-                    ንመብዛሕትኡ ስራሕቲ ዝኸውን ማእከላይ ደረጃ ዘለዎ ምሉእ ኣገልግሎት ቀረጻ።
-                  </p>
-                  <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-8 font-light">
-                    <li className="flex items-center gap-2">✓ 2 መዓልቲ ቀረጻ</li>
-                    <li className="flex items-center gap-2">✓ ክልተ ናይ ኤዲቲንግ ሪቪዥን</li>
-                    <li className="flex items-center gap-2">✓ ጽሩይ ናይ ስቱድዮ ድምጺ</li>
-                    <li className="flex items-center gap-2 text-zinc-500">✕ ቦናስ ዲጂታል ፖስተር</li>
-                  </ul>
-                </div>
-                <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-                  Select Package
-                </button>
-              </div>
-
-              {/* 3. Gold Package */}
+              {/* 1. ካልኣይ ደረጃ (2nd Tier) */}
               <div className="bg-zinc-950 border-2 border-[#dfb557] p-6 sm:p-8 rounded-2xl shadow-2xl relative flex flex-col justify-between transition-transform hover:-translate-y-1">
                 <span className="absolute -top-3 right-6 bg-[#dfb557] text-black text-[9px] uppercase font-bold tracking-[0.3em] px-3 py-1 rounded-full shadow-md">
-                  Best Value
+                  Top Tier
                 </span>
                 <div>
-                  <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Advanced</span>
-                  <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Gold</h3>
-                  <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">$1,200</p>
-                  <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
-                    ንዓበይቲ ስራሕቲን መርዓታትን ዝተዳለወ ሰፊሕ ቀረጻን ፍሉይ ትሕዝቶን።
-                  </p>
-                  <ul className="text-xs sm:text-sm text-zinc-200 space-y-3 mb-8 font-light">
-                    <li className="flex items-center gap-2">✓ ምሉእ መዓልቲ ሰፊሕ ቀረጻ</li>
-                    <li className="flex items-center gap-2">✓ 4K Ultra HD ቪድዮ ኳሊቲ</li>
-                    <li className="flex items-center gap-2">✓ <b className="font-semibold text-[#dfb557]">Drone Footage</b> (ናይ ኣየር ቀረጻ)</li>
-                    <li className="flex items-center gap-2 text-[#dfb557] font-medium">🎁 <b className="font-semibold">ቦናስ:</b> 2 ነጻ ሰሻል ሚድያ ማርኬቲንግ ቪድዮታት</li>
+                  <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Exclusive</span>
+                  <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">ካልኣይ ደረጃ</h3>
+                  <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">300,000</p>
+                  
+                  <div className="text-xs sm:text-sm text-zinc-300 mb-6 font-light space-y-2 border-b border-zinc-800 pb-4">
+                    <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[11px]">ዓይነት ንብረት / ቀረጻ:</p>
+                    <ul className="space-y-1 pl-2">
+                      <li>• 1. ካሜራ ኣብ መስክ ስቱዲዮ (2 ካሜራ: 1 ቪድዮ 1 ፎቶ)</li>
+                      <li>• 2. ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ 1 ፎቶ)</li>
+                      <li>• 3. መዓልቲ መርዓ (5 ካሜራ: 4 ንቪድዮ 1 ንፎቶ)</li>
+                      <li>• 4. ሓማውቲ (1 ንቪድዮ 1 ፎቶ)</li>
+                      <li>• 5. ኩሉ ሶፍት ኮፒ (All Soft Copy)</li>
+                    </ul>
+                  </div>
+
+                  <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
+                    <li className="flex items-center gap-2">✓ Photo -- 800 (10×15)</li>
+                    <li className="flex items-center gap-2">✓ Laminated Photo -- 2 (30×90 & 30×60)</li>
+                    <li className="flex items-center gap-2">✓ Sine Board -- 2 (30×45)</li>
+                    <li className="flex items-center gap-2">✓ Board -- 3 (50×80, 40×60, 30×45)</li>
+                    <li className="flex items-center gap-2">✓ Thank you card -- 400</li>
+                    <li className="flex items-center gap-2">✓ USB Flash -- 8 (64 GB)</li>
+                    <li className="flex items-center gap-2">✓ Banner -- 2</li>
+                    <li className="flex items-center gap-2">✓ Cap -- 2</li>
                   </ul>
                 </div>
                 <button className="w-full bg-[#dfb557] text-black py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 rounded-xl shadow-lg">
-                  Select Gold
+                  Select Package
                 </button>
               </div>
 
-              {/* 4. Premium Package */}
+              {/* 2. ሳልሳይ ደረጃ (3rd Tier) */}
               <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
                 <div>
-                  <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Ultimate VIP</span>
-                  <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Premium</h3>
-                  <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">$2,000+</p>
-                  <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
-                    ዝለዓለ ደረጃ ሞያዊ ክእለትን ብርክት ዝበሉ መሳርሒታትን ተጠቒምካ ዝስራሕ ቪአይፒ ኣገልግሎት።
-                  </p>
-                  <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-8 font-light">
-                    <li className="flex items-center gap-2">✓ ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)</li>
-                    <li className="flex items-center gap-2">✓ ክልተ ኤክስፐርት ካሜራማን</li>
-                    <li className="flex items-center gap-2">✓ <b className="font-semibold text-[#dfb557]">Cinematic Color Grading</b> & VFX</li>
-                    <li className="flex items-center gap-2 text-[#dfb557] font-medium">🎁 <b className="font-semibold">ቦናስ:</b> ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር</li>
+                  <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Advanced</span>
+                  <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">ሳልሳይ ደረጃ</h3>
+                  <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">240,000</p>
+                  
+                  <div className="text-xs sm:text-sm text-zinc-300 mb-6 font-light space-y-2 border-b border-zinc-800 pb-4">
+                    <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[11px]">ዓይነት ንብረት / ቀረጻ:</p>
+                    <ul className="space-y-1 pl-2">
+                      <li>• 1. ካሜራ ኣብ መስክ ስቱዲዮ (2 ካሜራ: 1 ቪድዮ 1 ፎቶ)</li>
+                      <li>• 2. ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ 1 ፎቶ)</li>
+                      <li>• 3. መዓልቲ መርዓ (4 ካሜራ: 3 ንቪድዮ 1 ንፎቶ)</li>
+                      <li>• 4. ሓማውቲ (1 ንቪድዮ 1 ፎቶ)</li>
+                    </ul>
+                  </div>
+
+                  <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
+                    <li className="flex items-center gap-2">✓ Photo -- 500 (10×15)</li>
+                    <li className="flex items-center gap-2">✓ Laminated Photo -- 2 (30×90 & 40×60)</li>
+                    <li className="flex items-center gap-2">✓ Sine Board -- 1 (30×45)</li>
+                    <li className="flex items-center gap-2">✓ Board -- 2 (50×80 & 40×60)</li>
+                    <li className="flex items-center gap-2">✓ Thank you card -- 250</li>
+                    <li className="flex items-center gap-2">✓ USB Flash -- 6 (64 GB)</li>
+                    <li className="flex items-center gap-2">✓ Banner -- 2</li>
+                    <li className="flex items-center gap-2">✓ Cap -- 2</li>
                   </ul>
                 </div>
                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-                  Select Premium
+                  Select Package
+                </button>
+              </div>
+
+              {/* 3. ራብዓይ ደረጃ (4th Tier) */}
+              <div className="bg-zinc-950/70 border-2 border-[#dfb557]/30 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col justify-between transition-transform hover:-translate-y-1">
+                <div>
+                  <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-zinc-400">Standard</span>
+                  <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">ራብዓይ ደረጃ</h3>
+                  <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">190,000</p>
+                  
+                  <div className="text-xs sm:text-sm text-zinc-300 mb-6 font-light space-y-2 border-b border-zinc-800 pb-4">
+                    <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[11px]">ዓይነት ንብረት / ቀረጻ:</p>
+                    <ul className="space-y-1 pl-2">
+                      <li>• 1. ካሜራ ኣብ መስክ ስቱዲዮ (1 ቪድዮ 1 ፎቶ)</li>
+                      <li>• 2. ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ 1 ፎቶ)</li>
+                      <li>• 3. መዓልቲ መርዓ (3 ካሜራ: 2 ንቪድዮ 1 ንፎቶ)</li>
+                      <li>• 4. ሓማውቲ (2 ካሜራ: 1 ፎቶ 1 ቪድዮ)</li>
+                    </ul>
+                  </div>
+
+                  <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
+                    <li className="flex items-center gap-2">✓ Photo -- 300 (10×15)</li>
+                    <li className="flex items-center gap-2">✓ Laminated Photo -- 1 (30×90)</li>
+                    <li className="flex items-center gap-2">✓ Sine Board -- 1 (30×45)</li>
+                    <li className="flex items-center gap-2">✓ Board -- 1 (50×80)</li>
+                    <li className="flex items-center gap-2">✓ Thank you card -- 200</li>
+                    <li className="flex items-center gap-2">✓ USB Flash -- 4 (64 GB)</li>
+                    <li className="flex items-center gap-2">✓ Banner -- 2</li>
+                    <li className="flex items-center gap-2">✓ Cap -- 2</li>
+                  </ul>
+                </div>
+                <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
+                  Select Package
                 </button>
               </div>
 
