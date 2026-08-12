@@ -2690,7 +2690,6 @@
 
 // export default AdminDashboard;
 
-
 import React, { useState, useEffect } from 'react';
 import JSZip from 'jszip';
 
@@ -2769,6 +2768,8 @@ function AdminDashboard() {
       return;
     }
 
+    const cleanedImages = clientImages.map(img => img.trim());
+
     setCreatingPortal(true);
     try {
       const res = await fetch('https://habesha-film-production-server.onrender.com/api/client/create-portal', {
@@ -2777,7 +2778,7 @@ function AdminDashboard() {
         body: JSON.stringify({ 
           clientName: clientName.trim(), 
           portalNumber: portalNumber.trim(), 
-          images: clientImages 
+          images: cleanedImages 
         })
       });
 
@@ -2816,7 +2817,8 @@ function AdminDashboard() {
 
       if (res.ok) {
         const data = await res.json();
-        const newUrls = data.images || (data.imageUrl ? [data.imageUrl] : []);
+        const rawUrls = data.images || (data.imageUrl ? [data.imageUrl] : []);
+        const newUrls = rawUrls.map(url => url.trim());
         
         if (newUrls.length > 0) {
           setClientImages(prev => [...prev, ...newUrls]);
@@ -3245,7 +3247,8 @@ function SectionRenderer({ title, data, setData, onSave }) {
       if (!res.ok) throw new Error("Upload failed");
       
       const result = await res.json();
-      const newImagesFromBackend = result.images || [];
+      const rawImages = result.images || [];
+      const newImagesFromBackend = rawImages.map(url => url.trim());
       
       const updatedImages = [...(data.images || []), ...newImagesFromBackend];
       const updatedHeadings = [...(data.headings || [])];
