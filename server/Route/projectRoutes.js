@@ -93,10 +93,10 @@
 import 'dotenv/config'; 
 import express from 'express';
 import cors from 'cors';
-import connectDB from './Database Connection/DB.js';
-import projectRoutes from './Route/projectRoutes.js';
-import authRoutes from './Route/authRoutes.js';
-import clientRoutes from './Route/clientRoutes.js';
+import connectDB from '../Database Connection/DB.js';
+import projectRoutes from '../Route/projectRoutes';
+import authRoutes from '../Route/authRoutes.js';
+import clientRoutes from '../Route/clientRoutes.js';
 
 // 1. መጀመርያ app ፍጠር
 const app = express(); 
