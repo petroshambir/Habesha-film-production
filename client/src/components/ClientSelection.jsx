@@ -1179,24 +1179,35 @@ import Lightbox from "yet-another-react-lightbox";
 import Zoom from "yet-another-react-lightbox/plugins/zoom";
 import "yet-another-react-lightbox/styles.css";
 
-const fixImageUrl = (url) => {
-  if (!url) return '';
-  
-  // URL ስትሪንግ ምዃኑ ንምርግጋጽን ካብ ኦብጀክት ናብ ስትሪንግ ንምልዋጥን
-  const urlString = typeof url === 'string' ? url : (url.url || url.path || '');
-  
-  if (!urlString || typeof urlString !== 'string') return '';
+const fixImageUrl = (imgObjOrUrl) => {
+  if (!imgObjOrUrl) return { original: '', compressed: '' };
 
-  if (urlString.includes('localhost:5000')) {
-    return urlString.replace('http://localhost:5000', 'https://habesha-film-production-server.onrender.com');
+  // ምስቲ ሰርቨር ስኪማ (Object: original & compressed) ብንጹር ይተሓሓዝ
+  if (typeof imgObjOrUrl === 'string') {
+    let url = imgObjOrUrl;
+    if (url.includes('localhost:5000')) {
+      url = url.replace('http://localhost:5000', 'https://habesha-film-production-server.onrender.com');
+    }
+    return { original: url, compressed: url };
   }
-  return urlString;
+
+  const originalUrl = imgObjOrUrl.original || imgObjOrUrl.url || '';
+  const compressedUrl = imgObjOrUrl.compressed || originalUrl;
+
+  return {
+    original: originalUrl.includes('localhost:5000') 
+      ? originalUrl.replace('http://localhost:5000', 'https://habesha-film-production-server.onrender.com') 
+      : originalUrl,
+    compressed: compressedUrl.includes('localhost:5000') 
+      ? compressedUrl.replace('http://localhost:5000', 'https://habesha-film-production-server.onrender.com') 
+      : compressedUrl
+  };
 };
 
 function ClientSelection() {
   const [portals, setPortals] = useState([]);
   const [project, setProject] = useState(null);
-  const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedImages, setSelectedImages] = useState([]); // Array of objects [{original, compressed}]
   const [loading, setLoading] = useState(false);
   const [fetchingPortals, setFetchingPortals] = useState(true);
   const [error, setError] = useState('');
@@ -1281,11 +1292,12 @@ function ClientSelection() {
     }
   };
 
-  const handleCheckboxChange = (imageUrl) => {
-    if (selectedImages.includes(imageUrl)) {
-      setSelectedImages(selectedImages.filter(img => img !== imageUrl));
+  const handleCheckboxChange = (imgObj) => {
+    const isAlreadySelected = selectedImages.some(item => item.original === imgObj.original);
+    if (isAlreadySelected) {
+      setSelectedImages(selectedImages.filter(item => item.original !== imgObj.original));
     } else {
-      setSelectedImages([...selectedImages, imageUrl]);
+      setSelectedImages([...selectedImages, imgObj]);
     }
   };
 
@@ -1297,17 +1309,12 @@ function ClientSelection() {
 
     setLoading(true);
     try {
-      const cleanImages = selectedImages.map(img => {
-        const originalMatch = project.images.find(orig => orig === img || orig.includes(img) || img.includes(orig));
-        return originalMatch || img;
-      });
-
       const targetId = project._id || project.portalId;
 
       const response = await fetch(`https://habesha-film-production-server.onrender.com/api/client/submit-selection/${targetId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ selectedImages: cleanImages }),
+        body: JSON.stringify({ selectedImages }), // [{original, compressed}]
       });
 
       const data = await response.json();
@@ -1323,8 +1330,9 @@ function ClientSelection() {
     }
   };
 
-  const lightboxSlides = project?.images?.map((imgUrl) => ({
-    src: imgUrl,
+  const lightboxSlides = project?.images?.map((imgObj) => ({
+    src: imgObj.original,
+    compressed: imgObj.compressed,
   })) || [];
 
   return (
@@ -1457,41 +1465,39 @@ function ClientSelection() {
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4">
               {project.images && project.images.length > 0 ? (
-                project.images.map((imgUrl, index) => {
-                  const isSelected = selectedImages.includes(imgUrl);
+                project.images.map((imgObj, index) => {
+                  const isSelected = selectedImages.some(item => item.original === imgObj.original);
+                  const displayUrl = imgObj.compressed || imgObj.original;
+
                   return (
                     <div
                       key={index}
-                      className={`relative group overflow-hidden border-2 rounded-xl transition-all aspect-square bg-zinc-900 ${
+                      onClick={() => handleCheckboxChange(imgObj)}
+                      className={`relative group overflow-hidden border-2 rounded-xl transition-all aspect-square bg-zinc-900 cursor-pointer ${
                         isSelected ? 'border-[#dfb557] shadow-2xl scale-[0.98]' : 'border-zinc-800 hover:border-zinc-600'
                       }`}
                     >
-                      <div 
-                        className="w-full h-full cursor-pointer"
-                        onDoubleClick={() => {
-                          setCurrentIndex(index);
-                          setLightboxOpen(true);
-                        }}
-                      >
+                      <div className="w-full h-full">
                         <ProtectedImage
-                          src={imgUrl}
+                          src={displayUrl}
                           alt={`Client photo ${index + 1}`}
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                           showLogoOnly={false} 
                         />
                       </div>
                      
-                      <div className="absolute top-2 right-2 z-10 bg-black/60 rounded-lg p-1.5 backdrop-blur-md border border-white/10">
+                      <div className="absolute top-2 right-2 z-10 bg-black/60 rounded-lg p-1.5 backdrop-blur-md border border-white/10 pointer-events-none">
                         <input
                           type="checkbox"
                           checked={isSelected}
-                          onChange={() => handleCheckboxChange(imgUrl)}
+                          onChange={() => {}}
                           className="w-4 h-4 accent-[#dfb557] cursor-pointer"
                         />
                       </div>
 
                       <div 
-                        onClick={() => {
+                        onClick={(e) => {
+                          e.stopPropagation();
                           setCurrentIndex(index);
                           setLightboxOpen(true);
                         }}
@@ -1501,10 +1507,7 @@ function ClientSelection() {
                       </div>
 
                       {isSelected && (
-                        <div 
-                          onClick={() => handleCheckboxChange(imgUrl)}
-                          className="absolute inset-0 bg-[#dfb557]/20 cursor-pointer flex items-center justify-center backdrop-blur-[1px]"
-                        >
+                        <div className="absolute inset-0 bg-[#dfb557]/20 pointer-events-none flex items-center justify-center backdrop-blur-[1px]">
                           <span className="bg-[#dfb557] text-black text-[10px] uppercase font-bold px-2.5 py-1 tracking-widest shadow-md rounded-md">
                             Selected
                           </span>
@@ -1534,7 +1537,9 @@ function ClientSelection() {
         on={{ view: ({ index }) => setCurrentIndex(index) }}
         render={{
           slide: ({ slide }) => {
-            const isCurrentSelected = selectedImages.includes(slide.src);
+            const currentImgObj = project?.images.find(item => item.original === slide.src);
+            const isCurrentSelected = currentImgObj && selectedImages.some(item => item.original === currentImgObj.original);
+
             return (
               <div className="relative w-full h-full flex flex-col items-center justify-center p-2 select-none" onContextMenu={(e) => e.preventDefault()}>
                 <div className="relative flex items-center justify-center w-full flex-grow">
@@ -1547,7 +1552,7 @@ function ClientSelection() {
                 </div>
                 <div className="mt-2 mb-4 z-50">
                   <button
-                    onClick={() => handleCheckboxChange(slide.src)}
+                    onClick={() => currentImgObj && handleCheckboxChange(currentImgObj)}
                     className={`px-6 py-2.5 rounded-xl text-xs uppercase font-bold tracking-widest transition-all shadow-lg ${
                       isCurrentSelected 
                         ? 'bg-red-500/80 text-white hover:bg-red-600' 
