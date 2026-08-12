@@ -5621,7 +5621,6 @@
 
 // export default AdminDashboard;
 
-
 import React, { useState, useEffect } from 'react';
 import JSZip from 'jszip';
 
@@ -6358,17 +6357,17 @@ function SectionRenderer({ title, data, setData, onSave }) {
               <div className="flex-1 w-full space-y-2">
                 <input 
                   type="text"
-                  value={data.headings?.[index] || defaultHeading}
+                  value={data.headings?.[index] !== undefined ? data.headings[index] : defaultHeading}
                   onChange={(e) => handleHeadingChange(index, e.target.value)}
                   placeholder="Image Heading"
-                  className="bg-zinc-800 border border-zinc-600 p-2 rounded-lg w-full text-white text-xs"
+                  className="bg-zinc-800 border border-zinc-700 p-2.5 rounded-lg w-full text-white text-xs"
                 />
                 <textarea 
                   rows="2"
-                  value={data.descriptions?.[index] || defaultDesc}
+                  value={data.descriptions?.[index] !== undefined ? data.descriptions[index] : defaultDesc}
                   onChange={(e) => handleDescriptionChange(index, e.target.value)}
                   placeholder="Image Description"
-                  className="bg-zinc-800 border border-zinc-600 p-2 rounded-lg w-full text-white text-xs"
+                  className="bg-zinc-800 border border-zinc-700 p-2.5 rounded-lg w-full text-white text-xs"
                 />
               </div>
             </div>
