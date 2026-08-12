@@ -5774,6 +5774,53 @@ function AdminDashboard() {
     }
   };
 
+  // const handleClientImageUpload = async (e) => {
+  //   const files = Array.from(e.target.files);
+  //   if (files.length === 0) return;
+
+  //   if (clientImages.length + files.length > 500) {
+  //     alert('ጌጋ: ጠቕላላ ብዝሒ ምስልታት ካብ 500 ክልላት ክልል ክበዝሕ የብሉን!');
+  //     return;
+  //   }
+
+  //   alert('ስእሊታት ናብ ንኡስ KB ይቕየሩ ኣለዉ፣ በጃኹም ቅሩብ ጽንሑ...');
+
+  //   const formData = new FormData();
+  //   for (let file of files) {
+  //     const compressedFile = await compressImageFile(file);
+  //     formData.append('images', compressedFile);
+  //   }
+
+  //   try {
+  //     const res = await fetch('https://habesha-film-production-server.onrender.com/api/client/upload-image', {
+  //       method: 'POST',
+  //       body: formData
+  //     });
+
+  //     if (res.ok) {
+  //       const data = await res.json();
+  //       if (data.images && Array.isArray(data.images)) {
+  //         setClientImages(prev => {
+  //           const updated = [...prev, ...data.images];
+  //           if (updated.length > 500) {
+  //             alert('ጌጋ: 500 ምስልታት ሰጊሩ ኣሎ!');
+  //             return prev;
+  //           }
+  //           return updated;
+  //         });
+  //         alert(`${data.images.length} ስእሊታት ብሰላም ተሰቒሎም ኣለዉ!`);
+  //       } else {
+  //         alert('ስእሊ ተሰቒሉ ግን ሰርቨር ቅኑዕ ሊንክ ኣይሰደደን።');
+  //       }
+  //     } else {
+  //       const errData = await res.json();
+  //       alert(errData.message || 'ስእሊ ክስቀል ኣይከኣለን።');
+  //     }
+  //   } catch (err) {
+  //     console.error("Error uploading client images:", err);
+  //     alert('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ።');
+  //   }
+  // };
   const handleClientImageUpload = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
@@ -5792,10 +5839,17 @@ function AdminDashboard() {
     }
 
     try {
+      // 5 ደቓይቕ Timeout ንምሃብ (5 * 60 * 1000 ms)
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 300000);
+
       const res = await fetch('https://habesha-film-production-server.onrender.com/api/client/upload-image', {
         method: 'POST',
-        body: formData
+        body: formData,
+        signal: controller.signal
       });
+
+      clearTimeout(timeoutId);
 
       if (res.ok) {
         const data = await res.json();
@@ -5813,12 +5867,16 @@ function AdminDashboard() {
           alert('ስእሊ ተሰቒሉ ግን ሰርቨር ቅኑዕ ሊንክ ኣይሰደደን።');
         }
       } else {
-        const errData = await res.json();
+        const errData = await res.json().catch(() => ({}));
         alert(errData.message || 'ስእሊ ክስቀል ኣይከኣለን።');
       }
     } catch (err) {
       console.error("Error uploading client images:", err);
-      alert('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ።');
+      if (err.name === 'AbortError') {
+        alert('ሰርቨር መልሲ ንምሃብ ኣዝዩ ነዊሕ ወሲዱ (Timeout 5 minutes expired)። ብሕጽር ዝበለ ብዝሒ (ንኣብነት ብ30 ወይ 50 ፋይላት) ፈትን።');
+      } else {
+        alert('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ።');
+      }
     }
   };
 
