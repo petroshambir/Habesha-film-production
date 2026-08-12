@@ -1170,6 +1170,7 @@
 
 // export default ClientSelection;
 
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -1180,10 +1181,16 @@ import "yet-another-react-lightbox/styles.css";
 
 const fixImageUrl = (url) => {
   if (!url) return '';
-  if (url.includes('localhost:5000')) {
-    return url.replace('http://localhost:5000', 'https://habesha-film-production-server.onrender.com');
+  
+  // URL ስትሪንግ ምዃኑ ንምርግጋጽን ካብ ኦብጀክት ናብ ስትሪንግ ንምልዋጥን
+  const urlString = typeof url === 'string' ? url : (url.url || url.path || '');
+  
+  if (!urlString || typeof urlString !== 'string') return '';
+
+  if (urlString.includes('localhost:5000')) {
+    return urlString.replace('http://localhost:5000', 'https://habesha-film-production-server.onrender.com');
   }
-  return url;
+  return urlString;
 };
 
 function ClientSelection() {
@@ -1257,7 +1264,6 @@ function ClientSelection() {
 
         setProject({
           ...data.project,
-          // ፖርታል ID ንፕሮጀክት ID ብንጹር ንምሓዝ
           portalId: selectedPortalForPasscode?._id,
           images: fixedImages,
           selectedImages: fixedSelectedImages
