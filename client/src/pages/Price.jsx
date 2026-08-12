@@ -251,96 +251,111 @@ function Price() {
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  // ናይቶም ፓኬታት ሓበሬታ ካብ localStorage ንምሓዝ ወይ ድማ ብነባሪ (Default) ንምጅማር
+  const defaultPackages = {
+    premium: {
+      tag: 'Ultimate VIP',
+      title: 'Premium',
+      price: '$2,000+',
+      desc: 'ዝለዓለ ደረጃ ሞያዊ ክእለትን ብርክት ዝበሉ መሳርሒታትን ተጠቒምካ ዝስራሕ ቪአይፒ ኣገልግሎት。',
+      feat1: 'ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)',
+      feat2: 'ክልተ ኤክስፐርት ካሜራማን',
+      feat3: 'Cinematic Color Grading & VFX',
+      feat4: 'ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር'
+    },
+    gold: {
+      tag: 'Exclusive',
+      title: 'Gold',
+      price: '300,000',
+      services: [
+        'ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+        'ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+        'መዓልቲ መርዓ (5 ካሜራ: 4 ቪድዮ፣ 1 ፎቶ)',
+        'ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)',
+        'ኩሉ ሶፍት ኮፒ (All Soft Copy)'
+      ],
+      items: [
+        '800 ፎቶዎች (10×15)',
+        '2 ላሚኔትድ ፎቶ (30×90 & 30×60)',
+        '2 ሳይን ቦርድ (30×45)',
+        '3 ቦርድ (50×80, 40×60, 30×45)',
+        '400 ምስጋና ካርድ (Thank You Card)',
+        '8 ዩኤስቢ ፍላሽ (64 GB)',
+        '2 ባነር',
+        '2 ራማ / ቆብዕ (Cap)'
+      ]
+    },
+    silver: {
+      tag: 'Advanced',
+      title: 'Silver',
+      price: '240,000',
+      services: [
+        'ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+        'ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+        'መዓልቲ መርዓ (4 ካሜራ: 3 ቪድዮ፣ 1 ፎቶ)',
+        'ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)'
+      ],
+      items: [
+        '500 ፎቶዎች (10×15)',
+        '2 ላሚኔትድ ፎቶ (30×90 & 40×60)',
+        '1 ሳይን ቦርድ (30×45)',
+        '2 ቦርድ (50×80 & 40×60)',
+        '250 ምስጋና ካርድ (Thank You Card)',
+        '6 ዩኤስቢ ፍላሽ (64 GB)',
+        '2 ባነር',
+        '2 ራማ / ቆብዕ (Cap)'
+      ]
+    },
+    standard: {
+      tag: 'Standard',
+      title: 'Standard',
+      price: '190,000',
+      services: [
+        'ስቱዲዮ / ኣብ መስክ (1 ቪድዮ፣ 1 ፎቶ)',
+        'ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+        'መዓልቲ መርዓ (3 ካሜራ: 2 ቪድዮ፣ 1 ፎቶ)',
+        'ሓማውቲ (2 ካሜራ: 1 ፎቶ፣ 1 ቪድዮ)'
+      ],
+      items: [
+        '300 ፎቶዎች (10×15)',
+        '1 ላሚኔትድ ፎቶ (30×90)',
+        '1 ሳይን ቦርድ (30×45)',
+        '1 ቦርድ (50×80)',
+        '200 ምስጋና ካርድ (Thank You Card)',
+        '4 ዩኤስቢ ፍላሽ (64 GB)',
+        '2 ባነር',
+        '2 ራማ / ቆብዕ (Cap)'
+      ]
+    }
+  };
+
   const [packages, setPackages] = useState(() => {
     const saved = localStorage.getItem('myHabeshaPrices');
-    return saved ? JSON.parse(saved) : {
-      premium: {
-        tag: 'Ultimate VIP',
-        title: 'Premium',
-        price: '$2,000+',
-        desc: 'ዝለዓለ ደረጃ ሞያዊ ክእለትን ብርክት ዝበሉ መሳርሒታትን ተጠቒምካ ዝስራሕ ቪአይፒ ኣገልግሎት。',
-        feat1: 'ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)',
-        feat2: 'ክልተ ኤክስፐርት ካሜራማን',
-        feat3: 'Cinematic Color Grading & VFX',
-        feat4: 'ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር'
-      },
-      gold: {
-        tag: 'Exclusive',
-        title: 'Gold',
-        price: '300,000',
-        services: [
-          'ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
-          'ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
-          'መዓልቲ መርዓ (5 ካሜራ: 4 ቪድዮ፣ 1 ፎቶ)',
-          'ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)',
-          'ኩሉ ሶፍት ኮፒ (All Soft Copy)'
-        ],
-        items: [
-          '800 ፎቶዎች (10×15)',
-          '2 ላሚኔትድ ፎቶ (30×90 & 30×60)',
-          '2 ሳይን ቦርድ (30×45)',
-          '3 ቦርድ (50×80, 40×60, 30×45)',
-          '400 ምስጋና ካርድ (Thank You Card)',
-          '8 ዩኤስቢ ፍላሽ (64 GB)',
-          '2 ባነር',
-          '2 ራማ / ቆብዕ (Cap)'
-        ]
-      },
-      silver: {
-        tag: 'Advanced',
-        title: 'Silver',
-        price: '240,000',
-        services: [
-          'ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
-          'ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
-          'መዓልቲ መርዓ (4 ካሜራ: 3 ቪድዮ፣ 1 ፎቶ)',
-          'ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)'
-        ],
-        items: [
-          '500 ፎቶዎች (10×15)',
-          '2 ላሚኔትድ ፎቶ (30×90 & 40×60)',
-          '1 ሳይን ቦርድ (30×45)',
-          '2 ቦርድ (50×80 & 40×60)',
-          '250 ምስጋና ካርድ (Thank You Card)',
-          '6 ዩኤስቢ ፍላሽ (64 GB)',
-          '2 ባነር',
-          '2 ራማ / ቆብዕ (Cap)'
-        ]
-      },
-      standard: {
-        tag: 'Standard',
-        title: 'Standard',
-        price: '190,000',
-        services: [
-          'ስቱዲዮ / ኣብ መስክ (1 ቪድዮ፣ 1 ፎቶ)',
-          'ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
-          'መዓልቲ መርዓ (3 ካሜራ: 2 ቪድዮ፣ 1 ፎቶ)',
-          'ሓማውቲ (2 ካሜራ: 1 ፎቶ፣ 1 ቪድዮ)'
-        ],
-        items: [
-          '300 ፎቶዎች (10×15)',
-          '1 ላሚኔትድ ፎቶ (30×90)',
-          '1 ሳይን ቦርድ (30×45)',
-          '1 ቦርድ (50×80)',
-          '200 ምስጋና ካርድ (Thank You Card)',
-          '4 ዩኤስቢ ፍላሽ (64 GB)',
-          '2 ባነር',
-          '2 ራማ / ቆብዕ (Cap)'
-        ]
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        if (parsed.gold && Array.isArray(parsed.gold.services)) {
+          return parsed;
+        }
+      } catch (e) {
+        console.error("Error parsing localStorage", e);
       }
-    };
+    }
+    return defaultPackages;
   });
 
   useEffect(() => {
     const authData = localStorage.getItem('priceAuthData');
     if (authData) {
-      const { expiry } = JSON.parse(authData);
-      if (new Date().getTime() < expiry) {
-        setIsAuthenticated(true);
-      } else {
+      try {
+        const { expiry } = JSON.parse(authData);
+        if (new Date().getTime() < expiry) {
+          setIsAuthenticated(true);
+        } else {
+          localStorage.removeItem('priceAuthData');
+          setIsAuthenticated(false);
+        }
+      } catch (e) {
         localStorage.removeItem('priceAuthData');
-        setIsAuthenticated(false);
       }
     }
   }, []);
@@ -380,7 +395,6 @@ function Price() {
     }
   };
 
-  // መቕረዪ ንምግባር ዝሕግዝ ፈንክሽን
   const handleFieldChange = (pkgKey, field, value) => {
     setPackages(prev => ({
       ...prev,
@@ -405,7 +419,6 @@ function Price() {
     });
   };
 
-  // ለውጥታት ሰቭ ንምግባርን ካብ ኢዲት ሙድ ንምውጻእን
   const handleSave = () => {
     localStorage.setItem('myHabeshaPrices', JSON.stringify(packages));
     alert('ለውጥታት ብሰላም ተዓቂሮም ኣለዉ!');
@@ -450,7 +463,6 @@ function Price() {
         ) : (
           <div className="max-w-7xl mx-auto text-center px-4 py-12 w-full">
             
-            {/* Edit Bar Header */}
             <div className="flex flex-col sm:flex-row justify-between items-center mb-8 bg-zinc-950/80 p-4 rounded-xl border border-[#dfb557]/30">
               <span className="text-[10px] md:text-[11px] tracking-[0.3em] uppercase text-emerald-400 font-bold">
                 ⚡ Edit Mode Active (Changes will apply on save)
