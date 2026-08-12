@@ -2690,7 +2690,6 @@
 
 // export default AdminDashboard;
 
-
 import React, { useState, useEffect } from 'react';
 import JSZip from 'jszip';
 
@@ -2703,18 +2702,14 @@ const sectionsConfig = [
 function AdminDashboard() {
   const [sectionsData, setSectionsData] = useState({});
 
-  // ንኮሚሽን/ምርጫ ካስተመራት ዝምልከት ስቴት
   const [clientName, setClientName] = useState('');
   const [portalNumber, setPortalNumber] = useState('');
   const [clientImages, setClientImages] = useState([]);
   const [portalsList, setPortalsList] = useState([]);
   const [creatingPortal, setCreatingPortal] = useState(false);
 
-  // ሓድሽ ንዝተመረጹ ስእሊታት ዝርእየሉ ሞዳል (Modal) ዝምልከት ስቴት
   const [viewingPortalSelections, setViewingPortalSelections] = useState(null);
-
-  // ናይ ሳድባር ንጡፍ ክፋል ንምምራጽ (Active Tab State)
-  const [activeTab, setActiveTab] = useState('manager'); // 'manager', 'portal', or section title
+  const [activeTab, setActiveTab] = useState('manager');
 
   useEffect(() => {
     fetch('https://habesha-film-production-server.onrender.com/api/projects')
@@ -2769,8 +2764,6 @@ function AdminDashboard() {
       return;
     }
 
-    const cleanedImages = clientImages.map(img => (typeof img === 'string' ? img.trim() : img));
-
     setCreatingPortal(true);
     try {
       const res = await fetch('https://habesha-film-production-server.onrender.com/api/client/create-portal', {
@@ -2779,7 +2772,7 @@ function AdminDashboard() {
         body: JSON.stringify({ 
           clientName: clientName.trim(), 
           portalNumber: portalNumber.trim(), 
-          images: cleanedImages 
+          images: clientImages // እዚ ሕጂ { original, compressed } list ዘለዎ ഒብጀክት እዩ
         })
       });
 
@@ -2818,28 +2811,14 @@ function AdminDashboard() {
 
       if (res.ok) {
         const data = await res.json();
-        console.log("Upload Response Data:", data); // ንምርመራ (Debug)
-        
-        let rawUrls = [];
-        if (Array.isArray(data.images)) {
-          rawUrls = data.images;
-        } else if (data.imageUrl) {
-          rawUrls = [data.imageUrl];
-        } else if (Array.isArray(data)) {
-          rawUrls = data;
-        }
+        console.log("FULL SERVER UPLOAD RESPONSE:", data);
 
-        const newUrls = rawUrls.map(img => {
-          if (typeof img === 'string') return img.trim();
-          if (img && typeof img.url === 'string') return img.url.trim();
-          return '';
-        }).filter(url => url !== '');
-        
-        if (newUrls.length > 0) {
-          setClientImages(prev => [...prev, ...newUrls]);
-          alert(`${newUrls.length} ስእሊታት ብሰላም ተሰቒሎም ኣለዉ!`);
+        // ናይ ሰርቨርካ መልሲ ብቐጥታ images array ({ original, compressed }) ይሕዝ
+        if (data.images && Array.isArray(data.images)) {
+          setClientImages(prev => [...prev, ...data.images]);
+          alert(`${data.images.length} ስእሊታት ብሰላም ተሰቒሎም ኣለዉ!`);
         } else {
-          alert('ስእሊታት ተሰቒሎም ግን ትኽክለኛ ሊንክ ኣይተረኽበን።');
+          alert('ስእሊ ተሰቒሉ ግን ሰርቨር ቅኑዕ ሊንክ ኣይሰደደን። F12 Console ርአ።');
         }
       } else {
         const errData = await res.json();
@@ -2895,7 +2874,6 @@ function AdminDashboard() {
   return (
     <div className="bg-zinc-950 min-h-screen text-white flex flex-col md:flex-row relative">
       
-      {/* ─── ጸጋማይ ወገን ፕሮፌሽናል ሳድባር (Left Sidebar) - Mobile Responsive ─── */}
       <aside className="w-full md:w-72 bg-zinc-900 border-b md:border-r border-zinc-800 p-4 md:p-6 flex flex-col justify-between shrink-0 md:sticky md:top-0 md:h-screen z-20">
         <div>
           <div className="flex items-center gap-3 mb-6 md:mb-8">
@@ -2957,10 +2935,8 @@ function AdminDashboard() {
         </div>
       </aside>
 
-      {/* ─── ማእከላይ መርአዪ ክፍሊ (Main Content Display Area) ─── */}
       <main className="flex-1 p-4 md:p-10 overflow-y-auto max-w-full">
         
-        {/* Tab 1: Dashboard Overview */}
         {activeTab === 'manager' && (
           <div className="space-y-6">
             <div className="bg-zinc-900 border border-zinc-800 p-6 md:p-8 rounded-2xl">
@@ -2990,7 +2966,6 @@ function AdminDashboard() {
           </div>
         )}
 
-        {/* Tab 2: Client Selection Portals Management */}
         {activeTab === 'portal' && (
           <div className="space-y-8">
             <div className="p-4 md:p-6 border border-amber-500/50 rounded-2xl bg-zinc-900 shadow-2xl">
@@ -3034,16 +3009,12 @@ function AdminDashboard() {
 
                 {clientImages.length > 0 && (
                   <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 mt-4 p-3 bg-zinc-950 rounded-xl border border-zinc-800 max-h-40 overflow-y-auto">
-                    {clientImages.map((url, i) => (
+                    {clientImages.map((imgObj, i) => (
                       <div key={i} className="relative aspect-square rounded overflow-hidden border border-zinc-700">
                         <img 
-                          src={typeof url === 'string' ? url : (url.url || '')} 
+                          src={imgObj.compressed || imgObj.original} 
                           alt={`preview-${i}`} 
                           className="w-full h-full object-cover rounded"
-                          onError={(e) => {
-                            e.target.style.display = 'none';
-                            console.error("Image load error:", url);
-                          }}
                         />
                       </div>
                     ))}
@@ -3106,7 +3077,6 @@ function AdminDashboard() {
           </div>
         )}
 
-        {/* Dynamic Sections */}
         {sectionsConfig.map((sec) => {
           if (activeTab !== sec.title) return null;
           const currentData = sectionsData[sec.title] || { names: '', desc: '', images: [], descriptions: [], headings: [] };
@@ -3123,7 +3093,6 @@ function AdminDashboard() {
         })}
       </main>
 
-      {/* Modal for View Selections */}
       {viewingPortalSelections && (
         <div className="fixed inset-0 bg-black/80 flex items-center justify-center z-50 p-2 md:p-4">
           <div className="bg-zinc-900 border border-zinc-700 rounded-2xl max-w-4xl w-full p-4 md:p-6 max-h-[95vh] overflow-y-auto">
@@ -3158,11 +3127,12 @@ function AdminDashboard() {
                       const folder = zip.folder(folderName);
 
                       for (let i = 0; i < viewingPortalSelections.selectedImages.length; i++) {
-                        const url = viewingPortalSelections.selectedImages[i];
+                        const imgObj = viewingPortalSelections.selectedImages[i];
+                        const downloadUrl = imgObj.original || imgObj.compressed;
                         try {
-                          const response = await fetch(url);
+                          const response = await fetch(downloadUrl);
                           const blob = await response.blob();
-                          const extension = url.split('.').pop().split('?')[0] || 'jpg';
+                          const extension = downloadUrl.split('.').pop().split('?')[0] || 'jpg';
                           folder.file(`photo_${i + 1}.${extension}`, blob);
                         } catch (err) {
                           console.error(`Error fetching image ${i}:`, err);
@@ -3201,7 +3171,10 @@ function AdminDashboard() {
                       return;
                     }
 
-                    const updatedImages = [...(currentSecData.images || []), ...viewingPortalSelections.selectedImages];
+                    // ናብቲ ቀንዲ ፖርትፎሊዮ ክሰጋገር ከሎ ኦርጂናል ሊንክ (string) ጥራይ ንወስድ
+                    const plainUrls = viewingPortalSelections.selectedImages.map(img => img.original || img);
+                    const updatedImages = [...(currentSecData.images || []), ...plainUrls];
+                    
                     setSectionsData({
                       ...sectionsData,
                       [targetSection]: { ...currentSecData, images: updatedImages }
@@ -3217,24 +3190,28 @@ function AdminDashboard() {
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 md:gap-3">
-              {viewingPortalSelections.selectedImages.map((imgUrl, idx) => (
-                <div key={idx} className="aspect-square bg-zinc-800 border border-zinc-700 rounded-lg overflow-hidden relative group">
-                  <img 
-                    src={typeof imgUrl === 'string' ? imgUrl : (imgUrl.url || '')} 
-                    alt={`Selected ${idx}`} 
-                    className="w-full h-full object-cover" 
-                    onError={(e) => e.target.src = 'https://via.placeholder.com/150'} 
-                  />
-                  <a 
-                    href={typeof imgUrl === 'string' ? imgUrl : (imgUrl.url || '#')} 
-                    target="_blank" 
-                    rel="noreferrer" 
-                    className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs font-bold text-amber-300 underline p-1 text-center"
-                  >
-                    View Full
-                  </a>
-                </div>
-              ))}
+              {viewingPortalSelections.selectedImages.map((imgObj, idx) => {
+                const displayUrl = imgObj.compressed || imgObj.original;
+                const fullUrl = imgObj.original || imgObj.compressed;
+                return (
+                  <div key={idx} className="aspect-square bg-zinc-800 border border-zinc-700 rounded-lg overflow-hidden relative group">
+                    <img 
+                      src={displayUrl} 
+                      alt={`Selected ${idx}`} 
+                      className="w-full h-full object-cover" 
+                      onError={(e) => e.target.src = 'https://via.placeholder.com/150'} 
+                    />
+                    <a 
+                      href={fullUrl} 
+                      target="_blank" 
+                      rel="noreferrer" 
+                      className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs font-bold text-amber-300 underline p-1 text-center"
+                    >
+                      View Full
+                    </a>
+                  </div>
+                );
+              })}
             </div>
           </div>
         </div>
@@ -3262,12 +3239,7 @@ function SectionRenderer({ title, data, setData, onSave }) {
       if (!res.ok) throw new Error("Upload failed");
       
       const result = await res.json();
-      const rawImages = result.images || [];
-      const newImagesFromBackend = rawImages.map(img => {
-        if (typeof img === 'string') return img.trim();
-        if (img && typeof img.url === 'string') return img.url.trim();
-        return '';
-      }).filter(url => url !== '');
+      const newImagesFromBackend = result.images || [];
       
       const updatedImages = [...(data.images || []), ...newImagesFromBackend];
       const updatedHeadings = [...(data.headings || [])];
@@ -3279,14 +3251,13 @@ function SectionRenderer({ title, data, setData, onSave }) {
         updatedDescriptions.push(`0${totalIdx + 1}. A wonderful captured memory of the special day.`);
       });
 
-      const newData = {
+      setData({
         ...data,
         images: updatedImages,
         headings: updatedHeadings,
         descriptions: updatedDescriptions
-      };
+      });
 
-      setData(newData);
       alert(`${newImagesFromBackend.length} ስእሊ(ታት) ተሰቒሎም ኣለዉ!`);
     } catch (err) {
       console.error("Upload Error:", err);
@@ -3299,13 +3270,12 @@ function SectionRenderer({ title, data, setData, onSave }) {
     const updatedHeadings = (data.headings || []).filter((_, i) => i !== imgIndex);
     const updatedDescriptions = (data.descriptions || []).filter((_, i) => i !== imgIndex);
 
-    const newData = { 
+    setData({ 
       ...data, 
       images: updatedImages,
       headings: updatedHeadings,
       descriptions: updatedDescriptions
-    };
-    setData(newData);
+    });
   };
 
   const handleHeadingChange = (index, value) => {
@@ -3366,7 +3336,7 @@ function SectionRenderer({ title, data, setData, onSave }) {
         {data.images && data.images.map((img, index) => {
           const defaultHeading = `Featured Moment ${index + 1}`;
           const defaultDesc = `0${index + 1}. A wonderful captured memory of the special day.`;
-          const imgSrc = typeof img === 'string' ? img : (img?.url || '');
+          const imgSrc = typeof img === 'string' ? img : (img?.url || img?.original || '');
 
           return (
             <div key={index} className="flex flex-col sm:flex-row gap-4 p-4 bg-zinc-800/50 border border-zinc-700 rounded-xl items-center">
