@@ -2690,6 +2690,7 @@
 
 // export default AdminDashboard;
 
+
 import React, { useState, useEffect } from 'react';
 import JSZip from 'jszip';
 
@@ -2768,7 +2769,7 @@ function AdminDashboard() {
       return;
     }
 
-    const cleanedImages = clientImages.map(img => img.trim());
+    const cleanedImages = clientImages.map(img => (typeof img === 'string' ? img.trim() : img));
 
     setCreatingPortal(true);
     try {
@@ -2817,14 +2818,28 @@ function AdminDashboard() {
 
       if (res.ok) {
         const data = await res.json();
-        const rawUrls = data.images || (data.imageUrl ? [data.imageUrl] : []);
-        const newUrls = rawUrls.map(url => url.trim());
+        console.log("Upload Response Data:", data); // ንምርመራ (Debug)
+        
+        let rawUrls = [];
+        if (Array.isArray(data.images)) {
+          rawUrls = data.images;
+        } else if (data.imageUrl) {
+          rawUrls = [data.imageUrl];
+        } else if (Array.isArray(data)) {
+          rawUrls = data;
+        }
+
+        const newUrls = rawUrls.map(img => {
+          if (typeof img === 'string') return img.trim();
+          if (img && typeof img.url === 'string') return img.url.trim();
+          return '';
+        }).filter(url => url !== '');
         
         if (newUrls.length > 0) {
           setClientImages(prev => [...prev, ...newUrls]);
           alert(`${newUrls.length} ስእሊታት ብሰላም ተሰቒሎም ኣለዉ!`);
         } else {
-          alert('ስእሊታት ተሰቒሎም ግን ሊንክ ኣይተረኽበን።');
+          alert('ስእሊታት ተሰቒሎም ግን ትኽክለኛ ሊንክ ኣይተረኽበን።');
         }
       } else {
         const errData = await res.json();
@@ -3022,7 +3037,7 @@ function AdminDashboard() {
                     {clientImages.map((url, i) => (
                       <div key={i} className="relative aspect-square rounded overflow-hidden border border-zinc-700">
                         <img 
-                          src={url} 
+                          src={typeof url === 'string' ? url : (url.url || '')} 
                           alt={`preview-${i}`} 
                           className="w-full h-full object-cover rounded"
                           onError={(e) => {
@@ -3205,13 +3220,13 @@ function AdminDashboard() {
               {viewingPortalSelections.selectedImages.map((imgUrl, idx) => (
                 <div key={idx} className="aspect-square bg-zinc-800 border border-zinc-700 rounded-lg overflow-hidden relative group">
                   <img 
-                    src={imgUrl} 
+                    src={typeof imgUrl === 'string' ? imgUrl : (imgUrl.url || '')} 
                     alt={`Selected ${idx}`} 
                     className="w-full h-full object-cover" 
                     onError={(e) => e.target.src = 'https://via.placeholder.com/150'} 
                   />
                   <a 
-                    href={imgUrl} 
+                    href={typeof imgUrl === 'string' ? imgUrl : (imgUrl.url || '#')} 
                     target="_blank" 
                     rel="noreferrer" 
                     className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-xs font-bold text-amber-300 underline p-1 text-center"
@@ -3248,7 +3263,11 @@ function SectionRenderer({ title, data, setData, onSave }) {
       
       const result = await res.json();
       const rawImages = result.images || [];
-      const newImagesFromBackend = rawImages.map(url => url.trim());
+      const newImagesFromBackend = rawImages.map(img => {
+        if (typeof img === 'string') return img.trim();
+        if (img && typeof img.url === 'string') return img.url.trim();
+        return '';
+      }).filter(url => url !== '');
       
       const updatedImages = [...(data.images || []), ...newImagesFromBackend];
       const updatedHeadings = [...(data.headings || [])];
@@ -3347,11 +3366,12 @@ function SectionRenderer({ title, data, setData, onSave }) {
         {data.images && data.images.map((img, index) => {
           const defaultHeading = `Featured Moment ${index + 1}`;
           const defaultDesc = `0${index + 1}. A wonderful captured memory of the special day.`;
+          const imgSrc = typeof img === 'string' ? img : (img?.url || '');
 
           return (
             <div key={index} className="flex flex-col sm:flex-row gap-4 p-4 bg-zinc-800/50 border border-zinc-700 rounded-xl items-center">
               <div className="relative w-24 h-24 sm:w-28 sm:h-28 flex-shrink-0 border border-zinc-700 rounded-lg overflow-hidden w-full sm:w-auto">
-                <img src={img} className="w-full h-full object-cover" alt="upload" />
+                <img src={imgSrc} className="w-full h-full object-cover" alt="upload" />
                 <button onClick={() => deleteImage(index)} className="absolute top-0 right-0 bg-red-600 text-white px-2 py-0.5 text-xs font-bold">&times;</button>
               </div>
               <div className="flex-1 w-full space-y-3">
