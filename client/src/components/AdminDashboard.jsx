@@ -5830,52 +5830,61 @@ function AdminDashboard() {
       return;
     }
 
-    alert('ስእሊታት ናብ ንኡስ KB ይቕየሩ ኣለዉ፣ በጃኹም ቅሩብ ጽንሑ...');
+    alert(`ስእሊታት ይዳለዉ ኣለዉ (ጠቕላላ: ${files.length}). በጃኹም ቅሩብ ጽንሑ...`);
 
-    const formData = new FormData();
-    for (let file of files) {
-      const compressedFile = await compressImageFile(file);
-      formData.append('images', compressedFile);
-    }
+    const BATCH_SIZE = 25; // ኣብ ሓደ ግዜ 25 ፋይላት ጥራይ ንስቀል
+    let allUploadedImages = [];
 
     try {
-      // 5 ደቓይቕ Timeout ንምሃብ (5 * 60 * 1000 ms)
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 300000);
+      for (let i = 0; i < files.length; i += BATCH_SIZE) {
+        const batchFiles = files.slice(i, i + BATCH_SIZE);
+        const formData = new FormData();
 
-      const res = await fetch('https://habesha-film-production-server.onrender.com/api/client/upload-image', {
-        method: 'POST',
-        body: formData,
-        signal: controller.signal
-      });
+        for (let file of batchFiles) {
+          const compressedFile = await compressImageFile(file);
+          formData.append('images', compressedFile);
+        }
 
-      clearTimeout(timeoutId);
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 300000); // 5 minutes timeout per batch
 
-      if (res.ok) {
+        const res = await fetch('https://habesha-film-production-server.onrender.com/api/client/upload-image', {
+          method: 'POST',
+          body: formData,
+          signal: controller.signal
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.message || 'ስእሊ ክስቀል ኣይከኣለን።');
+        }
+
         const data = await res.json();
         if (data.images && Array.isArray(data.images)) {
-          setClientImages(prev => {
-            const updated = [...prev, ...data.images];
-            if (updated.length > 500) {
-              alert('ጌጋ: 500 ምስልታት ሰጊሩ ኣሎ!');
-              return prev;
-            }
-            return updated;
-          });
-          alert(`${data.images.length} ስእሊታት ብሰላም ተሰቒሎም ኣለዉ!`);
-        } else {
-          alert('ስእሊ ተሰቒሉ ግን ሰርቨር ቅኑዕ ሊንክ ኣይሰደደን።');
+          allUploadedImages.push(...data.images);
         }
-      } else {
-        const errData = await res.json().catch(() => ({}));
-        alert(errData.message || 'ስእሊ ክስቀል ኣይከኣለን።');
       }
+
+      // ምስ ተዛዘመ ኣብ State ንዕቀቦ
+      setClientImages(prev => {
+        const updated = [...prev, ...allUploadedImages];
+        if (updated.length > 500) {
+          alert('ጌጋ: 500 ምስልታት ሰጊሩ ኣሎ!');
+          return prev;
+        }
+        return updated;
+      });
+
+      alert(`${allUploadedImages.length} ስእሊታት ብሰላም ተሰቒሎም ኣለዉ!`);
+
     } catch (err) {
       console.error("Error uploading client images:", err);
       if (err.name === 'AbortError') {
-        alert('ሰርቨር መልሲ ንምሃብ ኣዝዩ ነዊሕ ወሲዱ (Timeout 5 minutes expired)። ብሕጽር ዝበለ ብዝሒ (ንኣብነት ብ30 ወይ 50 ፋይላት) ፈትን።');
+        alert('ሰርቨር መልሲ ንምሃብ ኣዝዩ ነዊሕ ወሲዱ።');
       } else {
-        alert('ሰርቨር ጌጋ ኣጋጢሙ ኣሎ።');
+        alert(err.message || 'ሰርቨር ጌጋ ኣጋጢሙ ኣሎ።');
       }
     }
   };
