@@ -11,3 +11,4 @@ const packageSchema = new mongoose.Schema({
 
 // ንነፍሲ ወከፍ ፔኬጅ (premium, gold, silver, standard) ክንጥቀመሉ ኢና
 module.exports = mongoose.model('Package', packageSchema);
+export default SitePrice;
