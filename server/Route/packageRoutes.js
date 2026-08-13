@@ -1,5 +1,5 @@
 import express from 'express';
-import Package from '../models/Package.js';
+import Package from '../models/sitePrices.js';
 
 const router = express.Router();
 
