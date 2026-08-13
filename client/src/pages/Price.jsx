@@ -1727,98 +1727,106 @@ function Price() {
   const [isEditGateOpen, setIsEditGateOpen] = useState(false);
   const [adminError, setAdminError] = useState(false);
 
-  // ሙሉእ መዋቕር ዘለዎ ፓኬታት (State)
+  const defaultPackages = {
+    premium: { 
+      tier: 'Ultimate VIP', 
+      name: 'Premium', 
+      price: '$1,000+', 
+      desc: 'ዝለዓለ ደረጃ ሞያዊ ክእለትን ብርክት ዝበሉ መሳርሒታትን ተጠቒምካ ዝስራሕ ቪአይፒ ኣገልግሎት።', 
+      services: [], 
+      features: [
+        '✓ ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)',
+        '✓ ክልተ ኤክስፐርት ካሜራማን',
+        '✓ Cinematic Color Grading & VFX',
+        '🎁 ቦናስ: ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር'
+      ] 
+    },
+    gold: { 
+      tier: 'Top Tier', 
+      name: 'Gold', 
+      price: '300,000', 
+      desc: '', 
+      services: [
+        '• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+        '• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+        '• መዓልቲ መርዓ (5 ካሜራ: 4 ቪድዮ፣ 1 ፎቶ)',
+        '• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)',
+        '• ኩሉ ሶፍት ኮፒ (All Soft Copy)'
+      ], 
+      features: [
+        '✓ 800 ፎቶዎች (10×15)',
+        '✓ 2 ላሚኔትድ ፎቶ (30×90 & 30×60)',
+        '✓ 2 ሳይን ቦርድ (30×45)',
+        '✓ 3 ቦርድ (50×80, 40×60, 30×45)',
+        '✓ 400 ምስጋና ካርድ (Thank You Card)',
+        '✓ 8 ዩኤስቢ ፍላሽ (64 GB)',
+        '✓ 2 ባነር',
+        '✓ 2 ራማ / ቆብዕ (Cap)'
+      ] 
+    },
+    silver: { 
+      tier: 'Advanced', 
+      name: 'Silver', 
+      price: '240,000', 
+      desc: '', 
+      services: [
+        '• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+        '• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+        '• መዓልቲ መርዓ (4 ካሜራ: 3 ቪድዮ፣ 1 ፎቶ)',
+        '• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)'
+      ], 
+      features: [
+        '✓ 500 ፎቶዎች (10×15)',
+        '✓ 2 ላሚኔትድ ፎቶ (30×90 & 40×60)',
+        '✓ 1 ሳይን ቦርድ (30×45)',
+        '✓ 2 ቦርድ (50×80 & 40×60)',
+        '✓ 250 ምስጋና ካርድ (Thank You Card)',
+        '✓ 6 ዩኤስቢ ፍላሽ (64 GB)',
+        '✓ 2 ባነር',
+        '✓ 2 ራማ / ቆብዕ (Cap)'
+      ] 
+    },
+    standard: { 
+      tier: 'Standard', 
+      name: 'Standard', 
+      price: '190,000', 
+      desc: '', 
+      services: [
+        '• ስቱዲዮ / ኣብ መስክ (1 ቪድዮ፣ 1 ፎቶ)',
+        '• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+        '• መዓልቲ መርዓ (3 ካሜራ: 2 ቪድዮ፣ 1 ፎቶ)',
+        '• ሓማውቲ (2 ካሜራ: 1 ፎቶ፣ 1 ቪድዮ)'
+      ], 
+      features: [
+        '✓ 300 ፎቶዎች (10×15)',
+        '✓ 1 ላሚኔትድ ፎቶ (30×90)',
+        '✓ 1 ሳይን ቦርድ (30×45)',
+        '✓ 1 ቦርድ (50×80)',
+        '✓ 200 ምስጋና ካርድ (Thank You Card)',
+        '✓ 4 ዩኤስቢ ፍላሽ (64 GB)',
+        '✓ 2 ባነር',
+        '✓ 2 ራማ / ቆብዕ (Cap)'
+      ] 
+    },
+  };
+
   const [packages, setPackages] = useState(() => {
     const saved = localStorage.getItem('habeshaFilmPackages');
     if (saved) {
       try {
-        return JSON.parse(saved);
+        const parsed = JSON.parse(saved);
+        // Merge with default to ensure all keys (like services/features) exist
+        return {
+          premium: { ...defaultPackages.premium, ...parsed.premium },
+          gold: { ...defaultPackages.gold, ...parsed.gold },
+          silver: { ...defaultPackages.silver, ...parsed.silver },
+          standard: { ...defaultPackages.standard, ...parsed.standard },
+        };
       } catch (e) {
         console.error("Error parsing saved packages:", e);
       }
     }
-    return {
-      premium: { 
-        tier: 'Ultimate VIP', 
-        name: 'Premium', 
-        price: '$1,000+', 
-        desc: 'ዝለዓለ ደረጃ ሞያዊ ክእለትን ብርክት ዝበሉ መሳርሒታትን ተጠቒምካ ዝስራሕ ቪአይፒ ኣገልግሎት።', 
-        services: [], 
-        features: [
-          '✓ ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)',
-          '✓ ክልተ ኤክስፐርት ካሜራማን',
-          '✓ Cinematic Color Grading & VFX',
-          '🎁 ቦናስ: ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር'
-        ] 
-      },
-      gold: { 
-        tier: 'Top Tier', 
-        name: 'Gold', 
-        price: '300,000', 
-        desc: '', 
-        services: [
-          '• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
-          '• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
-          '• መዓልቲ መርዓ (5 ካሜራ: 4 ቪድዮ፣ 1 ፎቶ)',
-          '• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)',
-          '• ኩሉ ሶፍት ኮፒ (All Soft Copy)'
-        ], 
-        features: [
-          '✓ 800 ፎቶዎች (10×15)',
-          '✓ 2 ላሚኔትድ ፎቶ (30×90 & 30×60)',
-          '✓ 2 ሳይን ቦርድ (30×45)',
-          '✓ 3 ቦርድ (50×80, 40×60, 30×45)',
-          '✓ 400 ምስጋና ካርድ (Thank You Card)',
-          '✓ 8 ዩኤስቢ ፍላሽ (64 GB)',
-          '✓ 2 ባነር',
-          '✓ 2 ራማ / ቆብዕ (Cap)'
-        ] 
-      },
-      silver: { 
-        tier: 'Advanced', 
-        name: 'Silver', 
-        price: '240,000', 
-        desc: '', 
-        services: [
-          '• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
-          '• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
-          '• መዓልቲ መርዓ (4 ካሜራ: 3 ቪድዮ፣ 1 ፎቶ)',
-          '• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)'
-        ], 
-        features: [
-          '✓ 500 ፎቶዎች (10×15)',
-          '✓ 2 ላሚኔትድ ፎቶ (30×90 & 40×60)',
-          '✓ 1 ሳይን ቦርድ (30×45)',
-          '✓ 2 ቦርድ (50×80 & 40×60)',
-          '✓ 250 ምስጋና ካርድ (Thank You Card)',
-          '✓ 6 ዩኤስቢ ፍላሽ (64 GB)',
-          '✓ 2 ባነር',
-          '✓ 2 ራማ / ቆብዕ (Cap)'
-        ] 
-      },
-      standard: { 
-        tier: 'Standard', 
-        name: 'Standard', 
-        price: '190,000', 
-        desc: '', 
-        services: [
-          '• ስቱዲዮ / ኣብ መስክ (1 ቪድዮ፣ 1 ፎቶ)',
-          '• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
-          '• መዓልቲ መርዓ (3 ካሜራ: 2 ቪድዮ፣ 1 ፎቶ)',
-          '• ሓማውቲ (2 ካሜራ: 1 ፎቶ፣ 1 ቪድዮ)'
-        ], 
-        features: [
-          '✓ 300 ፎቶዎች (10×15)',
-          '✓ 1 ላሚኔትድ ፎቶ (30×90)',
-          '✓ 1 ሳይን ቦርድ (30×45)',
-          '✓ 1 ቦርድ (50×80)',
-          '✓ 200 ምስጋና ካርድ (Thank You Card)',
-          '✓ 4 ዩኤስቢ ፍላሽ (64 GB)',
-          '✓ 2 ባነር',
-          '✓ 2 ራማ / ቆብዕ (Cap)'
-        ] 
-      },
-    };
+    return defaultPackages;
   });
 
   const [tempPackages, setTempPackages] = useState(packages);
@@ -1930,72 +1938,75 @@ function Price() {
             
             <div className="bg-zinc-950 border border-[#dfb557]/40 p-6 md:p-8 rounded-2xl space-y-6 text-left shadow-2xl">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {Object.keys(tempPackages).map((key) => (
-                  <div key={key} className="bg-zinc-900 p-5 rounded-xl border border-zinc-800 space-y-3">
-                    <h3 className="text-sm font-bold uppercase text-[#dfb557]">{key} Package</h3>
-                    
-                    <div>
-                      <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Tier Title</label>
-                      <input 
-                        value={tempPackages[key].tier} 
-                        onChange={(e) => setTempPackages({...tempPackages, [key]: {...tempPackages[key], tier: e.target.value}})}
-                        className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Name</label>
-                      <input 
-                        value={tempPackages[key].name} 
-                        onChange={(e) => setTempPackages({...tempPackages, [key]: {...tempPackages[key], name: e.target.value}})}
-                        className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Price</label>
-                      <input 
-                        value={tempPackages[key].price} 
-                        onChange={(e) => setTempPackages({...tempPackages, [key]: {...tempPackages[key], price: e.target.value}})}
-                        className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100 font-bold text-[#dfb557]"
-                      />
-                    </div>
-
-                    {key === 'premium' && (
+                {Object.keys(tempPackages).map((key) => {
+                  const pkg = tempPackages[key];
+                  return (
+                    <div key={key} className="bg-zinc-900 p-5 rounded-xl border border-zinc-800 space-y-3">
+                      <h3 className="text-sm font-bold uppercase text-[#dfb557]">{key} Package</h3>
+                      
                       <div>
-                        <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Description</label>
-                        <textarea 
-                          rows="2"
-                          value={tempPackages[key].desc} 
-                          onChange={(e) => setTempPackages({...tempPackages, [key]: {...tempPackages[key], desc: e.target.value}})}
+                        <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Tier Title</label>
+                        <input 
+                          value={pkg.tier || ''} 
+                          onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, tier: e.target.value}})}
                           className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
                         />
                       </div>
-                    )}
 
-                    {tempPackages[key].services && tempPackages[key].services.length > 0 && (
                       <div>
-                        <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Services (Comma or Newline separated)</label>
-                        <textarea 
-                          rows="4"
-                          value={tempPackages[key].services.join('\n')} 
-                          onChange={(e) => setTempPackages({...tempPackages, [key]: {...tempPackages[key], services: e.target.value.split('\n')}})}
+                        <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Name</label>
+                        <input 
+                          value={pkg.name || ''} 
+                          onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, name: e.target.value}})}
                           className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
                         />
                       </div>
-                    )}
 
-                    <div>
-                      <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Features List</label>
-                      <textarea 
-                        rows="5"
-                        value={tempPackages[key].features.join('\n')} 
-                        onChange={(e) => setTempPackages({...tempPackages, [key]: {...tempPackages[key], features: e.target.value.split('\n')}})}
-                        className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
-                      />
+                      <div>
+                        <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Price</label>
+                        <input 
+                          value={pkg.price || ''} 
+                          onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, price: e.target.value}})}
+                          className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100 font-bold text-[#dfb557]"
+                        />
+                      </div>
+
+                      {key === 'premium' && (
+                        <div>
+                          <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Description</label>
+                          <textarea 
+                            rows="2"
+                            value={pkg.desc || ''} 
+                            onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, desc: e.target.value}})}
+                            className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
+                          />
+                        </div>
+                      )}
+
+                      {pkg.services && (
+                        <div>
+                          <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Services (Newline separated)</label>
+                          <textarea 
+                            rows="4"
+                            value={(pkg.services || []).join('\n')} 
+                            onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, services: e.target.value.split('\n')}})}
+                            className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
+                          />
+                        </div>
+                      )}
+
+                      <div>
+                        <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Features List (Newline separated)</label>
+                        <textarea 
+                          rows="5"
+                          value={(pkg.features || []).join('\n')} 
+                          onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, features: e.target.value.split('\n')}})}
+                          className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
+                        />
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               <div className="flex justify-end gap-4 pt-4 border-t border-zinc-900">
@@ -2044,7 +2055,7 @@ function Price() {
                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.premium.price}</p>
                   <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">{packages.premium.desc}</p>
                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-8 font-light">
-                    {packages.premium.features.map((feat, idx) => (
+                    {(packages.premium.features || []).map((feat, idx) => (
                       <li key={idx} className="flex items-center gap-2">{feat}</li>
                     ))}
                   </ul>
@@ -2076,7 +2087,7 @@ function Price() {
                   )}
 
                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-                    {packages.gold.features.map((feat, idx) => (
+                    {(packages.gold.features || []).map((feat, idx) => (
                       <li key={idx} className="flex items-center gap-2">{feat}</li>
                     ))}
                   </ul>
@@ -2105,7 +2116,7 @@ function Price() {
                   )}
 
                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-                    {packages.silver.features.map((feat, idx) => (
+                    {(packages.silver.features || []).map((feat, idx) => (
                       <li key={idx} className="flex items-center gap-2">{feat}</li>
                     ))}
                   </ul>
@@ -2134,7 +2145,7 @@ function Price() {
                   )}
 
                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-                    {packages.standard.features.map((feat, idx) => (
+                    {(packages.standard.features || []).map((feat, idx) => (
                       <li key={idx} className="flex items-center gap-2">{feat}</li>
                     ))}
                   </ul>
