@@ -1,1352 +1,121 @@
 
-
 // import React, { useState, useEffect } from 'react';
 // import Navbar from '../components/Navbar';
 // import Footer from '../components/Footer';
 
 // function Price() {
 //   const [isAuthenticated, setIsAuthenticated] = useState(false);
+//   const [isEditMode, setIsEditMode] = useState(false);
 //   const [passcode, setPasscode] = useState('');
 //   const [error, setError] = useState(false);
 //   const [loading, setLoading] = useState(false);
 
-//   useEffect(() => {
-//     const authData = localStorage.getItem('priceAuthData');
-//     if (authData) {
-//       const { expiry } = JSON.parse(authData);
-//       if (new Date().getTime() < expiry) {
-//         setIsAuthenticated(true);
-//       } else {
-//         localStorage.removeItem('priceAuthData');
-//         setIsAuthenticated(false);
-//       }
-//     }
-//   }, []);
-
-//   const handleLogin = async (e) => {
-//     e.preventDefault();
-//     setLoading(true);
-//     setError(false);
-
-//     try {
-//       const response = await fetch('https://habesha-film-production-server.onrender.com/api/auth/verify-passcode', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ passcode }),
-//       });
-
-//       const data = await response.json();
-
-//       if (response.ok && data.success) {
-//         setIsAuthenticated(true);
-//         const expiryDuration = 10 * 60 * 1000; 
-//         const authData = {
-//           value: 'true',
-//           expiry: new Date().getTime() + expiryDuration,
-//         };
-//         localStorage.setItem('priceAuthData', JSON.stringify(authData));
-//       } else {
-//         setError(true);
-//       }
-//     } catch (err) {
-//       console.error("Error verifying passcode:", err);
-//       setError(true);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-[#050505] text-zinc-100 font-sans selection:bg-[#dfb557]/30 selection:text-[#dfb557] overflow-x-hidden flex flex-col justify-between">
-//       <Navbar />
-
-//       <div className="flex-grow flex items-center justify-center px-4 py-32">
-//         {!isAuthenticated ? (
-//           <div className="bg-zinc-950 p-8 md:p-12 shadow-2xl border-2 border-[#dfb557]/40 rounded-2xl max-w-md w-full text-center relative">
-//             <span className="text-[9px] md:text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-2">
-//               Secure Access
-//             </span>
-//             <h2 className="text-2xl md:text-3xl font-serif mb-3 text-zinc-100">Protected Price Page</h2>
-//             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
-//             <p className="text-xs md:text-sm text-zinc-400 mb-6 font-light">
-//               እዚ ገጽ ብሚጢራዊ ፓስኮድ ዝተዓጸወ እዩ። በጃኹም ፓስኮድ ኣእትዉ።
-//             </p>
-            
-//             <form onSubmit={handleLogin} className="space-y-4">
-//               <input 
-//                 type="password"
-//                 placeholder="Enter Passcode"
-//                 value={passcode}
-//                 onChange={(e) => setPasscode(e.target.value)}
-//                 className="w-full px-4 py-3 bg-zinc-900 border border-[#dfb557]/50 rounded-xl focus:outline-none focus:border-[#dfb557] text-center tracking-widest text-lg text-zinc-100 placeholder-zinc-500 shadow-inner"
-//               />
-//               <button 
-//                 type="submit"
-//                 disabled={loading}
-//                 className="w-full bg-[#dfb557] text-black py-3 uppercase text-xs font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 disabled:opacity-50 rounded-xl shadow-lg"
-//               >
-//                 {loading ? 'Checking...' : 'Submit'}
-//               </button>
-//               {error && <p className="text-red-400 text-xs mt-2 font-medium">ጌጋ ፓስኮድ! ደጊምካ ፈትን።</p>}
-//             </form>
-//           </div>
-//         ) : (
-//           <div className="max-w-7xl mx-auto text-center px-4 py-12">
-//             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
-//               Investment & Tiers
-//             </span>
-//             <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4 text-zinc-100">Our Professional Packages</h1>
-//             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
-//             <p className="text-zinc-400 text-sm md:text-base mb-16 max-w-2xl mx-auto font-light">
-//               ንመጻኢ ፕሮጀክትታትኩም ዝኸውን ዝተፈላለየ ሞያዊ ኣገልግሎታት። ካብቶም ደረጃታት እቲ ንደለይዎ ምረጹ።
-//             </p>
-            
-//             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-              
-//               {/* 1. Premium Package */}
-//               <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
-//                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Ultimate VIP</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Premium</h3>
-//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">$2,000+</p>
-//                   <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
-//                     ዝለዓለ ደረጃ ሞያዊ ክእለትን ብርክት ዝበሉ መሳርሒታትን ተጠቒምካ ዝስራሕ ቪአይፒ ኣገልግሎት።
-//                   </p>
-//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)</li>
-//                     <li className="flex items-center gap-2">✓ ክልተ ኤክስፐርት ካሜራማን</li>
-//                     <li className="flex items-center gap-2">✓ <b className="font-semibold text-[#dfb557]">Cinematic Color Grading</b> & VFX</li>
-//                     <li className="flex items-center gap-2 text-[#dfb557] font-medium">🎁 <b className="font-semibold">ቦናስ:</b> ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር</li>
-//                   </ul>
-//                 </div>
-//                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-//                   Select Premium
-//                 </button>
-//               </div>
-
-//               {/* 2. Gold Package */}
-//               <div className="bg-zinc-950 border-2 border-[#dfb557] p-6 sm:p-8 rounded-2xl shadow-2xl relative flex flex-col justify-between transition-transform hover:-translate-y-1">
-//                 <span className="absolute -top-3 right-6 bg-[#dfb557] text-black text-[9px] uppercase font-bold tracking-[0.3em] px-3 py-1 rounded-full shadow-md">
-//                   Top Tier
-//                 </span>
-//                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Exclusive</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Gold</h3>
-//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">300,000</p>
-                  
-//                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-//                     <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
-//                     <ul className="space-y-1 pl-1">
-//                       <li>• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• መዓልቲ መርዓ (5 ካሜራ: 4 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ኩሉ ሶፍት ኮፒ (All Soft Copy)</li>
-//                     </ul>
-//                   </div>
-
-//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ 800 ፎቶዎች (10×15)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ላሚኔትድ ፎቶ (30×90 & 30×60)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ሳይን ቦርድ (30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 3 ቦርድ (50×80, 40×60, 30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 400 ምስጋና ካርድ (Thank You Card)</li>
-//                     <li className="flex items-center gap-2">✓ 8 ዩኤስቢ ፍላሽ (64 GB)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ባነር</li>
-//                     <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
-//                   </ul>
-//                 </div>
-//                 <button className="w-full bg-[#dfb557] text-black py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 rounded-xl shadow-lg">
-//                   Select Gold
-//                 </button>
-//               </div>
-
-//               {/* 3. Silver Package */}
-//               <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
-//                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Advanced</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Silver</h3>
-//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">240,000</p>
-                  
-//                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-//                     <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
-//                     <ul className="space-y-1 pl-1">
-//                       <li>• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• መዓልቲ መርዓ (4 ካሜራ: 3 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)</li>
-//                     </ul>
-//                   </div>
-
-//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ 500 ፎቶዎች (10×15)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ላሚኔትድ ፎቶ (30×90 & 40×60)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ሳይን ቦርድ (30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ቦርድ (50×80 & 40×60)</li>
-//                     <li className="flex items-center gap-2">✓ 250 ምስጋና ካርድ (Thank You Card)</li>
-//                     <li className="flex items-center gap-2">✓ 6 ዩኤስቢ ፍላሽ (64 GB)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ባነር</li>
-//                     <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
-//                   </ul>
-//                 </div>
-//                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-//                   Select Silver
-//                 </button>
-//               </div>
-
-//               {/* 4. Standard Package */}
-//               <div className="bg-zinc-950/70 border-2 border-[#dfb557]/30 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col justify-between transition-transform hover:-translate-y-1">
-//                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-zinc-400">Standard</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Standard</h3>
-//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">190,000</p>
-                  
-//                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-//                     <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
-//                     <ul className="space-y-1 pl-1">
-//                       <li>• ስቱዲዮ / ኣብ መስክ (1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• መዓልቲ መርዓ (3 ካሜራ: 2 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ሓማውቲ (2 ካሜራ: 1 ፎቶ፣ 1 ቪድዮ)</li>
-//                     </ul>
-//                   </div>
-
-//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ 300 ፎቶዎች (10×15)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ላሚኔትድ ፎቶ (30×90)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ሳይን ቦርድ (30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ቦርድ (50×80)</li>
-//                     <li className="flex items-center gap-2">✓ 200 ምስጋና ካርድ (Thank You Card)</li>
-//                     <li className="flex items-center gap-2">✓ 4 ዩኤስቢ ፍላሽ (64 GB)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ባነር</li>
-//                     <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
-//                   </ul>
-//                 </div>
-//                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-//                   Select Standard
-//                 </button>
-//               </div>
-
-//             </div>
-//           </div>
-//         )}
-//       </div>
-
-//       <Footer />
-//     </div>
-//   );
-// }
-// // 
-// export default Price;
-
-// import React, { useState, useEffect } from 'react';
-// import Navbar from '../components/Navbar';
-// import Footer from '../components/Footer';
-
-// function Price() {
-//   const [isAuthenticated, setIsAuthenticated] = useState(false);
-//   const [isEditMode, setIsEditMode] = useState(false); // ሓድሽ ስቴት ንኤዲት ሞድ
-//   const [passcode, setPasscode] = useState('');
-//   const [error, setError] = useState(false);
-//   const [loading, setLoading] = useState(false);
-
-//   // ኣብ እዋን ሰቭ ዝግበር ዳታ (ንመርኣያ ዝኣክል ኣብ ስቴት ተታሒዙ ዘሎ)
-//   const [packages, setPackages] = useState({
-//     premium: { name: 'Premium', price: '$2,000+' },
-//     gold: { name: 'Gold', price: '300,000' },
-//     silver: { name: 'Silver', price: '240,000' },
-//     standard: { name: 'Standard', price: '190,000' },
-//   });
-
-//   useEffect(() => {
-//     const authData = localStorage.getItem('priceAuthData');
-//     if (authData) {
-//       const { expiry } = JSON.parse(authData);
-//       if (new Date().getTime() < expiry) {
-//         setIsAuthenticated(true);
-//       } else {
-//         localStorage.removeItem('priceAuthData');
-//         setIsAuthenticated(false);
-//       }
-//     }
-//   }, []);
-
-//   const handleLogin = async (e) => {
-//     e.preventDefault();
-//     setLoading(true);
-//     setError(false);
-
-//     try {
-//       const response = await fetch('https://habesha-film-production-server.onrender.com/api/auth/verify-passcode', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ passcode }),
-//       });
-
-//       const data = await response.json();
-
-//       if (response.ok && data.success) {
-//         setIsAuthenticated(true);
-//         const expiryDuration = 10 * 60 * 1000; 
-//         const authData = {
-//           value: 'true',
-//           expiry: new Date().getTime() + expiryDuration,
-//         };
-//         localStorage.setItem('priceAuthData', JSON.stringify(authData));
-//       } else {
-//         setError(true);
-//       }
-//     } catch (err) {
-//       console.error("Error verifying passcode:", err);
-//       setError(true);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   // መዓቀኒ ን ለውጢ ዋጋ ኣብ ኤዲት ሞድ
-//   const handlePriceChange = (key, newPrice) => {
-//     setPackages(prev => ({
-//       ...prev,
-//       [key]: { ...prev[key], price: newPrice }
-//     }));
-//   };
-
-//   // ቁልፊ ሰቭ ንምግባርን ናብ ስሩዕ እቲ ሓድሽ ገጽ ንምምላስን
-//   const handleSaveAndExit = () => {
-//     // ኣብዚ ንወገን ሰቨር ዝለኣኽ API ጻውዒት ከተእቱ ትኽእል ኢኻ
-//     setIsEditMode(false);
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-[#050505] text-zinc-100 font-sans selection:bg-[#dfb557]/30 selection:text-[#dfb557] overflow-x-hidden flex flex-col justify-between">
-//       <Navbar />
-
-//       <div className="flex-grow flex items-center justify-center px-4 py-32">
-//         {!isAuthenticated ? (
-//           <div className="bg-zinc-950 p-8 md:p-12 shadow-2xl border-2 border-[#dfb557]/40 rounded-2xl max-w-md w-full text-center relative">
-//             <span className="text-[9px] md:text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-2">
-//               Secure Access
-//             </span>
-//             <h2 className="text-2xl md:text-3xl font-serif mb-3 text-zinc-100">Protected Price Page</h2>
-//             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
-//             <p className="text-xs md:text-sm text-zinc-400 mb-6 font-light">
-//               እዚ ገጽ ብሚጢራዊ ፓስኮድ ዝተዓጸወ እዩ። በጃኹም ፓስኮድ ኣእትዉ።
-//             </p>
-            
-//             <form onSubmit={handleLogin} className="space-y-4 relative">
-//               <input 
-//                 type="password"
-//                 placeholder="Enter Passcode"
-//                 value={passcode}
-//                 onChange={(e) => setPasscode(e.target.value)}
-//                 className="w-full px-4 py-3 bg-zinc-900 border border-[#dfb557]/50 rounded-xl focus:outline-none focus:border-[#dfb557] text-center tracking-widest text-lg text-zinc-100 placeholder-zinc-500 shadow-inner"
-//               />
-//               <button 
-//                 type="submit"
-//                 disabled={loading}
-//                 className="w-full bg-[#dfb557] text-black py-3 uppercase text-xs font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 disabled:opacity-50 rounded-xl shadow-lg"
-//               >
-//                 {loading ? 'Checking...' : 'Submit'}
-//               </button>
-//               {error && <p className="text-red-400 text-xs mt-2 font-medium">ጌጋ ፓስኮድ! ደጊምካ ፈትን።</p>}
-
-//               {/* ኣብ ታሕተዋይ የማነ መኣዝን እትርከብ ናይ ኤዲት ሞድ መእተዊት ንእሽተይ መራኸቢ (Link/Button) */}
-//               <div className="flex justify-end mt-2">
-//                 <button
-//                   type="button"
-//                   onClick={() => setIsEditMode(true)}
-//                   className="text-[10px] text-zinc-500 hover:text-[#dfb557] transition-colors uppercase tracking-widest"
-//                 >
-//                   Edit Mode →
-//                 </button>
-//               </div>
-//             </form>
-//           </div>
-//         ) : isEditMode ? (
-//           // --- ኤዲት ሞድ (Edit Mode Interface) ---
-//           <div className="max-w-4xl mx-auto text-center px-4 py-12 w-full">
-//             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
-//               Administration Mode
-//             </span>
-//             <h1 className="text-3xl font-serif mb-4 text-zinc-100">Edit Packages & Prices</h1>
-//             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-8"></div>
-            
-//             <div className="bg-zinc-950 border border-[#dfb557]/40 p-6 md:p-8 rounded-2xl space-y-6 text-left shadow-2xl">
-//               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//                 <div>
-//                   <label className="text-xs text-[#dfb557] uppercase font-semibold block mb-2">Premium Price</label>
-//                   <input 
-//                     type="text" 
-//                     value={packages.premium.price} 
-//                     onChange={(e) => handlePriceChange('premium', e.target.value)}
-//                     className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 focus:border-[#dfb557] focus:outline-none"
-//                   />
-//                 </div>
-//                 <div>
-//                   <label className="text-xs text-[#dfb557] uppercase font-semibold block mb-2">Gold Price</label>
-//                   <input 
-//                     type="text" 
-//                     value={packages.gold.price} 
-//                     onChange={(e) => handlePriceChange('gold', e.target.value)}
-//                     className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 focus:border-[#dfb557] focus:outline-none"
-//                   />
-//                 </div>
-//                 <div>
-//                   <label className="text-xs text-[#dfb557] uppercase font-semibold block mb-2">Silver Price</label>
-//                   <input 
-//                     type="text" 
-//                     value={packages.silver.price} 
-//                     onChange={(e) => handlePriceChange('silver', e.target.value)}
-//                     className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 focus:border-[#dfb557] focus:outline-none"
-//                   />
-//                 </div>
-//                 <div>
-//                   <label className="text-xs text-[#dfb557] uppercase font-semibold block mb-2">Standard Price</label>
-//                   <input 
-//                     type="text" 
-//                     value={packages.standard.price} 
-//                     onChange={(e) => handlePriceChange('standard', e.target.value)}
-//                     className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 focus:border-[#dfb557] focus:outline-none"
-//                   />
-//                 </div>
-//               </div>
-
-//               <div className="flex justify-end gap-4 pt-4 border-t border-zinc-900">
-//                 <button 
-//                   onClick={() => setIsEditMode(false)}
-//                   className="px-6 py-3 bg-zinc-900 text-zinc-300 rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-zinc-800 transition-all"
-//                 >
-//                   Cancel
-//                 </button>
-//                 <button 
-//                   onClick={handleSaveAndExit}
-//                   className="px-6 py-3 bg-[#dfb557] text-black rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-[#c99f45] transition-all"
-//                 >
-//                   Save Changes
-//                 </button>
-//               </div>
-//             </div>
-//           </div>
-//         ) : (
-//           // --- ስሩዕ መርኣያ ዋጋታት (Normal Price View) ---
-//           <div className="max-w-7xl mx-auto text-center px-4 py-12">
-//             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
-//               Investment & Tiers
-//             </span>
-//             <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4 text-zinc-100">Our Professional Packages</h1>
-//             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
-//             <p className="text-zinc-400 text-sm md:text-base mb-16 max-w-2xl mx-auto font-light">
-//               ንመጻኢ ፕሮጀክትታትኩም ዝኸውን ዝተፈላለየ ሞያዊ ኣገልግሎታት። ካብቶም ደረጃታት እቲ ንደለይዎ ምረጹ።
-//             </p>
-            
-//             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-              
-//               {/* 1. Premium Package */}
-//               <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
-//                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Ultimate VIP</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Premium</h3>
-//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.premium.price}</p>
-//                   <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
-//                     ዝለዓለ ደረጃ ሞያዊ ክእለትን ብርክት ዝበሉ መሳርሒታትን ተጠቒምካ ዝስራሕ ቪአይፒ ኣገልግሎት።
-//                   </p>
-//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)</li>
-//                     <li className="flex items-center gap-2">✓ ክልተ ኤክስፐርት ካሜራማን</li>
-//                     <li className="flex items-center gap-2">✓ <b className="font-semibold text-[#dfb557]">Cinematic Color Grading</b> & VFX</li>
-//                     <li className="flex items-center gap-2 text-[#dfb557] font-medium">🎁 <b className="font-semibold">ቦናስ:</b> ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር</li>
-//                   </ul>
-//                 </div>
-//                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-//                   Select Premium
-//                 </button>
-//               </div>
-
-//               {/* 2. Gold Package */}
-//               <div className="bg-zinc-950 border-2 border-[#dfb557] p-6 sm:p-8 rounded-2xl shadow-2xl relative flex flex-col justify-between transition-transform hover:-translate-y-1">
-//                 <span className="absolute -top-3 right-6 bg-[#dfb557] text-black text-[9px] uppercase font-bold tracking-[0.3em] px-3 py-1 rounded-full shadow-md">
-//                   Top Tier
-//                 </span>
-//                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Exclusive</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Gold</h3>
-//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.gold.price}</p>
-                  
-//                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-//                     <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
-//                     <ul className="space-y-1 pl-1">
-//                       <li>• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• መዓልቲ መርዓ (5 ካሜራ: 4 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ኩሉ ሶፍት ኮፒ (All Soft Copy)</li>
-//                     </ul>
-//                   </div>
-
-//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ 800 ፎቶዎች (10×15)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ላሚኔትድ ፎቶ (30×90 & 30×60)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ሳይን ቦርድ (30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 3 ቦርድ (50×80, 40×60, 30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 400 ምስጋና ካርድ (Thank You Card)</li>
-//                     <li className="flex items-center gap-2">✓ 8 ዩኤስቢ ፍላሽ (64 GB)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ባነር</li>
-//                     <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
-//                   </ul>
-//                 </div>
-//                 <button className="w-full bg-[#dfb557] text-black py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 rounded-xl shadow-lg">
-//                   Select Gold
-//                 </button>
-//               </div>
-
-//               {/* 3. Silver Package */}
-//               <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
-//                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Advanced</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Silver</h3>
-//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.silver.price}</p>
-                  
-//                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-//                     <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
-//                     <ul className="space-y-1 pl-1">
-//                       <li>• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• መዓልቲ መርዓ (4 ካሜራ: 3 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)</li>
-//                     </ul>
-//                   </div>
-
-//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ 500 ፎቶዎች (10×15)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ላሚኔትድ ፎቶ (30×90 & 40×60)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ሳይን ቦርድ (30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ቦርድ (50×80 & 40×60)</li>
-//                     <li className="flex items-center gap-2">✓ 250 ምስጋና ካርድ (Thank You Card)</li>
-//                     <li className="flex items-center gap-2">✓ 6 ዩኤስቢ ፍላሽ (64 GB)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ባነር</li>
-//                     <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
-//                   </ul>
-//                 </div>
-//                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-//                   Select Silver
-//                 </button>
-//               </div>
-
-//               {/* 4. Standard Package */}
-//               <div className="bg-zinc-950/70 border-2 border-[#dfb557]/30 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col justify-between transition-transform hover:-translate-y-1">
-//                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-zinc-400">Standard</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Standard</h3>
-//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.standard.price}</p>
-                  
-//                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-//                     <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
-//                     <ul className="space-y-1 pl-1">
-//                       <li>• ስቱዲዮ / ኣብ መስክ (1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• መዓልቲ መርዓ (3 ካሜራ: 2 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ሓማውቲ (2 ካሜራ: 1 ፎቶ፣ 1 ቪድዮ)</li>
-//                     </ul>
-//                   </div>
-
-//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ 300 ፎቶዎች (10×15)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ላሚኔትድ ፎቶ (30×90)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ሳይን ቦርድ (30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ቦርድ (50×80)</li>
-//                     <li className="flex items-center gap-2">✓ 200 ምስጋና ካርድ (Thank You Card)</li>
-//                     <li className="flex items-center gap-2">✓ 4 ዩኤስቢ ፍላሽ (64 GB)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ባነር</li>
-//                     <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
-//                   </ul>
-//                 </div>
-//                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-//                   Select Standard
-//                 </button>
-//               </div>
-
-//             </div>
-//           </div>
-//         )}
-//       </div>
-
-//       <Footer />
-//     </div>
-//   );
-// }
-
-// export default Price;
-
-// import React, { useState, useEffect } from 'react';
-// import Navbar from '../components/Navbar';
-// import Footer from '../components/Footer';
-
-// function Price() {
-//   const [isAuthenticated, setIsAuthenticated] = useState(false);
-//   const [isEditMode, setIsEditMode] = useState(false); // ንኤዲት ሞድ ንምቁጽጻር
-//   const [passcode, setPasscode] = useState('');
-//   const [error, setError] = useState(false);
-//   const [loading, setLoading] = useState(false);
-
-//   // ዋጋታት ንምምሕዳር ዝሕግዝ ስቴት
-//   const [packages, setPackages] = useState({
-//     premium: { name: 'Premium', price: '$2,000+' },
-//     gold: { name: 'Gold', price: '300,000' },
-//     silver: { name: 'Silver', price: '240,000' },
-//     standard: { name: 'Standard', price: '190,000' },
-//   });
-
-//   useEffect(() => {
-//     const authData = localStorage.getItem('priceAuthData');
-//     if (authData) {
-//       const { expiry } = JSON.parse(authData);
-//       if (new Date().getTime() < expiry) {
-//         setIsAuthenticated(true);
-//       } else {
-//         localStorage.removeItem('priceAuthData');
-//         setIsAuthenticated(false);
-//       }
-//     }
-//   }, []);
-
-//   const handleLogin = async (e) => {
-//     e.preventDefault();
-//     setLoading(true);
-//     setError(false);
-
-//     try {
-//       const response = await fetch('https://habesha-film-production-server.onrender.com/api/auth/verify-passcode', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ passcode }),
-//       });
-
-//       const data = await response.json();
-
-//       if (response.ok && data.success) {
-//         setIsAuthenticated(true);
-//         const expiryDuration = 10 * 60 * 1000; 
-//         const authData = {
-//           value: 'true',
-//           expiry: new Date().getTime() + expiryDuration,
-//         };
-//         localStorage.setItem('priceAuthData', JSON.stringify(authData));
-//       } else {
-//         setError(true);
-//       }
-//     } catch (err) {
-//       console.error("Error verifying passcode:", err);
-//       setError(true);
-//     } finally {
-//       setLoading(false);
-//     }
-//   };
-
-//   const handlePriceChange = (key, newPrice) => {
-//     setPackages(prev => ({
-//       ...prev,
-//       [key]: { ...prev[key], price: newPrice }
-//     }));
-//   };
-
-//   const handleSaveAndExit = () => {
-//     // ኣብዚ ንሰቨር ዳታ ንምልኣክ ክትክእል ኢኻ
-//     setIsEditMode(false);
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-[#050505] text-zinc-100 font-sans selection:bg-[#dfb557]/30 selection:text-[#dfb557] overflow-x-hidden flex flex-col justify-between">
-//       <Navbar />
-
-//       <div className="flex-grow flex items-center justify-center px-4 py-32">
-//         {!isAuthenticated ? (
-//           <div className="bg-zinc-950 p-8 md:p-12 shadow-2xl border-2 border-[#dfb557]/40 rounded-2xl max-w-md w-full text-center relative">
-//             <span className="text-[9px] md:text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-2">
-//               Secure Access
-//             </span>
-//             <h2 className="text-2xl md:text-3xl font-serif mb-3 text-zinc-100">Protected Price Page</h2>
-//             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
-//             <p className="text-xs md:text-sm text-zinc-400 mb-6 font-light">
-//               እዚ ገጽ ብሚጢራዊ ፓስኮድ ዝተዓጸወ እዩ። በጃኹም ፓስኮድ ኣእትዉ።
-//             </p>
-            
-//             <form onSubmit={handleLogin} className="space-y-4">
-//               <input 
-//                 type="password"
-//                 placeholder="Enter Passcode"
-//                 value={passcode}
-//                 onChange={(e) => setPasscode(e.target.value)}
-//                 className="w-full px-4 py-3 bg-zinc-900 border border-[#dfb557]/50 rounded-xl focus:outline-none focus:border-[#dfb557] text-center tracking-widest text-lg text-zinc-100 placeholder-zinc-500 shadow-inner"
-//               />
-//               <button 
-//                 type="submit"
-//                 disabled={loading}
-//                 className="w-full bg-[#dfb557] text-black py-3 uppercase text-xs font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 disabled:opacity-50 rounded-xl shadow-lg"
-//               >
-//                 {loading ? 'Checking...' : 'Submit'}
-//               </button>
-//               {error && <p className="text-red-400 text-xs mt-2 font-medium">ጌጋ ፓስኮድ! ደጊምካ ፈትን።</p>}
-//             </form>
-
-//             {/* ኣብ ታሕተዋይ የማነ መኣዝን ዘሎ ናይ ክሊክ/ታች ቁልፊ */}
-//             <div className="flex justify-end mt-4">
-//               <button
-//                 type="button"
-//                 onClick={() => setIsEditMode(true)}
-//                 className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 hover:text-[#dfb557] rounded-lg text-[10px] uppercase font-semibold tracking-widest transition-all shadow-md"
-//               >
-//                 Edit Mode ⚙️
-//               </button>
-//             </div>
-//           </div>
-//         ) : isEditMode ? (
-//           // --- ኤዲት ሞድ (Edit Mode Interface) ---
-//           <div className="max-w-4xl mx-auto text-center px-4 py-12 w-full">
-//             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
-//               Administration Mode
-//             </span>
-//             <h1 className="text-3xl font-serif mb-4 text-zinc-100">Edit Packages & Prices</h1>
-//             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-8"></div>
-            
-//             <div className="bg-zinc-950 border border-[#dfb557]/40 p-6 md:p-8 rounded-2xl space-y-6 text-left shadow-2xl">
-//               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//                 <div>
-//                   <label className="text-xs text-[#dfb557] uppercase font-semibold block mb-2">Premium Price</label>
-//                   <input 
-//                     type="text" 
-//                     value={packages.premium.price} 
-//                     onChange={(e) => handlePriceChange('premium', e.target.value)}
-//                     className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 focus:border-[#dfb557] focus:outline-none"
-//                   />
-//                 </div>
-//                 <div>
-//                   <label className="text-xs text-[#dfb557] uppercase font-semibold block mb-2">Gold Price</label>
-//                   <input 
-//                     type="text" 
-//                     value={packages.gold.price} 
-//                     onChange={(e) => handlePriceChange('gold', e.target.value)}
-//                     className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 focus:border-[#dfb557] focus:outline-none"
-//                   />
-//                 </div>
-//                 <div>
-//                   <label className="text-xs text-[#dfb557] uppercase font-semibold block mb-2">Silver Price</label>
-//                   <input 
-//                     type="text" 
-//                     value={packages.silver.price} 
-//                     onChange={(e) => handlePriceChange('silver', e.target.value)}
-//                     className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 focus:border-[#dfb557] focus:outline-none"
-//                   />
-//                 </div>
-//                 <div>
-//                   <label className="text-xs text-[#dfb557] uppercase font-semibold block mb-2">Standard Price</label>
-//                   <input 
-//                     type="text" 
-//                     value={packages.standard.price} 
-//                     onChange={(e) => handlePriceChange('standard', e.target.value)}
-//                     className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 focus:border-[#dfb557] focus:outline-none"
-//                   />
-//                 </div>
-//               </div>
-
-//               <div className="flex justify-end gap-4 pt-4 border-t border-zinc-900">
-//                 <button 
-//                   onClick={() => setIsEditMode(false)}
-//                   className="px-6 py-3 bg-zinc-900 text-zinc-300 rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-zinc-800 transition-all"
-//                 >
-//                   Cancel
-//                 </button>
-//                 <button 
-//                   onClick={handleSaveAndExit}
-//                   className="px-6 py-3 bg-[#dfb557] text-black rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-[#c99f45] transition-all"
-//                 >
-//                   Save Changes
-//                 </button>
-//               </div>
-//             </div>
-//           </div>
-//         ) : (
-//           // --- ስሩዕ መርኣያ ዋጋታት (Normal Price View) ---
-//           <div className="max-w-7xl mx-auto text-center px-4 py-12">
-//             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
-//               Investment & Tiers
-//             </span>
-//             <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4 text-zinc-100">Our Professional Packages</h1>
-//             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
-//             <p className="text-zinc-400 text-sm md:text-base mb-16 max-w-2xl mx-auto font-light">
-//               ንመጻኢ ፕሮጀክትታትኩም ዝኸውን ዝተፈላለየ ሞያዊ ኣገልግሎታት። ካብቶም ደረጃታት እቲ ንደለይዎ ምረጹ።
-//             </p>
-            
-//             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-              
-//               {/* 1. Premium Package */}
-//               <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
-//                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Ultimate VIP</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Premium</h3>
-//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.premium.price}</p>
-//                   <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
-//                     ዝለዓለ ደረጃ ሞያዊ ክእለትን ብርክት ዝበሉ መሳርሒታትን ተጠቒምካ ዝስራሕ ቪአይፒ ኣገልግሎት።
-//                   </p>
-//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)</li>
-//                     <li className="flex items-center gap-2">✓ ክልተ ኤክስፐርት ካሜራማን</li>
-//                     <li className="flex items-center gap-2">✓ <b className="font-semibold text-[#dfb557]">Cinematic Color Grading</b> & VFX</li>
-//                     <li className="flex items-center gap-2 text-[#dfb557] font-medium">🎁 <b className="font-semibold">ቦናስ:</b> ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር</li>
-//                   </ul>
-//                 </div>
-//                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-//                   Select Premium
-//                 </button>
-//               </div>
-
-//               {/* 2. Gold Package */}
-//               <div className="bg-zinc-950 border-2 border-[#dfb557] p-6 sm:p-8 rounded-2xl shadow-2xl relative flex flex-col justify-between transition-transform hover:-translate-y-1">
-//                 <span className="absolute -top-3 right-6 bg-[#dfb557] text-black text-[9px] uppercase font-bold tracking-[0.3em] px-3 py-1 rounded-full shadow-md">
-//                   Top Tier
-//                 </span>
-//                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Exclusive</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Gold</h3>
-//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.gold.price}</p>
-                  
-//                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-//                     <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
-//                     <ul className="space-y-1 pl-1">
-//                       <li>• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• መዓልቲ መርዓ (5 ካሜራ: 4 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ኩሉ ሶፍት ኮፒ (All Soft Copy)</li>
-//                     </ul>
-//                   </div>
-
-//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ 800 ፎቶዎች (10×15)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ላሚኔትድ ፎቶ (30×90 & 30×60)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ሳይን ቦርድ (30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 3 ቦርድ (50×80, 40×60, 30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 400 ምስጋና ካርድ (Thank You Card)</li>
-//                     <li className="flex items-center gap-2">✓ 8 ዩኤስቢ ፍላሽ (64 GB)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ባነር</li>
-//                     <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
-//                   </ul>
-//                 </div>
-//                 <button className="w-full bg-[#dfb557] text-black py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 rounded-xl shadow-lg">
-//                   Select Gold
-//                 </button>
-//               </div>
-
-//               {/* 3. Silver Package */}
-//               <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
-//                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Advanced</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Silver</h3>
-//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.silver.price}</p>
-                  
-//                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-//                     <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
-//                     <ul className="space-y-1 pl-1">
-//                       <li>• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• መዓልቲ መርዓ (4 ካሜራ: 3 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)</li>
-//                     </ul>
-//                   </div>
-
-//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ 500 ፎቶዎች (10×15)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ላሚኔትድ ፎቶ (30×90 & 40×60)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ሳይን ቦርድ (30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ቦርድ (50×80 & 40×60)</li>
-//                     <li className="flex items-center gap-2">✓ 250 ምስጋና ካርድ (Thank You Card)</li>
-//                     <li className="flex items-center gap-2">✓ 6 ዩኤስቢ ፍላሽ (64 GB)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ባነር</li>
-//                     <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
-//                   </ul>
-//                 </div>
-//                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-//                   Select Silver
-//                 </button>
-//               </div>
-
-//               {/* 4. Standard Package */}
-//               <div className="bg-zinc-950/70 border-2 border-[#dfb557]/30 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col justify-between transition-transform hover:-translate-y-1">
-//                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-zinc-400">Standard</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Standard</h3>
-//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.standard.price}</p>
-                  
-//                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-//                     <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
-//                     <ul className="space-y-1 pl-1">
-//                       <li>• ስቱዲዮ / ኣብ መስክ (1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• መዓልቲ መርዓ (3 ካሜራ: 2 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ሓማውቲ (2 ካሜራ: 1 ፎቶ፣ 1 ቪድዮ)</li>
-//                     </ul>
-//                   </div>
-
-//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ 300 ፎቶዎች (10×15)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ላሚኔትድ ፎቶ (30×90)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ሳይን ቦርድ (30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ቦርድ (50×80)</li>
-//                     <li className="flex items-center gap-2">✓ 200 ምስጋና ካርድ (Thank You Card)</li>
-//                     <li className="flex items-center gap-2">✓ 4 ዩኤስቢ ፍላሽ (64 GB)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ባነር</li>
-//                     <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
-//                   </ul>
-//                 </div>
-//                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-//                   Select Standard
-//                 </button>
-//               </div>
-
-//             </div>
-//           </div>
-//         )}
-//       </div>
-
-//       <Footer />
-//     </div>
-//   );
-// }
-
-// export default Price;
-
-// import React, { useState, useEffect } from 'react';
-// import Navbar from '../components/Navbar';
-// import Footer from '../components/Footer';
-
-// function Price() {
-//   const [isAuthenticated, setIsAuthenticated] = useState(false);
-//   const [isEditMode, setIsEditMode] = useState(false); // ንኤዲት ሞድ ንምቁጽጻር
-//   const [passcode, setPasscode] = useState('');
-//   const [error, setError] = useState(false);
-//   const [loading, setLoading] = useState(false);
-
-//   // ሓድሽ ዝተወሰኸ፡ ንኤዲት ሞድ ዝሕሉ ኣድሚን ፓስኮድ
 //   const [adminPasscode, setAdminPasscode] = useState('');
 //   const [isEditGateOpen, setIsEditGateOpen] = useState(false);
 //   const [adminError, setAdminError] = useState(false);
 
-//   // ዋጋታት ንምምሕዳር ዝሕግዝ ስቴት
-//   const [packages, setPackages] = useState({
-//     premium: { name: 'Premium', price: '$2,000+' },
-//     gold: { name: 'Gold', price: '300,000' },
-//     silver: { name: 'Silver', price: '240,000' },
-//     standard: { name: 'Standard', price: '190,000' },
-//   });
-
-//   // ግዝላዊ ንምእታው ዝሕግዝ ስቴት (እቲ ሓድሽ ዋጋ ክሳብ ዝቐመጥ)
-//   const [tempPackages, setTempPackages] = useState(packages);
-
-//   useEffect(() => {
-//     const authData = localStorage.getItem('priceAuthData');
-//     if (authData) {
-//       const { expiry } = JSON.parse(authData);
-//       if (new Date().getTime() < expiry) {
-//         setIsAuthenticated(true);
-//       } else {
-//         localStorage.removeItem('priceAuthData');
-//         setIsAuthenticated(false);
-//       }
-//     }
-//   }, []);
-
-//   const handleLogin = async (e) => {
-//     e.preventDefault();
-//     setLoading(true);
-//     setError(false);
-
-//     try {
-//       const response = await fetch('https://habesha-film-production-server.onrender.com/api/auth/verify-passcode', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify({ passcode }),
-//       });
-
-//       const data = await response.json();
-
-//       if (response.ok && data.success) {
-//         setIsAuthenticated(true);
-//         const expiryDuration = 10 * 60 * 1000; 
-//         const authData = {
-//           value: 'true',
-//           expiry: new Date().getTime() + expiryDuration,
-//         };
-//         localStorage.setItem('priceAuthData', JSON.stringify(authData));
-//       } else {
-//         setError(true);
-//       }
-//     } catch (err) {
-//       console.error("Error verifying passcode:", err);
-//       setError(true);
-//     } finally {
-//       setLoading(false);
-//     }
+//   const defaultPackages = {
+//     premium: { 
+//       tier: 'Ultimate VIP', 
+//       name: 'Premium', 
+//       price: '$1,000+', 
+//       desc: 'ዝለዓለ ደረጃ ሞያዊ ክእለትን ብርክት ዝበሉ መሳርሒታትን ተጠቒምካ ዝስራሕ ቪአይፒ ኣገልግሎት።', 
+//       services: [], 
+//       features: [
+//         '✓ ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)',
+//         '✓ ክልተ ኤክስፐርት ካሜራማን',
+//         '✓ Cinematic Color Grading & VFX',
+//         '🎁 ቦናስ: ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር'
+//       ] 
+//     },
+//     gold: { 
+//       tier: 'Top Tier', 
+//       name: 'Gold', 
+//       price: '300,000', 
+//       desc: '', 
+//       services: [
+//         '• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+//         '• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+//         '• መዓልቲ መርዓ (5 ካሜራ: 4 ቪድዮ፣ 1 ፎቶ)',
+//         '• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)',
+//         '• ኩሉ ሶፍት ኮፒ (All Soft Copy)'
+//       ], 
+//       features: [
+//         '✓ 800 ፎቶዎች (10×15)',
+//         '✓ 2 ላሚኔትድ ፎቶ (30×90 & 30×60)',
+//         '✓ 2 ሳይን ቦርድ (30×45)',
+//         '✓ 3 ቦርድ (50×80, 40×60, 30×45)',
+//         '✓ 400 ምስጋና ካርድ (Thank You Card)',
+//         '✓ 8 ዩኤስቢ ፍላሽ (64 GB)',
+//         '✓ 2 ባነር',
+//         '✓ 2 ራማ / ቆብዕ (Cap)'
+//       ] 
+//     },
+//     silver: { 
+//       tier: 'Advanced', 
+//       name: 'Silver', 
+//       price: '240,000', 
+//       desc: '', 
+//       services: [
+//         '• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+//         '• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+//         '• መዓልቲ መርዓ (4 ካሜራ: 3 ቪድዮ፣ 1 ፎቶ)',
+//         '• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)'
+//       ], 
+//       features: [
+//         '✓ 500 ፎቶዎች (10×15)',
+//         '✓ 2 ላሚኔትድ ፎቶ (30×90 & 40×60)',
+//         '✓ 1 ሳይን ቦርድ (30×45)',
+//         '✓ 2 ቦርድ (50×80 & 40×60)',
+//         '✓ 250 ምስጋና ካርድ (Thank You Card)',
+//         '✓ 6 ዩኤስቢ ፍላሽ (64 GB)',
+//         '✓ 2 ባነር',
+//         '✓ 2 ራማ / ቆብዕ (Cap)'
+//       ] 
+//     },
+//     standard: { 
+//       tier: 'Standard', 
+//       name: 'Standard', 
+//       price: '190,000', 
+//       desc: '', 
+//       services: [
+//         '• ስቱዲዮ / ኣብ መስክ (1 ቪድዮ፣ 1 ፎቶ)',
+//         '• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+//         '• መዓልቲ መርዓ (3 ካሜራ: 2 ቪድዮ፣ 1 ፎቶ)',
+//         '• ሓማውቲ (2 ካሜራ: 1 ፎቶ፣ 1 ቪድዮ)'
+//       ], 
+//       features: [
+//         '✓ 300 ፎቶዎች (10×15)',
+//         '✓ 1 ላሚኔትድ ፎቶ (30×90)',
+//         '✓ 1 ሳይን ቦርድ (30×45)',
+//         '✓ 1 ቦርድ (50×80)',
+//         '✓ 200 ምስጋና ካርድ (Thank You Card)',
+//         '✓ 4 ዩኤስቢ ፍላሽ (64 GB)',
+//         '✓ 2 ባነር',
+//         '✓ 2 ራማ / ቆብዕ (Cap)'
+//       ] 
+//     },
 //   };
 
-//   // ናይ ኣድሚን ፓስኮድ መፍትሒ ፊርማ (Function)
-//   const handleEditGateSubmit = (e) => {
-//     e.preventDefault();
-//     // ኣብዚ ንምፍታን 'ADMIN2026' ተጠቒምና ኣለና (ደልዩካዮ ናብ ዝደለኻዮ ክትቅይሮ ትኽእል ኢኻ)
-//     if (adminPasscode === 'ADMIN2026') { 
-//       setIsEditGateOpen(true);
-//       setIsEditMode(true);
-//       setAdminError(false);
-//       setAdminPasscode('');
-//     } else {
-//       setAdminError(true);
-//     }
-//   };
-
-//   const handlePriceChange = (key, newPrice) => {
-//     setTempPackages(prev => ({
-//       ...prev,
-//       [key]: { ...prev[key], price: newPrice }
-//     }));
-//   };
-
-//   const handleSaveAndExit = () => {
-//     // እቲ ኤዲት ዝተገብረሉ ዋጋ ናብቲ ቀንዲ ስቴት ነሰጋገሮ
-//     setPackages(tempPackages);
-//     setIsEditMode(false);
-//     setIsEditGateOpen(false);
-//   };
-
-//   const handleCancelEdit = () => {
-//     // ከنسል ምስ ዝግበር ናብቲ ዝነበሮ ንምምላስ
-//     setTempPackages(packages);
-//     setIsEditMode(false);
-//     setIsEditGateOpen(false);
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-[#050505] text-zinc-100 font-sans selection:bg-[#dfb557]/30 selection:text-[#dfb557] overflow-x-hidden flex flex-col justify-between">
-//       <Navbar />
-
-//       <div className="flex-grow flex items-center justify-center px-4 py-32">
-//         {!isAuthenticated ? (
-//           <div className="bg-zinc-950 p-8 md:p-12 shadow-2xl border-2 border-[#dfb557]/40 rounded-2xl max-w-md w-full text-center relative">
-//             <span className="text-[9px] md:text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-2">
-//               Secure Access
-//             </span>
-//             <h2 className="text-2xl md:text-3xl font-serif mb-3 text-zinc-100">Protected Price Page</h2>
-//             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
-//             <p className="text-xs md:text-sm text-zinc-400 mb-6 font-light">
-//               እዚ ገጽ ብሚጢራዊ ፓስኮድ ዝተዓጸወ እዩ። በጃኹም ፓስኮድ ኣእትዉ።
-//             </p>
-            
-//             <form onSubmit={handleLogin} className="space-y-4">
-//               <input 
-//                 type="password"
-//                 placeholder="Enter Passcode"
-//                 value={passcode}
-//                 onChange={(e) => setPasscode(e.target.value)}
-//                 className="w-full px-4 py-3 bg-zinc-900 border border-[#dfb557]/50 rounded-xl focus:outline-none focus:border-[#dfb557] text-center tracking-widest text-lg text-zinc-100 placeholder-zinc-500 shadow-inner"
-//               />
-//               <button 
-//                 type="submit"
-//                 disabled={loading}
-//                 className="w-full bg-[#dfb557] text-black py-3 uppercase text-xs font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 disabled:opacity-50 rounded-xl shadow-lg"
-//               >
-//                 {loading ? 'Checking...' : 'Submit'}
-//               </button>
-//               {error && <p className="text-red-400 text-xs mt-2 font-medium">ጌጋ ፓስኮድ! ደጊምካ ፈትን።</p>}
-//             </form>
-//           </div>
-//         ) : isEditMode ? (
-//           // --- ኤዲት ሞድ (Edit Mode Interface) ---
-//           <div className="max-w-4xl mx-auto text-center px-4 py-12 w-full">
-//             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
-//               Administration Mode
-//             </span>
-//             <h1 className="text-3xl font-serif mb-4 text-zinc-100">Edit Packages & Prices</h1>
-//             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-8"></div>
-            
-//             <div className="bg-zinc-950 border border-[#dfb557]/40 p-6 md:p-8 rounded-2xl space-y-6 text-left shadow-2xl">
-//               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//                 <div>
-//                   <label className="text-xs text-[#dfb557] uppercase font-semibold block mb-2">Premium Price</label>
-//                   <input 
-//                     type="text" 
-//                     value={tempPackages.premium.price} 
-//                     onChange={(e) => handlePriceChange('premium', e.target.value)}
-//                     className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 focus:border-[#dfb557] focus:outline-none"
-//                   />
-//                 </div>
-//                 <div>
-//                   <label className="text-xs text-[#dfb557] uppercase font-semibold block mb-2">Gold Price</label>
-//                   <input 
-//                     type="text" 
-//                     value={tempPackages.gold.price} 
-//                     onChange={(e) => handlePriceChange('gold', e.target.value)}
-//                     className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 focus:border-[#dfb557] focus:outline-none"
-//                   />
-//                 </div>
-//                 <div>
-//                   <label className="text-xs text-[#dfb557] uppercase font-semibold block mb-2">Silver Price</label>
-//                   <input 
-//                     type="text" 
-//                     value={tempPackages.silver.price} 
-//                     onChange={(e) => handlePriceChange('silver', e.target.value)}
-//                     className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 focus:border-[#dfb557] focus:outline-none"
-//                   />
-//                 </div>
-//                 <div>
-//                   <label className="text-xs text-[#dfb557] uppercase font-semibold block mb-2">Standard Price</label>
-//                   <input 
-//                     type="text" 
-//                     value={tempPackages.standard.price} 
-//                     onChange={(e) => handlePriceChange('standard', e.target.value)}
-//                     className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 focus:border-[#dfb557] focus:outline-none"
-//                   />
-//                 </div>
-//               </div>
-
-//               <div className="flex justify-end gap-4 pt-4 border-t border-zinc-900">
-//                 <button 
-//                   onClick={handleCancelEdit}
-//                   className="px-6 py-3 bg-zinc-900 text-zinc-300 rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-zinc-800 transition-all"
-//                 >
-//                   Cancel
-//                 </button>
-//                 <button 
-//                   onClick={handleSaveAndExit}
-//                   className="px-6 py-3 bg-[#dfb557] text-black rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-[#c99f45] transition-all"
-//                 >
-//                   Save Changes
-//                 </button>
-//               </div>
-//             </div>
-//           </div>
-//         ) : (
-//           // --- ስሩዕ መርኣያ ዋጋታት (Normal Price View) ---
-//           <div className="max-w-7xl mx-auto text-center px-4 py-12 w-full">
-//             {/* Edit Mode Gate (ኣድሚን ፓስኮድ መእተዊ ኢንፑት) */}
-//             <div className="flex justify-end mb-4">
-//               {!isEditGateOpen ? (
-//                 <div className="flex flex-col items-end">
-//                   <div className="flex items-center gap-2 bg-zinc-900 p-2 rounded-xl border border-[#dfb557]/40 shadow-lg">
-//                     <input 
-//                       type="password"
-//                       placeholder="Admin Code"
-//                       value={adminPasscode}
-//                       onChange={(e) => setAdminPasscode(e.target.value)}
-//                       className="bg-transparent text-zinc-100 text-xs px-2 focus:outline-none w-28"
-//                     />
-//                     <button
-//                       onClick={handleEditGateSubmit}
-//                       className="px-3 py-1.5 bg-[#dfb557] text-black rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-[#c99f45] transition-all"
-//                     >
-//                       Unlock
-//                     </button>
-//                   </div>
-//                   {adminError && <p className="text-red-400 text-[10px] mt-1 font-medium">Wrong Admin Code!</p>}
-//                 </div>
-//               ) : (
-//                 <button
-//                   onClick={() => setIsEditMode(true)}
-//                   className="px-4 py-2 bg-[#dfb557] text-black rounded-xl text-xs uppercase font-semibold tracking-widest shadow-md hover:bg-[#c99f45] transition-all"
-//                 >
-//                   Enter Edit Mode ⚙️
-//                 </button>
-//               )}
-//             </div>
-
-//             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
-//               Investment & Tiers
-//             </span>
-//             <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4 text-zinc-100">Our Professional Packages</h1>
-//             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
-//             <p className="text-zinc-400 text-sm md:text-base mb-16 max-w-2xl mx-auto font-light">
-//               ንመጻኢ ፕሮጀክትታትኩም ዝኸውን ዝተፈላለየ ሞያዊ ኣገልግሎታት። ካብቶም ደረጃታት እቲ ንደለይዎ ምረጹ።
-//             </p>
-            
-//             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-              
-//               {/* 1. Premium Package */}
-//               <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
-//                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Ultimate VIP</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Premium</h3>
-//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.premium.price}</p>
-//                   <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
-//                     ዝለዓለ ደረጃ ሞያዊ ክእለትን ብርክት ዝበሉ መሳርሒታትን ተጠቒምካ ዝስራሕ ቪአይፒ ኣገልግሎት።
-//                   </p>
-//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)</li>
-//                     <li className="flex items-center gap-2">✓ ክልተ ኤክስፐርት ካሜራማን</li>
-//                     <li className="flex items-center gap-2">✓ <b className="font-semibold text-[#dfb557]">Cinematic Color Grading</b> & VFX</li>
-//                     <li className="flex items-center gap-2 text-[#dfb557] font-medium">🎁 <b className="font-semibold">ቦናስ:</b> ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር</li>
-//                   </ul>
-//                 </div>
-//                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-//                   Select Premium
-//                 </button>
-//               </div>
-
-//               {/* 2. Gold Package */}
-//               <div className="bg-zinc-950 border-2 border-[#dfb557] p-6 sm:p-8 rounded-2xl shadow-2xl relative flex flex-col justify-between transition-transform hover:-translate-y-1">
-//                 <span className="absolute -top-3 right-6 bg-[#dfb557] text-black text-[9px] uppercase font-bold tracking-[0.3em] px-3 py-1 rounded-full shadow-md">
-//                   Top Tier
-//                 </span>
-//                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Exclusive</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Gold</h3>
-//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.gold.price}</p>
-                  
-//                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-//                     <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
-//                     <ul className="space-y-1 pl-1">
-//                       <li>• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• መዓልቲ መርዓ (5 ካሜራ: 4 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ኩሉ ሶፍት ኮፒ (All Soft Copy)</li>
-//                     </ul>
-//                   </div>
-
-//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ 800 ፎቶዎች (10×15)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ላሚኔትድ ፎቶ (30×90 & 30×60)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ሳይን ቦርድ (30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 3 ቦርድ (50×80, 40×60, 30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 400 ምስጋና ካርድ (Thank You Card)</li>
-//                     <li className="flex items-center gap-2">✓ 8 ዩኤስቢ ፍላሽ (64 GB)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ባነር</li>
-//                     <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
-//                   </ul>
-//                 </div>
-//                 <button className="w-full bg-[#dfb557] text-black py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 rounded-xl shadow-lg">
-//                   Select Gold
-//                 </button>
-//               </div>
-
-//               {/* 3. Silver Package */}
-//               <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
-//                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Advanced</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Silver</h3>
-//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.silver.price}</p>
-                  
-//                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-//                     <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
-//                     <ul className="space-y-1 pl-1">
-//                       <li>• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• መዓልቲ መርዓ (4 ካሜራ: 3 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)</li>
-//                     </ul>
-//                   </div>
-
-//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ 500 ፎቶዎች (10×15)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ላሚኔትድ ፎቶ (30×90 & 40×60)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ሳይን ቦርድ (30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ቦርድ (50×80 & 40×60)</li>
-//                     <li className="flex items-center gap-2">✓ 250 ምስጋና ካርድ (Thank You Card)</li>
-//                     <li className="flex items-center gap-2">✓ 6 ዩኤስቢ ፍላሽ (64 GB)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ባነር</li>
-//                     <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
-//                   </ul>
-//                 </div>
-//                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-//                   Select Silver
-//                 </button>
-//               </div>
-
-//               {/* 4. Standard Package */}
-//               <div className="bg-zinc-950/70 border-2 border-[#dfb557]/30 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col justify-between transition-transform hover:-translate-y-1">
-//                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-zinc-400">Standard</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Standard</h3>
-//                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.standard.price}</p>
-                  
-//                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-//                     <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
-//                     <ul className="space-y-1 pl-1">
-//                       <li>• ስቱዲዮ / ኣብ መስክ (1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• መዓልቲ መርዓ (3 ካሜራ: 2 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ሓማውቲ (2 ካሜራ: 1 ፎቶ፣ 1 ቪድዮ)</li>
-//                     </ul>
-//                   </div>
-
-//                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ 300 ፎቶዎች (10×15)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ላሚኔትድ ፎቶ (30×90)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ሳይን ቦርድ (30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ቦርድ (50×80)</li>
-//                     <li className="flex items-center gap-2">✓ 200 ምስጋና ካርድ (Thank You Card)</li>
-//                     <li className="flex items-center gap-2">✓ 4 ዩኤስቢ ፍላሽ (64 GB)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ባነር</li>
-//                     <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
-//                   </ul>
-//                 </div>
-//                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-//                   Select Standard
-//                 </button>
-//               </div>
-
-//             </div>
-//           </div>
-//         )}
-//       </div>
-
-//       <Footer />
-//     </div>
-//   );
-// }
-
-// export default Price;
-
-
-// import React, { useState, useEffect } from 'react';
-// import Navbar from '../components/Navbar';
-// import Footer from '../components/Footer';
-
-// function Price() {
-//   const [isAuthenticated, setIsAuthenticated] = useState(false);
-//   const [isEditMode, setIsEditMode] = useState(false); // ንኤዲት ሞድ ንምቁጽጻር
-//   const [passcode, setPasscode] = useState('');
-//   const [error, setError] = useState(false);
-//   const [loading, setLoading] = useState(false);
-
-//   // ናይ ኣድሚን ፓስኮድ መፍትሒ ፊርማ
-//   const [adminPasscode, setAdminPasscode] = useState('');
-//   const [isEditGateOpen, setIsEditGateOpen] = useState(false);
-//   const [adminError, setAdminError] = useState(false);
-
-//   // ዋጋታት ንምምሕዳር ዝሕግዝ ስቴት (ካብ localStorage ክዕቀብ ንምግባር)
 //   const [packages, setPackages] = useState(() => {
-//     const savedPackages = localStorage.getItem('habeshaFilmPackages');
-//     if (savedPackages) {
+//     const saved = localStorage.getItem('habeshaFilmPackages');
+//     if (saved) {
 //       try {
-//         return JSON.parse(savedPackages);
+//         const parsed = JSON.parse(saved);
+//         // Merge with default to ensure all keys (like services/features) exist
+//         return {
+//           premium: { ...defaultPackages.premium, ...parsed.premium },
+//           gold: { ...defaultPackages.gold, ...parsed.gold },
+//           silver: { ...defaultPackages.silver, ...parsed.silver },
+//           standard: { ...defaultPackages.standard, ...parsed.standard },
+//         };
 //       } catch (e) {
 //         console.error("Error parsing saved packages:", e);
 //       }
 //     }
-//     return {
-//       premium: { name: 'Premium', price: '$2,000+' },
-//       gold: { name: 'Gold', price: '300,000' },
-//       silver: { name: 'Silver', price: '240,000' },
-//       standard: { name: 'Standard', price: '190,000' },
-//     };
+//     return defaultPackages;
 //   });
 
-//   // ግዝላዊ ንምእታው ዝሕግዝ ስቴት (እቲ ሓድሽ ዋጋ ክሳብ ዝቐመጥ)
 //   const [tempPackages, setTempPackages] = useState(packages);
 
 //   useEffect(() => {
@@ -1370,9 +139,7 @@
 //     try {
 //       const response = await fetch('https://habesha-film-production-server.onrender.com/api/auth/verify-passcode', {
 //         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json',
-//         },
+//         headers: { 'Content-Type': 'application/json' },
 //         body: JSON.stringify({ passcode }),
 //       });
 
@@ -1381,10 +148,7 @@
 //       if (response.ok && data.success) {
 //         setIsAuthenticated(true);
 //         const expiryDuration = 10 * 60 * 1000; 
-//         const authData = {
-//           value: 'true',
-//           expiry: new Date().getTime() + expiryDuration,
-//         };
+//         const authData = { value: 'true', expiry: new Date().getTime() + expiryDuration };
 //         localStorage.setItem('priceAuthData', JSON.stringify(authData));
 //       } else {
 //         setError(true);
@@ -1397,7 +161,6 @@
 //     }
 //   };
 
-//   // ናይ ኣድሚን ፓስኮድ መፍትሒ ፊርማ (Function)
 //   const handleEditGateSubmit = (e) => {
 //     e.preventDefault();
 //     if (adminPasscode === 'ADMIN2026') { 
@@ -1410,15 +173,7 @@
 //     }
 //   };
 
-//   const handlePriceChange = (key, newPrice) => {
-//     setTempPackages(prev => ({
-//       ...prev,
-//       [key]: { ...prev[key], price: newPrice }
-//     }));
-//   };
-
 //   const handleSaveAndExit = () => {
-//     // እቲ ኤዲት ዝተገብረሉ ዋጋ ናብቲ ቀንዲ ስቴትን localStorage ንሰጋገሮ
 //     setPackages(tempPackages);
 //     localStorage.setItem('habeshaFilmPackages', JSON.stringify(tempPackages));
 //     setIsEditMode(false);
@@ -1426,7 +181,6 @@
 //   };
 
 //   const handleCancelEdit = () => {
-//     // ከنسል ምስ ዝግበር ናብቲ ዝነበሮ ንምምላስ
 //     setTempPackages(packages);
 //     setIsEditMode(false);
 //     setIsEditGateOpen(false);
@@ -1439,14 +193,10 @@
 //       <div className="flex-grow flex items-center justify-center px-4 py-32">
 //         {!isAuthenticated ? (
 //           <div className="bg-zinc-950 p-8 md:p-12 shadow-2xl border-2 border-[#dfb557]/40 rounded-2xl max-w-md w-full text-center relative">
-//             <span className="text-[9px] md:text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-2">
-//               Secure Access
-//             </span>
+//             <span className="text-[9px] md:text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-2">Secure Access</span>
 //             <h2 className="text-2xl md:text-3xl font-serif mb-3 text-zinc-100">Protected Price Page</h2>
 //             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
-//             <p className="text-xs md:text-sm text-zinc-400 mb-6 font-light">
-//               እዚ ገጽ ብሚጢራዊ ፓስኮድ ዝተዓጸወ እዩ። በጃኹም ፓስኮድ ኣእትዉ።
-//             </p>
+//             <p className="text-xs md:text-sm text-zinc-400 mb-6 font-light">እዚ ገጽ ብሚጢራዊ ፓስኮድ ዝተዓጸወ እዩ። በጃኹም ፓስኮድ ኣእትዉ።</p>
             
 //             <form onSubmit={handleLogin} className="space-y-4">
 //               <input 
@@ -1467,74 +217,94 @@
 //             </form>
 //           </div>
 //         ) : isEditMode ? (
-//           // --- ኤዲት ሞድ (Edit Mode Interface) ---
-//           <div className="max-w-4xl mx-auto text-center px-4 py-12 w-full">
-//             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
-//               Administration Mode
-//             </span>
+//           // --- ኤዲት ሞድ (Edit Mode Interface with Textareas) ---
+//           <div className="max-w-5xl mx-auto text-center px-4 py-12 w-full">
+//             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">Administration Mode</span>
 //             <h1 className="text-3xl font-serif mb-4 text-zinc-100">Edit Packages & Prices</h1>
 //             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-8"></div>
             
 //             <div className="bg-zinc-950 border border-[#dfb557]/40 p-6 md:p-8 rounded-2xl space-y-6 text-left shadow-2xl">
 //               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-//                 <div>
-//                   <label className="text-xs text-[#dfb557] uppercase font-semibold block mb-2">Premium Price</label>
-//                   <input 
-//                     type="text" 
-//                     value={tempPackages.premium.price} 
-//                     onChange={(e) => handlePriceChange('premium', e.target.value)}
-//                     className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 focus:border-[#dfb557] focus:outline-none"
-//                   />
-//                 </div>
-//                 <div>
-//                   <label className="text-xs text-[#dfb557] uppercase font-semibold block mb-2">Gold Price</label>
-//                   <input 
-//                     type="text" 
-//                     value={tempPackages.gold.price} 
-//                     onChange={(e) => handlePriceChange('gold', e.target.value)}
-//                     className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 focus:border-[#dfb557] focus:outline-none"
-//                   />
-//                 </div>
-//                 <div>
-//                   <label className="text-xs text-[#dfb557] uppercase font-semibold block mb-2">Silver Price</label>
-//                   <input 
-//                     type="text" 
-//                     value={tempPackages.silver.price} 
-//                     onChange={(e) => handlePriceChange('silver', e.target.value)}
-//                     className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 focus:border-[#dfb557] focus:outline-none"
-//                   />
-//                 </div>
-//                 <div>
-//                   <label className="text-xs text-[#dfb557] uppercase font-semibold block mb-2">Standard Price</label>
-//                   <input 
-//                     type="text" 
-//                     value={tempPackages.standard.price} 
-//                     onChange={(e) => handlePriceChange('standard', e.target.value)}
-//                     className="w-full px-4 py-3 bg-zinc-900 border border-zinc-800 rounded-xl text-zinc-100 focus:border-[#dfb557] focus:outline-none"
-//                   />
-//                 </div>
+//                 {Object.keys(tempPackages).map((key) => {
+//                   const pkg = tempPackages[key];
+//                   return (
+//                     <div key={key} className="bg-zinc-900 p-5 rounded-xl border border-zinc-800 space-y-3">
+//                       <h3 className="text-sm font-bold uppercase text-[#dfb557]">{key} Package</h3>
+                      
+//                       <div>
+//                         <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Tier Title</label>
+//                         <input 
+//                           value={pkg.tier || ''} 
+//                           onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, tier: e.target.value}})}
+//                           className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
+//                         />
+//                       </div>
+
+//                       <div>
+//                         <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Name</label>
+//                         <input 
+//                           value={pkg.name || ''} 
+//                           onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, name: e.target.value}})}
+//                           className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
+//                         />
+//                       </div>
+
+//                       <div>
+//                         <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Price</label>
+//                         <input 
+//                           value={pkg.price || ''} 
+//                           onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, price: e.target.value}})}
+//                           className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100 font-bold text-[#dfb557]"
+//                         />
+//                       </div>
+
+//                       {key === 'premium' && (
+//                         <div>
+//                           <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Description</label>
+//                           <textarea 
+//                             rows="2"
+//                             value={pkg.desc || ''} 
+//                             onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, desc: e.target.value}})}
+//                             className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
+//                           />
+//                         </div>
+//                       )}
+
+//                       {pkg.services && (
+//                         <div>
+//                           <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Services (Newline separated)</label>
+//                           <textarea 
+//                             rows="4"
+//                             value={(pkg.services || []).join('\n')} 
+//                             onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, services: e.target.value.split('\n')}})}
+//                             className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
+//                           />
+//                         </div>
+//                       )}
+
+//                       <div>
+//                         <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Features List (Newline separated)</label>
+//                         <textarea 
+//                           rows="5"
+//                           value={(pkg.features || []).join('\n')} 
+//                           onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, features: e.target.value.split('\n')}})}
+//                           className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
+//                         />
+//                       </div>
+//                     </div>
+//                   );
+//                 })}
 //               </div>
 
 //               <div className="flex justify-end gap-4 pt-4 border-t border-zinc-900">
-//                 <button 
-//                   onClick={handleCancelEdit}
-//                   className="px-6 py-3 bg-zinc-900 text-zinc-300 rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-zinc-800 transition-all"
-//                 >
-//                   Cancel
-//                 </button>
-//                 <button 
-//                   onClick={handleSaveAndExit}
-//                   className="px-6 py-3 bg-[#dfb557] text-black rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-[#c99f45] transition-all"
-//                 >
-//                   Save Changes
-//                 </button>
+//                 <button onClick={handleCancelEdit} className="px-6 py-3 bg-zinc-900 text-zinc-300 rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-zinc-800 transition-all">Cancel</button>
+//                 <button onClick={handleSaveAndExit} className="px-6 py-3 bg-[#dfb557] text-black rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-[#c99f45] transition-all">Save Changes</button>
 //               </div>
 //             </div>
 //           </div>
 //         ) : (
 //           // --- ስሩዕ መርኣያ ዋጋታት (Normal Price View) ---
 //           <div className="max-w-7xl mx-auto text-center px-4 py-12 w-full">
-//             {/* Edit Mode Gate (ኣድሚን ፓስኮድ መእተዊ ኢንፑት) */}
 //             <div className="flex justify-end mb-4">
 //               {!isEditGateOpen ? (
 //                 <div className="flex flex-col items-end">
@@ -1546,28 +316,16 @@
 //                       onChange={(e) => setAdminPasscode(e.target.value)}
 //                       className="bg-transparent text-zinc-100 text-xs px-2 focus:outline-none w-28"
 //                     />
-//                     <button
-//                       onClick={handleEditGateSubmit}
-//                       className="px-3 py-1.5 bg-[#dfb557] text-black rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-[#c99f45] transition-all"
-//                     >
-//                       Unlock
-//                     </button>
+//                     <button onClick={handleEditGateSubmit} className="px-3 py-1.5 bg-[#dfb557] text-black rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-[#c99f45] transition-all">Unlock</button>
 //                   </div>
 //                   {adminError && <p className="text-red-400 text-[10px] mt-1 font-medium">Wrong Admin Code!</p>}
 //                 </div>
 //               ) : (
-//                 <button
-//                   onClick={() => setIsEditMode(true)}
-//                   className="px-4 py-2 bg-[#dfb557] text-black rounded-xl text-xs uppercase font-semibold tracking-widest shadow-md hover:bg-[#c99f45] transition-all"
-//                 >
-//                   Enter Edit Mode ⚙️
-//                 </button>
+//                 <button onClick={() => setIsEditMode(true)} className="px-4 py-2 bg-[#dfb557] text-black rounded-xl text-xs uppercase font-semibold tracking-widest shadow-md hover:bg-[#c99f45] transition-all">Enter Edit Mode ⚙️</button>
 //               )}
 //             </div>
 
-//             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
-//               Investment & Tiers
-//             </span>
+//             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">Investment & Tiers</span>
 //             <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4 text-zinc-100">Our Professional Packages</h1>
 //             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
 //             <p className="text-zinc-400 text-sm md:text-base mb-16 max-w-2xl mx-auto font-light">
@@ -1579,124 +337,108 @@
 //               {/* 1. Premium Package */}
 //               <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
 //                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Ultimate VIP</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Premium</h3>
+//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">{packages.premium.tier}</span>
+//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{packages.premium.name}</h3>
 //                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.premium.price}</p>
-//                   <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">
-//                     ዝለዓለ ደረጃ ሞያዊ ክእለትን ብርክት ዝበሉ መሳርሒታትን ተጠቒምካ ዝስራሕ ቪአይፒ ኣገልግሎት።
-//                   </p>
+//                   <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">{packages.premium.desc}</p>
 //                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)</li>
-//                     <li className="flex items-center gap-2">✓ ክልተ ኤክስፐርት ካሜራማን</li>
-//                     <li className="flex items-center gap-2">✓ <b className="font-semibold text-[#dfb557]">Cinematic Color Grading</b> & VFX</li>
-//                     <li className="flex items-center gap-2 text-[#dfb557] font-medium">🎁 <b className="font-semibold">ቦናስ:</b> ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር</li>
+//                     {(packages.premium.features || []).map((feat, idx) => (
+//                       <li key={idx} className="flex items-center gap-2">{feat}</li>
+//                     ))}
 //                   </ul>
 //                 </div>
 //                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-//                   Select Premium
+//                   Select {packages.premium.name}
 //                 </button>
 //               </div>
 
 //               {/* 2. Gold Package */}
 //               <div className="bg-zinc-950 border-2 border-[#dfb557] p-6 sm:p-8 rounded-2xl shadow-2xl relative flex flex-col justify-between transition-transform hover:-translate-y-1">
 //                 <span className="absolute -top-3 right-6 bg-[#dfb557] text-black text-[9px] uppercase font-bold tracking-[0.3em] px-3 py-1 rounded-full shadow-md">
-//                   Top Tier
+//                   {packages.gold.tier}
 //                 </span>
 //                 <div>
 //                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Exclusive</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Gold</h3>
+//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{packages.gold.name}</h3>
 //                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.gold.price}</p>
                   
-//                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-//                     <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
-//                     <ul className="space-y-1 pl-1">
-//                       <li>• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• መዓልቲ መርዓ (5 ካሜራ: 4 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ኩሉ ሶፍት ኮፒ (All Soft Copy)</li>
-//                     </ul>
-//                   </div>
+//                   {packages.gold.services && packages.gold.services.length > 0 && (
+//                     <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
+//                       <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
+//                       <ul className="space-y-1 pl-1">
+//                         {packages.gold.services.map((srv, idx) => (
+//                           <li key={idx}>{srv}</li>
+//                         ))}
+//                       </ul>
+//                     </div>
+//                   )}
 
 //                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ 800 ፎቶዎች (10×15)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ላሚኔትድ ፎቶ (30×90 & 30×60)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ሳይን ቦርድ (30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 3 ቦርድ (50×80, 40×60, 30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 400 ምስጋና ካርድ (Thank You Card)</li>
-//                     <li className="flex items-center gap-2">✓ 8 ዩኤስቢ ፍላሽ (64 GB)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ባነር</li>
-//                     <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
+//                     {(packages.gold.features || []).map((feat, idx) => (
+//                       <li key={idx} className="flex items-center gap-2">{feat}</li>
+//                     ))}
 //                   </ul>
 //                 </div>
 //                 <button className="w-full bg-[#dfb557] text-black py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 rounded-xl shadow-lg">
-//                   Select Gold
+//                   Select {packages.gold.name}
 //                 </button>
 //               </div>
 
 //               {/* 3. Silver Package */}
 //               <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
 //                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Advanced</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Silver</h3>
+//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">{packages.silver.tier}</span>
+//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{packages.silver.name}</h3>
 //                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.silver.price}</p>
                   
-//                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-//                     <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
-//                     <ul className="space-y-1 pl-1">
-//                       <li>• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• መዓልቲ መርዓ (4 ካሜራ: 3 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)</li>
-//                     </ul>
-//                   </div>
+//                   {packages.silver.services && packages.silver.services.length > 0 && (
+//                     <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
+//                       <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
+//                       <ul className="space-y-1 pl-1">
+//                         {packages.silver.services.map((srv, idx) => (
+//                           <li key={idx}>{srv}</li>
+//                         ))}
+//                       </ul>
+//                     </div>
+//                   )}
 
 //                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ 500 ፎቶዎች (10×15)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ላሚኔትድ ፎቶ (30×90 & 40×60)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ሳይን ቦርድ (30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ቦርድ (50×80 & 40×60)</li>
-//                     <li className="flex items-center gap-2">✓ 250 ምስጋና ካርድ (Thank You Card)</li>
-//                     <li className="flex items-center gap-2">✓ 6 ዩኤስቢ ፍላሽ (64 GB)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ባነር</li>
-//                     <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
+//                     {(packages.silver.features || []).map((feat, idx) => (
+//                       <li key={idx} className="flex items-center gap-2">{feat}</li>
+//                     ))}
 //                   </ul>
 //                 </div>
 //                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-//                   Select Silver
+//                   Select {packages.silver.name}
 //                 </button>
 //               </div>
 
 //               {/* 4. Standard Package */}
 //               <div className="bg-zinc-950/70 border-2 border-[#dfb557]/30 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col justify-between transition-transform hover:-translate-y-1">
 //                 <div>
-//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-zinc-400">Standard</span>
-//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">Standard</h3>
+//                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-zinc-400">{packages.standard.tier}</span>
+//                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{packages.standard.name}</h3>
 //                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.standard.price}</p>
                   
-//                   <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
-//                     <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
-//                     <ul className="space-y-1 pl-1">
-//                       <li>• ስቱዲዮ / ኣብ መስክ (1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• መዓልቲ መርዓ (3 ካሜራ: 2 ቪድዮ፣ 1 ፎቶ)</li>
-//                       <li>• ሓማውቲ (2 ካሜራ: 1 ፎቶ፣ 1 ቪድዮ)</li>
-//                     </ul>
-//                   </div>
+//                   {packages.standard.services && packages.standard.services.length > 0 && (
+//                     <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
+//                       <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
+//                       <ul className="space-y-1 pl-1">
+//                         {packages.standard.services.map((srv, idx) => (
+//                           <li key={idx}>{srv}</li>
+//                         ))}
+//                       </ul>
+//                     </div>
+//                   )}
 
 //                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
-//                     <li className="flex items-center gap-2">✓ 300 ፎቶዎች (10×15)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ላሚኔትድ ፎቶ (30×90)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ሳይን ቦርድ (30×45)</li>
-//                     <li className="flex items-center gap-2">✓ 1 ቦርድ (50×80)</li>
-//                     <li className="flex items-center gap-2">✓ 200 ምስጋና ካርድ (Thank You Card)</li>
-//                     <li className="flex items-center gap-2">✓ 4 ዩኤስቢ ፍላሽ (64 GB)</li>
-//                     <li className="flex items-center gap-2">✓ 2 ባነር</li>
-//                     <li className="flex items-center gap-2">✓ 2 ራማ / ቆብዕ (Cap)</li>
+//                     {(packages.standard.features || []).map((feat, idx) => (
+//                       <li key={idx} className="flex items-center gap-2">{feat}</li>
+//                     ))}
 //                   </ul>
 //                 </div>
 //                 <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
-//                   Select Standard
+//                   Select {packages.standard.name}
 //                 </button>
 //               </div>
 
@@ -1810,36 +552,39 @@ function Price() {
     },
   };
 
-  const [packages, setPackages] = useState(() => {
-    const saved = localStorage.getItem('habeshaFilmPackages');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        // Merge with default to ensure all keys (like services/features) exist
-        return {
-          premium: { ...defaultPackages.premium, ...parsed.premium },
-          gold: { ...defaultPackages.gold, ...parsed.gold },
-          silver: { ...defaultPackages.silver, ...parsed.silver },
-          standard: { ...defaultPackages.standard, ...parsed.standard },
-        };
-      } catch (e) {
-        console.error("Error parsing saved packages:", e);
-      }
-    }
-    return defaultPackages;
-  });
+  const [packages, setPackages] = useState(defaultPackages);
+  const [tempPackages, setTempPackages] = useState(defaultPackages);
 
-  const [tempPackages, setTempPackages] = useState(packages);
-
+  // ዳታ ካብ ሰርቨር ንምውራድን Authentication ንምፍታሽን
   useEffect(() => {
+    fetch('https://habesha-film-production-server.onrender.com/api/packages')
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          const mergedData = {
+            premium: { ...defaultPackages.premium, ...data.premium },
+            gold: { ...defaultPackages.gold, ...data.gold },
+            silver: { ...defaultPackages.silver, ...data.silver },
+            standard: { ...defaultPackages.standard, ...data.standard },
+          };
+          setPackages(mergedData);
+          setTempPackages(mergedData);
+        }
+      })
+      .catch(err => console.log("Failed to fetch packages:", err));
+
     const authData = localStorage.getItem('priceAuthData');
     if (authData) {
-      const { expiry } = JSON.parse(authData);
-      if (new Date().getTime() < expiry) {
-        setIsAuthenticated(true);
-      } else {
+      try {
+        const { expiry } = JSON.parse(authData);
+        if (new Date().getTime() < expiry) {
+          setIsAuthenticated(true);
+        } else {
+          localStorage.removeItem('priceAuthData');
+          setIsAuthenticated(false);
+        }
+      } catch (e) {
         localStorage.removeItem('priceAuthData');
-        setIsAuthenticated(false);
       }
     }
   }, []);
@@ -1886,9 +631,26 @@ function Price() {
     }
   };
 
-  const handleSaveAndExit = () => {
-    setPackages(tempPackages);
-    localStorage.setItem('habeshaFilmPackages', JSON.stringify(tempPackages));
+  // ዳታ ናብ ሰርቨር ንምልኣኽ
+  const handleSaveAndExit = async () => {
+    try {
+      const response = await fetch('https://habesha-film-production-server.onrender.com/api/packages/update', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(tempPackages),
+      });
+
+      if (response.ok) {
+        setPackages(tempPackages);
+        alert("ዳታ ብሰላም ተሰዲዱ ኣብ ኩሉ ዲቫይስ ክረአ እዩ!");
+      } else {
+        alert("ሰርቨር ጌጋ ኣለዎ።");
+      }
+    } catch (err) {
+      console.error("Error saving to server:", err);
+      alert("ዳታ ናብ ሰርቨር ምልኣኽ ኣይከኣለን።");
+    }
+    
     setIsEditMode(false);
     setIsEditGateOpen(false);
   };
@@ -1930,7 +692,6 @@ function Price() {
             </form>
           </div>
         ) : isEditMode ? (
-          // --- ኤዲት ሞድ (Edit Mode Interface with Textareas) ---
           <div className="max-w-5xl mx-auto text-center px-4 py-12 w-full">
             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">Administration Mode</span>
             <h1 className="text-3xl font-serif mb-4 text-zinc-100">Edit Packages & Prices</h1>
@@ -2016,7 +777,6 @@ function Price() {
             </div>
           </div>
         ) : (
-          // --- ስሩዕ መርኣያ ዋጋታት (Normal Price View) ---
           <div className="max-w-7xl mx-auto text-center px-4 py-12 w-full">
             <div className="flex justify-end mb-4">
               {!isEditGateOpen ? (
