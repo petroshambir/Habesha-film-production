@@ -1715,6 +1715,20 @@ function AdminDashboard() {
       console.error("Error fetching portals:", err);
     }
   };
+  
+  const uploadWidget = window.cloudinary.createUploadWidget({
+  cloudName: 'YOUR_CLOUD_NAME',
+  uploadPreset: 'YOUR_UPLOAD_PRESET' // ካብ Cloudinary Dashboard ትረኽቦ
+}, (error, result) => {
+  if (!error && result && result.event === "success") {
+    // እቲ ዝተሰቀለ ስእሊ URL እዩ
+    const imageUrl = result.info.secure_url;
+    // ነዚ URL ኣብ state ትሕዞ እሞ ድሕሪኡ ናብ DB ትልእኾ
+  }
+});
+
+// ንምኽፋት
+uploadWidget.open();
 
   const handleCreatePortal = async (e) => {
     e.preventDefault();
