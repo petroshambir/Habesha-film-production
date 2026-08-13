@@ -1,6 +1,6 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
-const packageSchema = new mongoose.Schema({
+const sitePriceSchema = new mongoose.Schema({
   name: String,
   tier: String,
   price: String,
@@ -9,6 +9,6 @@ const packageSchema = new mongoose.Schema({
   features: [String]
 });
 
-// ንነፍሲ ወከፍ ፔኬጅ (premium, gold, silver, standard) ክንጥቀመሉ ኢና
-module.exports = mongoose.model('Package', packageSchema);
+const SitePrice = mongoose.model('SitePrice', sitePriceSchema);
+
 export default SitePrice;
