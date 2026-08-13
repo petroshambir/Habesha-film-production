@@ -16,11 +16,17 @@ export default function About() {
 
         {/* Hero Background Image & Dark Overlay */}
         <div className="absolute inset-0 z-0">
-          <img 
+          {/* <img 
             src="https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=1920&auto=format&fit=crop" 
             alt="Habesha Film Production Hero" 
             className="w-full h-full object-cover brightness-50"
+          /> */}
+         <img 
+            src="../assets/images/best-weeding-pic.jpeg" 
+            alt="Habesha Film Production Hero" 
+            className="w-full h-full object-cover brightness-50"
           />
+
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-black/40 to-black/60"></div>
         </div>
 
