@@ -218,6 +218,7 @@
 // });
 
 // export default router;
+
 import express from 'express';
 import multer from 'multer';
 import { v2 as cloudinary } from 'cloudinary';
@@ -257,16 +258,38 @@ router.get('/portals', async (req, res) => {
 });
 
 // 1. [ADMIN] ሓድሽ ፖርታል ምፍጣር
+
+// router.post('/create-portal', async (req, res) => {
+//     try {
+//         const { clientName, portalNumber, images } = req.body;
+//         const passcode = Math.floor(1000 + Math.random() * 9000).toString();
+
+//         const newProject = new ClientProject({
+//             clientName,
+//             passcode,
+//             portalNumber,
+//             images: images || [],
+//             selectedImages: []
+//         });
+
+//         await newProject.save();
+//         res.status(201).json({ success: true, passcode, newProject });
+//     } catch (err) {
+//         console.error("Error creating portal:", err);
+//         res.status(500).json({ success: false, message: 'Server error' });
+//     }
+// });
+// [ADMIN] ሓድሽ ፖርታል ምፍጣር
 router.post('/create-portal', async (req, res) => {
     try {
-        const { clientName, portalNumber, images } = req.body;
+        const { clientName, portalNumber, images } = req.body; // images ሕጂ URLs እዮም
         const passcode = Math.floor(1000 + Math.random() * 9000).toString();
 
         const newProject = new ClientProject({
             clientName,
-            passcode,
             portalNumber,
-            images: images || [],
+            passcode,
+            images: images || [], // እዚ ምስ ዝመጽእ URLs እዩ
             selectedImages: []
         });
 
@@ -340,6 +363,7 @@ router.post('/submit-selection/:id', async (req, res) => {
 });
 
 // 4. [ADMIN] ፎልደር ምድምساس
+
 router.delete('/delete-portal/:id', async (req, res) => {
     try {
         const project = await ClientProject.findByIdAndDelete(req.params.id);
