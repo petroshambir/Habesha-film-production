@@ -1,10 +1,13 @@
-// import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
-// const SitePricesSchema = new mongoose.Schema({
-//     title: { type: String, default: 'site_prices_config', unique: true },
-//     packages: { type: Array, default: [] },
-//     createdAt: { type: Date, default: Date.now }
-// });
+const packageSchema = new mongoose.Schema({
+  name: String,
+  tier: String,
+  price: String,
+  desc: String,
+  services: [String],
+  features: [String]
+});
 
-// const SitePrices = mongoose.model('SitePrices', SitePricesSchema);
-// export default SitePrices;
+// ንነፍሲ ወከፍ ፔኬጅ (premium, gold, silver, standard) ክንጥቀመሉ ኢና
+module.exports = mongoose.model('Package', packageSchema);
