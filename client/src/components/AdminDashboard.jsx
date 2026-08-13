@@ -990,7 +990,7 @@ function AdminDashboard() {
 
     alert(`ስእሊታት ይዳለዉ ኣለዉ (ጠቕላላ: ${files.length}). በጃኹም ቅሩብ ጽንሑ...`);
 
-    const BATCH_SIZE = 25; 
+    const BATCH_SIZE = 10; 
     let allUploadedImages = [];
 
     try {
@@ -1045,6 +1045,7 @@ function AdminDashboard() {
       }
     }
   };
+
 
   const handleDeletePortal = async (id) => {
     if (!window.confirm('ነዚ ፖርታል ከተጥፍኦ ትደል ኢኻ?')) return;
