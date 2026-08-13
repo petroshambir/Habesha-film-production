@@ -29,6 +29,104 @@ router.get('/portals', async (req, res) => {
 });
 
 // 🟢 0.1 [ADMIN] ንብዙሓት ስእሊታት ብባች (Batch) ምስ Sharp (ኦርጂናልን ኮምፕረስድን ብሓደ)
+
+// router.post('/upload-image', upload.array('images', 500), async (req, res) => {
+//     try {
+//         console.log(`Upload request received. Total files: ${req.files ? req.files.length : 0}`);
+
+//         if (!req.files || req.files.length === 0) {
+//             return res.status(400).json({ success: false, message: "No files uploaded" });
+//         }
+
+//         const uploadPromises = req.files.map(async (file) => {
+//             // 1. ኦርጂናል ስእሊ ናብ Cloudinary ምስቀል
+//             const originalUpload = await new Promise((resolve, reject) => {
+//                 cloudinary.uploader.upload_stream({ folder: 'client_portals' }, (error, result) => {
+//                     if (error) reject(error);
+//                     else resolve(result.secure_url);
+//                 }).end(file.buffer);
+//             });
+
+//             // 2. ኮምፕረስ ዝኾነ ስእሊ (Sharp) ብምጥቃም ኣዳልዎ
+//             const compressedBuffer = await sharp(file.buffer)
+//                 .resize(800) // 800px ወርዲ
+//                 .jpeg({ quality: 60 }) 
+//                 .toBuffer();
+
+//             // 3. ኮምፕረስ ዝኾነ ስእሊ ናብ Cloudinary (ፍሉይ ፎልደር) ምስቀል
+//             const compressedUpload = await new Promise((resolve, reject) => {
+//                 cloudinary.uploader.upload_stream({ folder: 'client_portals_compressed' }, (error, result) => {
+//                     if (error) reject(error);
+//                     else resolve(result.secure_url);
+//                 }).end(compressedBuffer);
+//             });
+
+//             // ክልቲኡ ናብ Object ተማሊሱ ይኸይድ
+//             return {
+//                 original: originalUpload,
+//                 compressed: compressedUpload
+//             };
+//         });
+
+//         const results = await Promise.all(uploadPromises);
+        
+//         res.status(200).json({ 
+//             success: true, 
+//             imageUrl: results[0].original, // ንመቐጸርታ ድሕነት ንሓደ ኦርጂናል
+//             images: results // [{ original: '...', compressed: '...' }, ...]
+//         });
+//     } catch (err) {
+//         console.error("CRITICAL UPLOAD ERROR:", err);
+//         res.status(500).json({ 
+//             success: false, 
+//             message: 'Server error during upload: ' + err.message 
+//         });
+//     }
+// });
+
+// // 1. [ADMIN] ሓድሽ ፎልደርን ፓስኮድን ምፍጣር
+// router.post('/create-portal', async (req, res) => {
+//     try {
+//         const { clientName, portalNumber, images } = req.body;
+//         const passcode = Math.floor(1000 + Math.random() * 9000).toString();
+
+//         const newProject = new ClientProject({
+//             clientName,
+//             passcode,
+//             portalNumber,
+//             images,
+//             selectedImages: []
+//         });
+
+//         await newProject.save();
+//         res.status(201).json({ success: true, passcode, newProject });
+//     } catch (err) {
+//         console.error("Error creating portal:", err);
+//         res.status(500).json({ success: false, message: 'Server error' });
+//     }
+// });
+
+// // 2. [CLIENT] ብፓስኮድ ኣቲኻ ፖርታል ምርካብ (Verify Passcode)
+// router.post('/verify-client-passcode', async (req, res) => {
+//     try {
+//         const { passcode } = req.body;
+//         if (!passcode) {
+//             return res.status(400).json({ success: false, message: "Passcode is required" });
+//         }
+
+//         const project = await ClientProject.findOne({ passcode: passcode.trim() });
+
+//         if (!project) {
+//             return res.status(401).json({ success: false, message: "ይቕሬታ፣ ዝኣተውዎ ፓስኮድ ቅኑዕ አይደለም (Invalid Passcode)" });
+//         }
+
+//         res.status(200).json({ success: true, project });
+//     } catch (err) {
+//         console.error("Error verifying client passcode:", err);
+//         res.status(500).json({ success: false, message: 'Server error' });
+//     }
+// });
+// 🟢 0.1 [ADMIN] ንብዙሓት ስእሊታት ብንኡኡስ ጉጅለ (Batch) ምስ Sharp
 router.post('/upload-image', upload.array('images', 500), async (req, res) => {
     try {
         console.log(`Upload request received. Total files: ${req.files ? req.files.length : 0}`);
@@ -37,8 +135,11 @@ router.post('/upload-image', upload.array('images', 500), async (req, res) => {
             return res.status(400).json({ success: false, message: "No files uploaded" });
         }
 
-        const uploadPromises = req.files.map(async (file) => {
-            // 1. ኦርጂናል ስእሊ ናብ Cloudinary ምስቀል
+        const results = [];
+
+        // ነፍሲ ወከፍ ስእሊ በብተራ (Sequential) ንምጽዓን ሰርቨር ንዘይምጽቃጥ
+        for (const file of req.files) {
+            // 1. ኦርጂናል ስእሊ ናብ Cloudinary ምጽዓን
             const originalUpload = await new Promise((resolve, reject) => {
                 cloudinary.uploader.upload_stream({ folder: 'client_portals' }, (error, result) => {
                     if (error) reject(error);
@@ -46,13 +147,13 @@ router.post('/upload-image', upload.array('images', 500), async (req, res) => {
                 }).end(file.buffer);
             });
 
-            // 2. ኮምፕረስ ዝኾነ ስእሊ (Sharp) ብምጥቃም ኣዳልዎ
+            // 2. ኮምፕረስ ዝኾነ ስእሊ (Sharp)
             const compressedBuffer = await sharp(file.buffer)
-                .resize(800) // 800px ወርዲ
-                .jpeg({ quality: 60 }) 
+                .resize(800)
+                .jpeg({ quality: 60 })
                 .toBuffer();
 
-            // 3. ኮምፕረስ ዝኾነ ስእሊ ናብ Cloudinary (ፍሉይ ፎልደር) ምስቀል
+            // 3. ኮምፕረስ ዝኾነ ስእሊ ናብ Cloudinary ምጽዓን
             const compressedUpload = await new Promise((resolve, reject) => {
                 cloudinary.uploader.upload_stream({ folder: 'client_portals_compressed' }, (error, result) => {
                     if (error) reject(error);
@@ -60,19 +161,16 @@ router.post('/upload-image', upload.array('images', 500), async (req, res) => {
                 }).end(compressedBuffer);
             });
 
-            // ክልቲኡ ናብ Object ተማሊሱ ይኸይድ
-            return {
+            results.push({
                 original: originalUpload,
                 compressed: compressedUpload
-            };
-        });
+            });
+        }
 
-        const results = await Promise.all(uploadPromises);
-        
         res.status(200).json({ 
             success: true, 
-            imageUrl: results[0].original, // ንመቐጸርታ ድሕነት ንሓደ ኦርጂናል
-            images: results // [{ original: '...', compressed: '...' }, ...]
+            imageUrl: results[0].original,
+            images: results 
         });
     } catch (err) {
         console.error("CRITICAL UPLOAD ERROR:", err);
@@ -80,49 +178,6 @@ router.post('/upload-image', upload.array('images', 500), async (req, res) => {
             success: false, 
             message: 'Server error during upload: ' + err.message 
         });
-    }
-});
-
-// 1. [ADMIN] ሓድሽ ፎልደርን ፓስኮድን ምፍጣር
-router.post('/create-portal', async (req, res) => {
-    try {
-        const { clientName, portalNumber, images } = req.body;
-        const passcode = Math.floor(1000 + Math.random() * 9000).toString();
-
-        const newProject = new ClientProject({
-            clientName,
-            passcode,
-            portalNumber,
-            images,
-            selectedImages: []
-        });
-
-        await newProject.save();
-        res.status(201).json({ success: true, passcode, newProject });
-    } catch (err) {
-        console.error("Error creating portal:", err);
-        res.status(500).json({ success: false, message: 'Server error' });
-    }
-});
-
-// 2. [CLIENT] ብፓስኮድ ኣቲኻ ፖርታል ምርካብ (Verify Passcode)
-router.post('/verify-client-passcode', async (req, res) => {
-    try {
-        const { passcode } = req.body;
-        if (!passcode) {
-            return res.status(400).json({ success: false, message: "Passcode is required" });
-        }
-
-        const project = await ClientProject.findOne({ passcode: passcode.trim() });
-
-        if (!project) {
-            return res.status(401).json({ success: false, message: "ይቕሬታ፣ ዝኣተውዎ ፓስኮድ ቅኑዕ አይደለም (Invalid Passcode)" });
-        }
-
-        res.status(200).json({ success: true, project });
-    } catch (err) {
-        console.error("Error verifying client passcode:", err);
-        res.status(500).json({ success: false, message: 'Server error' });
     }
 });
 
