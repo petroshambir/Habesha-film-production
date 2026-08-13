@@ -921,7 +921,6 @@
 
 // export default Price;
 
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -932,6 +931,11 @@ function Price() {
   const [passcode, setPasscode] = useState('');
   const [error, setError] = useState(false);
   const [loading, setLoading] = useState(false);
+
+  // ሓድሽ ዝተወሰኸ፡ ንኤዲት ሞድ ዝሕሉ ኣድሚን ፓስኮድ
+  const [adminPasscode, setAdminPasscode] = useState('');
+  const [isEditGateOpen, setIsEditGateOpen] = useState(false);
+  const [adminError, setAdminError] = useState(false);
 
   // ዋጋታት ንምምሕዳር ዝሕግዝ ስቴት
   const [packages, setPackages] = useState({
@@ -992,6 +996,20 @@ function Price() {
     }
   };
 
+  // ናይ ኣድሚን ፓስኮድ መፍትሒ ፊርማ (Function)
+  const handleEditGateSubmit = (e) => {
+    e.preventDefault();
+    // ኣብዚ ንምፍታን 'ADMIN2026' ተጠቒምና ኣለና (ደልዩካዮ ናብ ዝደለኻዮ ክትቅይሮ ትኽእል ኢኻ)
+    if (adminPasscode === 'ADMIN2026') { 
+      setIsEditGateOpen(true);
+      setIsEditMode(true);
+      setAdminError(false);
+      setAdminPasscode('');
+    } else {
+      setAdminError(true);
+    }
+  };
+
   const handlePriceChange = (key, newPrice) => {
     setTempPackages(prev => ({
       ...prev,
@@ -1002,14 +1020,15 @@ function Price() {
   const handleSaveAndExit = () => {
     // እቲ ኤዲት ዝተገብረሉ ዋጋ ናብቲ ቀንዲ ስቴት ነሰጋገሮ
     setPackages(tempPackages);
-    // ኣብዚ ንሰቨር ዳታ ንምልኣክ ክትክእል ኢኻ
     setIsEditMode(false);
+    setIsEditGateOpen(false);
   };
 
   const handleCancelEdit = () => {
     // ከنسል ምስ ዝግበር ናብቲ ዝነበሮ ንምምላስ
     setTempPackages(packages);
     setIsEditMode(false);
+    setIsEditGateOpen(false);
   };
 
   return (
@@ -1114,18 +1133,35 @@ function Price() {
         ) : (
           // --- ስሩዕ መርኣያ ዋጋታት (Normal Price View) ---
           <div className="max-w-7xl mx-auto text-center px-4 py-12 w-full">
-            {/* ፓስኮድ ምስ ኣተወ ጥራይ እዚ የርኢ, ኣብዚ ድማ Edit Mode ንምእታው ዝሕግዝ ቁልፊ ኣሎ */}
+            {/* Edit Mode Gate (ኣድሚን ፓስኮድ መእተዊ ኢንፑት) */}
             <div className="flex justify-end mb-4">
-              <button
-                type="button"
-                onClick={() => {
-                  setTempPackages(packages);
-                  setIsEditMode(true);
-                }}
-                className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-[#dfb557]/40 text-zinc-300 hover:text-[#dfb557] rounded-xl text-xs uppercase font-semibold tracking-widest transition-all shadow-md flex items-center gap-2"
-              >
-                Edit Mode ⚙️
-              </button>
+              {!isEditGateOpen ? (
+                <div className="flex flex-col items-end">
+                  <div className="flex items-center gap-2 bg-zinc-900 p-2 rounded-xl border border-[#dfb557]/40 shadow-lg">
+                    <input 
+                      type="password"
+                      placeholder="Admin Code"
+                      value={adminPasscode}
+                      onChange={(e) => setAdminPasscode(e.target.value)}
+                      className="bg-transparent text-zinc-100 text-xs px-2 focus:outline-none w-28"
+                    />
+                    <button
+                      onClick={handleEditGateSubmit}
+                      className="px-3 py-1.5 bg-[#dfb557] text-black rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-[#c99f45] transition-all"
+                    >
+                      Unlock
+                    </button>
+                  </div>
+                  {adminError && <p className="text-red-400 text-[10px] mt-1 font-medium">Wrong Admin Code!</p>}
+                </div>
+              ) : (
+                <button
+                  onClick={() => setIsEditMode(true)}
+                  className="px-4 py-2 bg-[#dfb557] text-black rounded-xl text-xs uppercase font-semibold tracking-widest shadow-md hover:bg-[#c99f45] transition-all"
+                >
+                  Enter Edit Mode ⚙️
+                </button>
+              )}
             </div>
 
             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
