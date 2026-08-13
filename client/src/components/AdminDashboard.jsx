@@ -825,7 +825,6 @@
 
 // export default AdminDashboard;
 
-
 import React, { useState, useEffect } from 'react';
 import JSZip from 'jszip';
 
@@ -835,7 +834,7 @@ const sectionsConfig = [
   { title: 'Baby Shower & Baptism', storageKey: 'portfolio_babyshower' }
 ];
 
-// ምስሊ ናብ ኣዝዩ ንኡስ ኪሎባይት (KB) ንምቕናስ ዝሕግዝ ፈንክሽን (Quality 0.2)
+// ምስሊ ናብ ኣዝዩ ንኡስ ኪሎባይት (KB) ንምቕናስ ዝሕግዝ ፈንክሽን - ንካስተመር ፖርታል ጥራሕ ዝዓለመ
 const compressImageFile = (file) => {
   return new Promise((resolve) => {
     const reader = new FileReader();
@@ -979,6 +978,7 @@ function AdminDashboard() {
     }
   };
 
+  // ንካስተመር ፖርታል ዝስቀሉ ስእሊታት ጥራሕ ብ compressImageFile ተገይሮም ይጽቀጡ
   const handleClientImageUpload = async (e) => {
     const files = Array.from(e.target.files);
     if (files.length === 0) return;
@@ -999,7 +999,7 @@ function AdminDashboard() {
         const formData = new FormData();
 
         for (let file of batchFiles) {
-          const compressedFile = await compressImageFile(file);
+          const compressedFile = await compressImageFile(file); // እዚ ንፖርታል ጥራሕ ይጽቀጥ
           formData.append('images', compressedFile);
         }
 
@@ -1433,6 +1433,7 @@ function AdminDashboard() {
   );
 }
 
+// እቲ ንፖርትፎሊዮ ዝጥቀመሉ ክፍሊ (ብዘይ ገለ ምጽቃጥ - Original Files)
 function SectionRenderer({ title, data, setData, onSave }) {
   const handleImageUpload = async (event) => {
     const files = Array.from(event.target.files);
@@ -1445,7 +1446,7 @@ function SectionRenderer({ title, data, setData, onSave }) {
       return;
     }
 
-    alert('ስእሊታት ተዳልዮም ብንኡኡስ ጉጅለ (Batch) ክስቀሉ እዮም፣ ጽንሕ በል...');
+    alert('ስእሊታት ናብ ፖርትፎሊዮ ይስቀሉ ኣለዉ፣ ጽንሕ በል...');
 
     const BATCH_SIZE = 3; 
     let allNewImages = [...(data.images || [])];
@@ -1458,8 +1459,7 @@ function SectionRenderer({ title, data, setData, onSave }) {
         const formData = new FormData();
 
         for (let file of batch) {
-          const compressedFile = await compressImageFile(file);
-          formData.append('images', compressedFile);
+          formData.append('images', file); // ብዘይ compressImageFile (ሙሉእ ጥራት ዘለዎ ፋይል) ይልኣኽ
         }
 
         const res = await fetch(`https://habesha-film-production-server.onrender.com/api/projects/${title}/upload`, {
