@@ -921,6 +921,7 @@
 
 // export default Price;
 
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -1044,20 +1045,6 @@ function Price() {
               </button>
               {error && <p className="text-red-400 text-xs mt-2 font-medium">ጌጋ ፓስኮድ! ደጊምካ ፈትን።</p>}
             </form>
-
-            {/* ኣብ ታሕተዋይ የማነ መኣዝን ዘሎ ናይ ክሊክ/ታች ቁልፊ */}
-            <div className="flex justify-end mt-4">
-              <button
-                type="button"
-                onClick={() => {
-                  setTempPackages(packages);
-                  setIsEditMode(true);
-                }}
-                className="px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 hover:text-[#dfb557] rounded-lg text-[10px] uppercase font-semibold tracking-widest transition-all shadow-md"
-              >
-                Edit Mode ⚙️
-              </button>
-            </div>
           </div>
         ) : isEditMode ? (
           // --- ኤዲት ሞድ (Edit Mode Interface) ---
@@ -1126,7 +1113,21 @@ function Price() {
           </div>
         ) : (
           // --- ስሩዕ መርኣያ ዋጋታት (Normal Price View) ---
-          <div className="max-w-7xl mx-auto text-center px-4 py-12">
+          <div className="max-w-7xl mx-auto text-center px-4 py-12 w-full">
+            {/* ፓስኮድ ምስ ኣተወ ጥራይ እዚ የርኢ, ኣብዚ ድማ Edit Mode ንምእታው ዝሕግዝ ቁልፊ ኣሎ */}
+            <div className="flex justify-end mb-4">
+              <button
+                type="button"
+                onClick={() => {
+                  setTempPackages(packages);
+                  setIsEditMode(true);
+                }}
+                className="px-4 py-2 bg-zinc-900 hover:bg-zinc-800 border border-[#dfb557]/40 text-zinc-300 hover:text-[#dfb557] rounded-xl text-xs uppercase font-semibold tracking-widest transition-all shadow-md flex items-center gap-2"
+              >
+                Edit Mode ⚙️
+              </button>
+            </div>
+
             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
               Investment & Tiers
             </span>
