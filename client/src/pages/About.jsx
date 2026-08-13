@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import bestWeedingPic from '../assets/images/best-weeding-pic.jpeg';
 
 export default function About() {
   return (
@@ -22,7 +23,7 @@ export default function About() {
             className="w-full h-full object-cover brightness-50"
           /> */}
          <img 
-            src="../assets/images/best-weeding-pic.jpeg" 
+            src={bestWeedingPic} 
             alt="Habesha Film Production Hero" 
             className="w-full h-full object-cover brightness-50"
           />
