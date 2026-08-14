@@ -113,9 +113,10 @@
 
 // export default Hero;
 
+
 import React from 'react';
 import Navbar from './Navbar';
-
+import img_bg from "../assets/images/camera-1-pic.jpeg"
 function Hero({ imageSrc }) {
   return (
     <section className="relative w-full h-[85vh] md:h-[95vh] flex items-end justify-start overflow-hidden bg-[#050505]">
@@ -160,43 +161,19 @@ function Hero({ imageSrc }) {
           </p>
         </div>
         
-        {/* ኣብ ክንዲ እታ Explore Reel ጽሕፍቲ፡ ነቲ ዝመረጽካዮም ናይ ስእሊ ስብስብ (Gallery Previews) ኣብዚ ኣእቲየዮ ኣለኹ */}
-        <div className="w-full lg:w-auto flex items-center gap-4 pb-2">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full">
-            {/* 1ይ ስእሊ */}
-            <div className="relative w-28 h-20 rounded-xl overflow-hidden border border-[#dfb557]/40 shadow-2xl group bg-black/60">
-              <img 
-                src="1000101433.jpg" 
-                alt="Camera Logo 1" 
-                className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500"
-              />
-            </div>
-
-            {/* 2ይ ስእሊ */}
-            <div className="relative w-28 h-20 rounded-xl overflow-hidden border border-[#dfb557]/40 shadow-2xl group bg-black/60">
-              <img 
-                src="1000101428.jpg" 
-                alt="Photographer Silhouette" 
-                className="w-full h-full object-contain p-2 group-hover:scale-110 transition-transform duration-500"
-              />
-            </div>
-
-            {/* 3ይ ስእሊ */}
-            <div className="relative w-28 h-20 rounded-xl overflow-hidden border border-[#dfb557]/40 shadow-2xl group bg-black/60">
-              <img 
-                src="1000101414.jpg" 
-                alt="Gold Camera" 
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              />
-            </div>
-
-            {/* 4ይ ስእሊ */}
-            <div className="relative w-28 h-20 rounded-xl overflow-hidden border border-[#dfb557]/40 shadow-2xl group bg-black/60">
-              <img 
-                src="1000101419.jpg" 
-                alt="Photography Planners" 
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              />
+        {/* ኣብታ ናይ Explore Reel ቦታ ንሰፍሓት ሓንቲ ስእሊ ብሆቨር ትንቀሳቐስ (Zoom & Hover Effect) ገይረዮ ኣለኹ */}
+        <div className="w-full lg:w-auto flex items-center pb-2">
+          <div className="relative w-48 sm:w-56 h-32 sm:h-36 rounded-2xl overflow-hidden border-2 border-[#dfb557]/50 shadow-2xl group cursor-pointer bg-black/80">
+            <img 
+              src={img_bg} 
+              alt="Featured Camera Showcase" 
+              className="w-full h-full object-cover group-hover:scale-110 group-hover:rotate-1 transition-transform duration-700 ease-out"
+            />
+            {/* Overlay Gradient & Text */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end p-3">
+              <span className="text-[11px] uppercase tracking-[0.25em] text-[#dfb557] font-bold group-hover:text-white transition-colors duration-300">
+                Featured Gear
+              </span>
             </div>
           </div>
         </div>
