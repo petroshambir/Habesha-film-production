@@ -116,7 +116,7 @@
 
 import React from 'react';
 import Navbar from './Navbar';
-import img_bg from "../assets/images/camera-1-pic.jpeg"
+import img_bg from "../assets/images/camera-pic-5.jpg"
 
 function Hero({ imageSrc }) {
   return (
