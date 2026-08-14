@@ -111,19 +111,25 @@
 //     }
 //   };
   
-//   const uploadWidget = window.cloudinary.createUploadWidget({
-//   cloudName: 'YOUR_CLOUD_NAME',
-//   uploadPreset: 'YOUR_UPLOAD_PRESET' // ካብ Cloudinary Dashboard ትረኽቦ
-// }, (error, result) => {
-//   if (!error && result && result.event === "success") {
-//     // እቲ ዝተሰቀለ ስእሊ URL እዩ
-//     const imageUrl = result.info.secure_url;
-//     // ነዚ URL ኣብ state ትሕዞ እሞ ድሕሪኡ ናብ DB ትልእኾ
-//   }
-// });
-
-// // ንምኽፋት
-// uploadWidget.open();
+//   // እቲ ዝተስተኻኸለ ናይ Cloudinary Widget ኣሰራርሓ (ንዘይደልዮም ምንቅስቓሳት ዝኽልክል)
+//   const openUploadWidget = () => {
+//     if (!window.cloudinary) {
+//       alert('Cloudinary script not loaded!');
+//       return;
+//     }
+//     window.cloudinary.createUploadWidget({
+//       cloudName: 'YOUR_CLOUD_NAME',
+//       uploadPreset: 'YOUR_UPLOAD_PRESET',
+//       sources: ['local', 'camera'], // ንGoogle Drive ወዘተ እንዳተሳእለ ከይሸገር ንኽትክልክሎ
+//       multiple: true
+//     }, (error, result) => {
+//       if (!error && result && result.event === "success") {
+//         const imageUrl = result.info.secure_url;
+//         // ንዘድልዮ ክፍሊ ክትጥቀመሉ ትኽእል
+//         console.log("Uploaded Image URL:", imageUrl);
+//       }
+//     }).open();
+//   };
 
 //   const handleCreatePortal = async (e) => {
 //     e.preventDefault();
@@ -234,7 +240,6 @@
 //       }
 //     }
 //   };
-
 
 //   const handleDeletePortal = async (id) => {
 //     if (!window.confirm('ነዚ ፖርታል ከተጥፍኦ ትደል ኢኻ?')) return;
@@ -790,7 +795,6 @@
 // }
 
 // export default AdminDashboard;
-
 
 import React, { useState, useEffect } from 'react';
 import JSZip from 'jszip';
@@ -1420,7 +1424,7 @@ function AdminDashboard() {
   );
 }
 
-// እቲ ንፖርትፎሊዮ ዝጥቀመሉ ክፍሊ (ብዘይ ገለ ምጽቃጥ - Original Files)
+// እቲ ንፖርትፎሊዮ ዝጥቀመሉ ክፍሊ (ንጸገም ዱፕሊኬትን ምስልን ኣርእስተይን ብግቡእ ዝተሓሓዘሉ)
 function SectionRenderer({ title, data, setData, onSave }) {
   const handleImageUpload = async (event) => {
     const files = Array.from(event.target.files);
@@ -1446,7 +1450,7 @@ function SectionRenderer({ title, data, setData, onSave }) {
         const formData = new FormData();
 
         for (let file of batch) {
-          formData.append('images', file); // ብዘይ compressImageFile (ሙሉእ ጥራት ዘለዎ ፋይል) ይልኣኽ
+          formData.append('images', file); 
         }
 
         const res = await fetch(`https://habesha-film-production-server.onrender.com/api/projects/${title}/upload`, {
@@ -1459,20 +1463,20 @@ function SectionRenderer({ title, data, setData, onSave }) {
         const result = await res.json();
         const newImagesFromBackend = result.images || [];
         
-        newImagesFromBackend.forEach((img, idx) => {
+        newImagesFromBackend.forEach((img) => {
           const totalIdx = allNewImages.length;
           allNewImages.push(img);
           allHeadings.push(`Featured Moment ${totalIdx + 1}`);
           allDescriptions.push(`0${totalIdx + 1}. A wonderful captured memory of the special day.`);
         });
-
-        setData({
-          ...data,
-          images: allNewImages,
-          headings: allHeadings,
-          descriptions: allDescriptions
-        });
       }
+
+      setData({
+        ...data,
+        images: allNewImages,
+        headings: allHeadings,
+        descriptions: allDescriptions
+      });
 
       alert(`${files.length} ስእሊ(ታት) ብትኽክል ተሰቒሎም ኣለዉ!`);
     } catch (err) {
@@ -1517,7 +1521,7 @@ function SectionRenderer({ title, data, setData, onSave }) {
         </button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <div className="flex flex-col w-full">
           <label className="block text-zinc-400 mb-2 text-sm">Names / Title:</label>
           <input 
@@ -1539,48 +1543,67 @@ function SectionRenderer({ title, data, setData, onSave }) {
         </div>
 
         <div className="flex flex-col w-full">
-          <label className="block text-zinc-400 mb-2 text-sm">Upload Images (Multiple Allowed):</label>
+          <label className="block text-zinc-400 mb-2 text-sm">Upload Portfolio Photos (ስእሊታት ምጽዓን):</label>
           <input 
             type="file" 
             multiple
-            onChange={handleImageUpload} 
-            className="text-zinc-400 text-xs file:mr-2 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-black hover:file:bg-amber-400 w-full bg-zinc-800 p-2 rounded-lg" 
+            onChange={handleImageUpload}
+            className="text-zinc-400 text-xs file:mr-2 file:py-3 file:px-4 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-amber-500 file:text-black hover:file:bg-amber-400 w-full bg-zinc-800 p-2 rounded-lg" 
           />
+          <p className="text-xs text-zinc-500 mt-2">ጠቕላላ ዝተሰቐሉ ስእሊታት: {(data.images || []).length} / 500</p>
         </div>
       </div>
 
-      <div className="mt-8 space-y-4">
-        <h3 className="text-lg md:text-xl font-semibold text-amber-400 border-b border-zinc-800 pb-2">Manage Image Headings & Descriptions</h3>
-        {data.images && data.images.map((img, index) => {
-          const defaultHeading = `Featured Moment ${index + 1}`;
-          const defaultDesc = `0${index + 1}. A wonderful captured memory of the special day.`;
-          const imgSrc = typeof img === 'string' ? img : (img?.url || img?.original || '');
+      <div className="mt-6 border-t border-zinc-800 pt-6">
+        <h3 className="text-lg font-bold text-amber-400 mb-4">Manage Photos, Headings & Descriptions</h3>
+        
+        {(!data.images || data.images.length === 0) ? (
+          <p className="text-zinc-500 text-sm italic">ዝኾነ ስእሊ የብሉን። ንምጽዓን ላዕሊ ዘሎ 'Choose Files' ጠውቕ።</p>
+        ) : (
+          <div className="grid grid-cols-1 gap-4 max-h-[600px] overflow-y-auto pr-2">
+            {data.images.map((imgUrl, index) => (
+              <div key={index} className="bg-zinc-800/80 border border-zinc-700 p-4 rounded-xl flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+                <div className="w-24 h-24 shrink-0 bg-zinc-900 rounded-lg overflow-hidden border border-zinc-700 relative">
+                  <img src={imgUrl} alt={`Item ${index}`} className="w-full h-full object-cover" />
+                  <span className="absolute top-1 left-1 bg-black/70 text-amber-400 text-[10px] px-1.5 py-0.5 rounded font-mono">
+                    #{index + 1}
+                  </span>
+                </div>
 
-          return (
-            <div key={index} className="flex flex-col sm:flex-row gap-4 p-4 bg-zinc-800/50 border border-zinc-700 rounded-xl items-center">
-              <img src={imgSrc} alt="" className="w-20 h-20 object-cover rounded-lg shrink-0 border border-zinc-600" />
-              <div className="flex-1 w-full space-y-2">
-                <input 
-                  type="text"
-                  value={data.headings?.[index] !== undefined ? data.headings[index] : defaultHeading}
-                  onChange={(e) => handleHeadingChange(index, e.target.value)}
-                  className="bg-zinc-800 border border-zinc-600 p-2 rounded w-full text-white text-xs"
-                  placeholder="Heading"
-                />
-                <textarea 
-                  rows="2"
-                  value={data.descriptions?.[index] !== undefined ? data.descriptions[index] : defaultDesc}
-                  onChange={(e) => handleDescriptionChange(index, e.target.value)}
-                  className="bg-zinc-800 border border-zinc-600 p-2 rounded w-full text-white text-xs"
-                  placeholder="Description"
-                />
+                <div className="flex-1 grid grid-cols-1 md:grid-cols-2 gap-3 w-full">
+                  <div>
+                    <label className="block text-[11px] text-zinc-400 mb-1">Heading (ርእሲ):</label>
+                    <input 
+                      type="text"
+                      value={data.headings?.[index] || ''}
+                      onChange={(e) => handleHeadingChange(index, e.target.value)}
+                      className="bg-zinc-900 border border-zinc-700 p-2 rounded-lg w-full text-white text-xs"
+                      placeholder="ርእሲ ኣእቱ..."
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-[11px] text-zinc-400 mb-1">Description (መግለጫ):</label>
+                    <input 
+                      type="text"
+                      value={data.descriptions?.[index] || ''}
+                      onChange={(e) => handleDescriptionChange(index, e.target.value)}
+                      className="bg-zinc-900 border border-zinc-700 p-2 rounded-lg w-full text-white text-xs"
+                      placeholder="መግለጫ ኣእቱ..."
+                    />
+                  </div>
+                </div>
+
+                <button 
+                  onClick={() => deleteImage(index)}
+                  className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg text-xs font-bold shrink-0 self-end sm:self-center"
+                  title="Delete Image"
+                >
+                  🗑️ Delete
+                </button>
               </div>
-              <button onClick={() => deleteImage(index)} className="bg-red-600 hover:bg-red-700 text-white p-2 rounded-lg text-xs font-bold shrink-0 self-start sm:self-center">
-                Delete
-              </button>
-            </div>
-          );
-        })}
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
