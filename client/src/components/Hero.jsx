@@ -235,7 +235,7 @@ function Hero({ imageSrc }) {
 
           {/* እታ ስእሊ ቁመታ ሙሉእ ብሙሉእ ብobject-contain ንኽታአ ተገይሩ ኣሎ */}
           <div className="pt-2">
-            <div className="relative w-56 sm:w-64 h-36 sm:h-40 rounded-2xl overflow-hidden shadow-2xl group cursor-pointer bg-black/40">
+            <div className="relative w-56 sm:w-64 h-36 sm:h-40 rounded-2xl overflow-hidden shadow-2xl group cursor-pointer ">
               <img 
                 src={img_bg} 
                 alt="Featured Camera Showcase" 
