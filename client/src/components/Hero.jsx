@@ -185,6 +185,7 @@
 // }
 
 // export default Hero;
+
 import React from 'react';
 import Navbar from './Navbar';
 import img_bg from "../assets/images/camera-pic-5-removebg-preview.png"
@@ -232,20 +233,28 @@ function Hero({ imageSrc }) {
             Redefining Film Production, Commercials & Global Digital Stories.
           </p>
 
-          {/* እታ ስእሊ ኣብ ሞባይል ብግቡእ ተዓዩዩ ንታሕቲ ብለስላሰ ክትንቀሳቐስ (Bounce/Fade Animation) ተገይራ ኣላ */}
-          <div className="pt-2 w-full">
-            <div className="relative w-full max-w-[240px] sm:w-64 h-32 sm:h-40 rounded-2xl overflow-hidden shadow-2xl group cursor-pointer  animate-fade-in-up transition-all duration-500">
-              <img 
-                src={img_bg} 
-                alt="Featured Camera Showcase" 
-                className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-700 ease-out"
-              />
-              {/* Overlay Gradient & Text */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3">
-                <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#dfb557] font-bold group-hover:text-white transition-colors duration-300">
-                  Featured Gear
-                </span>
+          {/* እታ ስእሊ ኣብ ሞባይልን ዴስክቶፕን ብርሃንን (Glow) ምንቅስቓስን (Bounce/Pulse) ክህልዋ ዝተገበረ */}
+          <div className="pt-3 w-full">
+            <div className="relative w-full max-w-[240px] sm:w-64 h-32 sm:h-40 rounded-2xl overflow-visible group cursor-pointer animate-bounce duration-[3000ms]">
+              
+              {/* እቲ ከባቢኣ ብርሃን ንክህልዎ ዘኽእል ጸጸኒሑ ዝለዋወጥ ወርቃዊ ብርሃን (Glow Effect) */}
+              <div className="absolute -inset-1.5 bg-gradient-to-r from-[#dfb557] via-amber-400 to-[#dfb557] rounded-2xl blur-md opacity-75 animate-pulse"></div>
+
+              {/* ቀንዲ ናይ ስእሊ መሓዛ */}
+              <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black/90 border border-[#dfb557]/40 shadow-[0_0_25px_rgba(223,181,87,0.3)]">
+                <img 
+                  src={img_bg} 
+                  alt="Featured Camera Showcase" 
+                  className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 ease-out p-1"
+                />
+                {/* Overlay Gradient & Text */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end p-3">
+                  <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#dfb557] font-bold group-hover:text-white transition-colors duration-300">
+                    Featured Gear
+                  </span>
+                </div>
               </div>
+
             </div>
           </div>
 
