@@ -927,7 +927,7 @@ function Home() {
       <Hero />
 
       {title && <h1 className="text-center text-3xl md:text-4xl mt-10 text-zinc-100 px-4">{title}</h1>}
-
+{/* 
       <section className="py-12 md:py-24 w-full">
         {sections.map((section, index) => {
           const titleLower = section.title ? section.title.toLowerCase() : '';
@@ -952,6 +952,51 @@ function Home() {
                   <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto my-3"></div>
                   <p className="text-[10px] md:text-[11px] uppercase tracking-[0.4em] text-zinc-400 font-light">
                     {section.date}
+                  </p>
+                </div>
+              )}
+
+              {isWedding ? (
+                <WeddingSection section={section} customHeadings={customHeadings} customDescriptions={customDescriptions} />
+              ) : isBridalShower ? (
+                <BridalShowerSection section={section} customHeadings={customHeadings} customDescriptions={customDescriptions} />
+              ) : isBabyShower ? (
+                <BabyShowerSection section={section} customHeadings={customHeadings} customDescriptions={customDescriptions} />
+              ) : (
+                <DefaultSection section={section} />
+              )}
+            </div>
+          );
+        })}
+      </section> */}
+
+      <section className="py-12 md:py-24 w-full">
+        {sections.map((section, index) => {
+          const titleLower = section.title ? section.title.toLowerCase() : '';
+          const isWedding = titleLower.includes('wedding');
+          const isBridalShower = titleLower.includes('bridal');
+          const isBabyShower = titleLower.includes('baby') || titleLower.includes('baptism');
+
+          const customDescriptions = section.descriptions?.length > 0 ? section.descriptions : DEFAULT_DESCRIPTIONS;
+          const customHeadings = section.headings?.length > 0 ? section.headings : DEFAULT_HEADINGS;
+
+          // Display title or names (whichever is available)
+          const displayHeading = section.names && section.names.trim() !== '' ? section.names : section.title;
+
+          return (
+            <div key={section._id || index} className="mb-20 md:mb-36 w-full border-b border-zinc-900 pb-16 md:pb-28 last:border-b-0">
+              
+              {displayHeading && (
+                <div className="mb-10 md:mb-16 text-center px-4">
+                  <span className="text-[9px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
+                    Event Story & Timeline
+                  </span>
+                  <h3 className="text-3xl sm:text-4xl md:text-6xl font-serif italic text-zinc-100 tracking-wide font-light">
+                    {displayHeading}
+                  </h3>
+                  <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto my-3"></div>
+                  <p className="text-[10px] md:text-[11px] uppercase tracking-[0.4em] text-zinc-400 font-light">
+                    {section.date || "Featured Project"}
                   </p>
                 </div>
               )}
