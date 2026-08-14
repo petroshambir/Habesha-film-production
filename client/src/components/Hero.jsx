@@ -113,10 +113,10 @@
 
 // export default Hero;
 
-
 import React from 'react';
 import Navbar from './Navbar';
 import img_bg from "../assets/images/camera-1-pic.jpeg"
+
 function Hero({ imageSrc }) {
   return (
     <section className="relative w-full h-[85vh] md:h-[95vh] flex items-end justify-start overflow-hidden bg-[#050505]">
@@ -138,8 +138,8 @@ function Hero({ imageSrc }) {
       </div>
       
       {/* ዝንሳፈፍ ትሕዝቶ ምስ Smooth Entrances */}
-      <div className="relative z-10 px-6 sm:px-12 md:px-24 pb-12 md:pb-20 pt-32 w-full max-w-7xl mt-auto flex flex-col lg:flex-row lg:items-end lg:justify-between gap-8">
-        <div className="flex flex-col items-start border-l-4 border-[#dfb557] pl-6 sm:pl-10 space-y-3 max-w-3xl">
+      <div className="relative z-10 px-6 sm:px-12 md:px-24 pb-12 md:pb-20 pt-32 w-full max-w-5xl mt-auto">
+        <div className="flex flex-col items-start border-l-4 border-[#dfb557] pl-6 sm:pl-10 space-y-5 max-w-3xl">
           
           {/* Tagline Animation */}
           <div className="overflow-hidden">
@@ -159,25 +159,25 @@ function Hero({ imageSrc }) {
           <p className="text-xs sm:text-sm uppercase tracking-[0.35em] text-zinc-300 font-light max-w-lg leading-relaxed animate-fade-in">
             Redefining Film Production, Commercials & Global Digital Stories.
           </p>
-        </div>
-        
-        {/* ኣብታ ናይ Explore Reel ቦታ ንሰፍሓት ሓንቲ ስእሊ ብሆቨር ትንቀሳቐስ (Zoom & Hover Effect) ገይረዮ ኣለኹ */}
-        <div className="w-full lg:w-auto flex items-center pb-2">
-          <div className="relative w-48 sm:w-56 h-32 sm:h-36 rounded-2xl overflow-hidden border-2 border-[#dfb557]/50 shadow-2xl group cursor-pointer bg-black/80">
-            <img 
-              src={img_bg} 
-              alt="Featured Camera Showcase" 
-              className="w-full h-full object-cover group-hover:scale-110 group-hover:rotate-1 transition-transform duration-700 ease-out"
-            />
-            {/* Overlay Gradient & Text */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end p-3">
-              <span className="text-[11px] uppercase tracking-[0.25em] text-[#dfb557] font-bold group-hover:text-white transition-colors duration-300">
-                Featured Gear
-              </span>
+
+          {/* እታ ስእሊ ሕጂ ኣብዚ ካብ ትሕቲ ጽሕፋት ብሆቨር ትንቀሳቐስ (Zoom & Hover Effect) ተሰሪዓ ኣላ */}
+          <div className="pt-2">
+            <div className="relative w-48 sm:w-56 h-32 sm:h-36 rounded-2xl overflow-hidden border-2 border-[#dfb557]/50 shadow-2xl group cursor-pointer bg-black/80">
+              <img 
+                src={img_bg} 
+                alt="Featured Camera Showcase" 
+                className="w-full h-full object-cover group-hover:scale-110 group-hover:rotate-1 transition-transform duration-700 ease-out"
+              />
+              {/* Overlay Gradient & Text */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end p-3">
+                <span className="text-[11px] uppercase tracking-[0.25em] text-[#dfb557] font-bold group-hover:text-white transition-colors duration-300">
+                  Featured Gear
+                </span>
+              </div>
             </div>
           </div>
-        </div>
 
+        </div>
       </div>
     </section>
   );
