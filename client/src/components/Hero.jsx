@@ -241,7 +241,7 @@ function Hero({ imageSrc }) {
               <div className="absolute -inset-1.5 bg-gradient-to-r from-[#dfb557] via-amber-400 to-[#dfb557] rounded-2xl blur-md opacity-75 animate-pulse"></div>
 
               {/* ቀንዲ ናይ ስእሊ መሓዛ */}
-              <div className="relative w-full h-full rounded-2xl overflow-hidden bg-black/90 border border-[#dfb557]/40 shadow-[0_0_25px_rgba(223,181,87,0.3)]">
+              <div className="relative w-full h-full rounded-2xl overflow-hidden  border border-[#dfb557]/40 shadow-[0_0_25px_rgba(223,181,87,0.3)]">
                 <img 
                   src={img_bg} 
                   alt="Featured Camera Showcase" 
@@ -250,7 +250,7 @@ function Hero({ imageSrc }) {
                 {/* Overlay Gradient & Text */}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end p-3">
                   <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#dfb557] font-bold group-hover:text-white transition-colors duration-300">
-                    Featured Gear
+                    ሓበሻ ፒክቸርስ ኣብ ምስራቅ ኣፍሪቃ ዝተመረጹ ካሜራማናት
                   </span>
                 </div>
               </div>
