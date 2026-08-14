@@ -113,6 +113,7 @@
 
 // export default Hero;
 
+
 import React from 'react';
 import Navbar from './Navbar';
 import img_bg from "../assets/images/camera-1-pic.jpeg"
@@ -160,9 +161,9 @@ function Hero({ imageSrc }) {
             Redefining Film Production, Commercials & Global Digital Stories.
           </p>
 
-          {/* እታ ስእሊ ሕጂ ኣብዚ ካብ ትሕቲ ጽሕፋት ብሆቨር ትንቀሳቐስ (Zoom & Hover Effect) ተሰሪዓ ኣላ */}
+          {/* እታ ስእሊ ብዘይ ቦርደር (Border-less) ብሆቨር ትንቀሳቐስ */}
           <div className="pt-2">
-            <div className="relative w-48 sm:w-56 h-32 sm:h-36 rounded-2xl overflow-hidden border-2 border-[#dfb557]/50 shadow-2xl group cursor-pointer bg-black/80">
+            <div className="relative w-48 sm:w-56 h-32 sm:h-36 rounded-2xl overflow-hidden shadow-2xl group cursor-pointer bg-black/80">
               <img 
                 src={img_bg} 
                 alt="Featured Camera Showcase" 
