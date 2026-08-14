@@ -163,7 +163,7 @@ function Hero({ imageSrc }) {
 
           {/* እታ ስእሊ ብዘይ ቦርደር (Border-less) ብሆቨር ትንቀሳቐስ */}
           <div className="pt-2">
-            <div className="relative w-48 sm:w-56 h-32 sm:h-36 rounded-2xl overflow-hidden shadow-2xl group cursor-pointer bg-black/80">
+            <div className="relative w-48 sm:w-56 h-full sm:h-36 rounded-2xl overflow-hidden shadow-2xl group cursor-pointer bg-black/80">
               <img 
                 src={img_bg} 
                 alt="Featured Camera Showcase" 
