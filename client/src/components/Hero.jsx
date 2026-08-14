@@ -232,9 +232,9 @@ function Hero({ imageSrc }) {
             Redefining Film Production, Commercials & Global Digital Stories.
           </p>
 
-          {/* እታ ስእሊ፡ ምንቅስቓሳ ህዱእ (Slow Smooth Motion) ተገይሩሎ እቲ ከባቢኣ ብርሃን ሓዊሱ */}
+          {/* እታ ስእሊ: ምንቅስቓሳ ኣዝዩ ህዱእን ቀስ ዝበለን (Slow Floating Motion - 8s) ተገይሩሉ ኣሎ */}
           <div className="pt-3 w-full">
-            <div className="relative w-full max-w-[240px] sm:w-64 h-32 sm:h-40 rounded-2xl overflow-visible group cursor-pointer animate-bounce duration-[5000ms]">
+            <div className="relative w-full max-w-[240px] sm:w-64 h-32 sm:h-40 rounded-2xl overflow-visible group cursor-pointer animate-bounce duration-[8000ms]">
               
               {/* እቲ ከባቢኣ ብርሃን ንክህልዎ ዘኽእል ጸጸኒሑ ዝለዋወጥ ወርቃዊ ብርሃን (Glow Effect) */}
               <div className="absolute -inset-2 bg-gradient-to-r from-[#dfb557] via-amber-300 to-[#dfb557] rounded-2xl blur-lg opacity-80 animate-pulse"></div>
@@ -249,7 +249,7 @@ function Hero({ imageSrc }) {
                 
                 {/* ጽሕፍቲ ሓበሻ: ብግእዝ፣ ግዝፍ ዝበለ፣ ኣብ ማእከል ታሕቲ ብምሉእ ጸጋማውን የማናውን ሚዛን ዝተሰርዔ */}
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent py-2.5 px-3 flex justify-center items-center">
-                  <span className="text-xs sm:text-sm font-bold tracking-[0.3em] text-[#dfb557] drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] group-hover:text-white transition-colors duration-300">
+                  <span className="text-xs sm:text-sm font-bold tracking-[0.3em] text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] group-hover:text-[#dfb557] transition-colors duration-300">
                     ሓበሻ
                   </span>
                 </div>
