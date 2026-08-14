@@ -234,7 +234,7 @@ function Hero({ imageSrc }) {
 
           {/* እታ ስእሊ ኣብ ሞባይል ብግቡእ ተዓዩዩ ንታሕቲ ብለስላሰ ክትንቀሳቐስ (Bounce/Fade Animation) ተገይራ ኣላ */}
           <div className="pt-2 w-full">
-            <div className="relative w-full max-w-[240px] sm:w-64 h-32 sm:h-40 rounded-2xl overflow-hidden shadow-2xl group cursor-pointer bg-black/40 animate-fade-in-up transition-all duration-500">
+            <div className="relative w-full max-w-[240px] sm:w-64 h-32 sm:h-40 rounded-2xl overflow-hidden shadow-2xl group cursor-pointer  animate-fade-in-up transition-all duration-500">
               <img 
                 src={img_bg} 
                 alt="Featured Camera Showcase" 
