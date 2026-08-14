@@ -234,13 +234,13 @@ function Hero({ imageSrc }) {
 
           {/* እታ ስእሊ: ምንቅስቓሳ ኣዝዩ ህዱእን ቀስ ዝበለን (Slow Floating Motion - 8s) ተገይሩሉ ኣሎ */}
           <div className="pt-3 w-full">
-            <div className="relative w-full max-w-[240px] sm:w-64 h-32 sm:h-40 rounded-2xl overflow-visible group cursor-pointer animate-bounce duration-[8000ms]">
+            <div className="relative w-full max-w-[240px] sm:w-64 h-32 sm:h-40 rounded-2xl overflow-visible group cursor-pointer animate-bounce duration-[9000ms]">
               
               {/* እቲ ከባቢኣ ብርሃን ንክህልዎ ዘኽእል ጸጸኒሑ ዝለዋወጥ ወርቃዊ ብርሃን (Glow Effect) */}
               <div className="absolute -inset-2 bg-gradient-to-r from-[#dfb557] via-amber-300 to-[#dfb557] rounded-2xl blur-lg opacity-80 animate-pulse"></div>
 
               {/* ቀንዲ ናይ ስእሊ መሓዛ */}
-              <div className="relative w-full h-full rounded-2xl overflow-hidden border border-[#dfb557]/50 shadow-[0_0_30px_rgba(223,181,87,0.4)] bg-black/80">
+              <div className="relative w-full h-full rounded-2xl overflow-hidden border border-[#dfb557]/50 shadow-[0_0_30px_rgba(223,181,87,0.4)] ">
                 <img 
                   src={img_bg} 
                   alt="Featured Camera Showcase" 
