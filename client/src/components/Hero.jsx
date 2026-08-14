@@ -185,10 +185,9 @@
 // }
 
 // export default Hero;
-
 import React from 'react';
 import Navbar from './Navbar';
-import img_bg from "../assets/images/camera-pic-5.jpg"
+import img_bg from "../assets/images/camera-pic-5-removebg-preview.png"
 
 function Hero({ imageSrc }) {
   return (
@@ -211,31 +210,31 @@ function Hero({ imageSrc }) {
       </div>
       
       {/* ዝንሳፈፍ ትሕዝቶ ምስ Smooth Entrances */}
-      <div className="relative z-10 px-6 sm:px-12 md:px-24 pb-10 md:pb-16 pt-28 w-full max-w-5xl mt-auto">
-        <div className="flex flex-col items-start border-l-4 border-[#dfb557] pl-6 sm:pl-10 space-y-4 max-w-3xl">
+      <div className="relative z-10 px-4 sm:px-12 md:px-24 pb-8 md:pb-16 pt-24 w-full max-w-5xl mt-auto">
+        <div className="flex flex-col items-start border-l-4 border-[#dfb557] pl-4 sm:pl-10 space-y-4 max-w-3xl">
           
           {/* Tagline Animation */}
           <div className="overflow-hidden">
-            <span className="inline-block text-[11px] md:text-sm uppercase tracking-[0.5em] text-[#dfb557] font-semibold animate-fade-in-down">
+            <span className="inline-block text-[10px] sm:text-[11px] md:text-sm uppercase tracking-[0.4em] sm:tracking-[0.5em] text-[#dfb557] font-semibold animate-fade-in-down">
               Cinematic Excellence & Visual Mastery
             </span>
           </div>
 
           {/* Main Title Animation */}
           <div className="overflow-hidden">
-            <h1 className="text-5xl sm:text-7xl md:text-9xl font-black text-white tracking-tighter font-serif drop-shadow-2xl animate-fade-in-up">
+            <h1 className="text-4xl sm:text-7xl md:text-9xl font-black text-white tracking-tighter font-serif drop-shadow-2xl animate-fade-in-up">
               Habesha
             </h1>
           </div>
 
           {/* Subtitle */}
-          <p className="text-xs sm:text-sm uppercase tracking-[0.35em] text-zinc-300 font-light max-w-lg leading-relaxed animate-fade-in">
+          <p className="text-[11px] sm:text-xs md:text-sm uppercase tracking-[0.25em] sm:tracking-[0.35em] text-zinc-300 font-light max-w-lg leading-relaxed animate-fade-in">
             Redefining Film Production, Commercials & Global Digital Stories.
           </p>
 
-          {/* እታ ስእሊ ቁመታ ሙሉእ ብሙሉእ ብobject-contain ንኽታአ ተገይሩ ኣሎ */}
-          <div className="pt-2">
-            <div className="relative w-56 sm:w-64 h-36 sm:h-40 rounded-2xl overflow-hidden shadow-2xl group cursor-pointer ">
+          {/* እታ ስእሊ ኣብ ሞባይል ብግቡእ ተዓዩዩ ንታሕቲ ብለስላሰ ክትንቀሳቐስ (Bounce/Fade Animation) ተገይራ ኣላ */}
+          <div className="pt-2 w-full">
+            <div className="relative w-full max-w-[240px] sm:w-64 h-32 sm:h-40 rounded-2xl overflow-hidden shadow-2xl group cursor-pointer bg-black/40 animate-fade-in-up transition-all duration-500">
               <img 
                 src={img_bg} 
                 alt="Featured Camera Showcase" 
@@ -243,7 +242,7 @@ function Hero({ imageSrc }) {
               />
               {/* Overlay Gradient & Text */}
               <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent flex items-end p-3">
-                <span className="text-[11px] uppercase tracking-[0.25em] text-[#dfb557] font-bold group-hover:text-white transition-colors duration-300">
+                <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#dfb557] font-bold group-hover:text-white transition-colors duration-300">
                   Featured Gear
                 </span>
               </div>
