@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import img_bg from "../assets/images/camera-1-pic.jpeg"
 
 export default function Contact() {
   const [formData, setFormData] = useState({ name: '', email: '', message: '' });
@@ -36,8 +37,15 @@ export default function Contact() {
 
         {/* Hero Background Image & Dark Overlay */}
         <div className="absolute inset-0 z-0">
-          <img 
+          {/* <img 
             src="https://images.unsplash.com/photo-1485846234645-a62644f84728?q=80&w=1920&auto=format&fit=crop"
+           
+            alt="Habesha Film Production Contact" 
+            className="w-full h-full object-cover brightness-50"
+          /> */}
+
+          <img 
+            src={img_bg}
            
             alt="Habesha Film Production Contact" 
             className="w-full h-full object-cover brightness-50"
