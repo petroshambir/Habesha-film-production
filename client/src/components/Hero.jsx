@@ -192,6 +192,22 @@ import img_bg from "../assets/images/camera-pic-5-removebg-preview.png"
 function Hero({ imageSrc }) {
   return (
     <section className="relative w-full h-[85vh] md:h-[95vh] flex items-end justify-start overflow-hidden bg-[#050505]">
+      
+      {/* Custom Keyframes for ultra-smooth slow floating */}
+      <style>{`
+        @keyframes customFloat {
+          0%, 100% {
+            transform: translateY(0px);
+          }
+          50% {
+            transform: translateY(-8px);
+          }
+        }
+        .animate-slow-float {
+          animation: customFloat 6s ease-in-out infinite;
+        }
+      `}</style>
+
       {/* Navbar */}
       <div className="absolute top-0 left-0 w-full z-50">
         <Navbar /> 
@@ -232,15 +248,15 @@ function Hero({ imageSrc }) {
             Redefining Film Production, Commercials & Global Digital Stories.
           </p>
 
-          {/* እታ ስእሊ: ምንቅስቓሳ ኣዝዩ ህዱእን ቀስ ዝበለን (Slow Floating Motion - 8s) ተገይሩሉ ኣሎ */}
+          {/* እታ ስእሊ: ሕጂ ብCustom Keyframes ኣዝዩ ህዱእን ልስሉስን (Slow Float) ምንቅስቓስ ተዋሂብዎ ኣሎ */}
           <div className="pt-3 w-full">
-            <div className="relative w-full max-w-[240px] sm:w-64 h-32 sm:h-40 rounded-2xl overflow-visible group cursor-pointer animate-bounce duration-[9000ms]">
+            <div className="relative w-full max-w-[240px] sm:w-64 h-32 sm:h-40 rounded-2xl overflow-visible group cursor-pointer animate-slow-float">
               
               {/* እቲ ከባቢኣ ብርሃን ንክህልዎ ዘኽእል ጸጸኒሑ ዝለዋወጥ ወርቃዊ ብርሃን (Glow Effect) */}
               <div className="absolute -inset-2 bg-gradient-to-r from-[#dfb557] via-amber-300 to-[#dfb557] rounded-2xl blur-lg opacity-80 animate-pulse"></div>
 
               {/* ቀንዲ ናይ ስእሊ መሓዛ */}
-              <div className="relative w-full h-full rounded-2xl overflow-hidden border border-[#dfb557]/50 shadow-[0_0_30px_rgba(223,181,87,0.4)] ">
+              <div className="relative w-full h-full rounded-2xl overflow-hidden border border-[#dfb557]/50 shadow-[0_0_30px_rgba(223,181,87,0.4)]">
                 <img 
                   src={img_bg} 
                   alt="Featured Camera Showcase" 
