@@ -185,7 +185,6 @@
 // }
 
 // export default Hero;
-
 import React from 'react';
 import Navbar from './Navbar';
 import img_bg from "../assets/images/camera-pic-5-removebg-preview.png"
@@ -233,24 +232,25 @@ function Hero({ imageSrc }) {
             Redefining Film Production, Commercials & Global Digital Stories.
           </p>
 
-          {/* እታ ስእሊ ኣብ ሞባይልን ዴስክቶፕን ብርሃንን (Glow) ምንቅስቓስን (Bounce/Pulse) ክህልዋ ዝተገበረ */}
+          {/* እታ ስእሊ፡ ምንቅስቓሳ ህዱእ (Slow Smooth Motion) ተገይሩሎ እቲ ከባቢኣ ብርሃን ሓዊሱ */}
           <div className="pt-3 w-full">
-            <div className="relative w-full max-w-[240px] sm:w-64 h-32 sm:h-40 rounded-2xl overflow-visible group cursor-pointer animate-bounce duration-[3000ms]">
+            <div className="relative w-full max-w-[240px] sm:w-64 h-32 sm:h-40 rounded-2xl overflow-visible group cursor-pointer animate-bounce duration-[5000ms]">
               
               {/* እቲ ከባቢኣ ብርሃን ንክህልዎ ዘኽእል ጸጸኒሑ ዝለዋወጥ ወርቃዊ ብርሃን (Glow Effect) */}
-              <div className="absolute -inset-1.5 bg-gradient-to-r from-[#dfb557] via-amber-400 to-[#dfb557] rounded-2xl blur-md opacity-75 animate-pulse"></div>
+              <div className="absolute -inset-2 bg-gradient-to-r from-[#dfb557] via-amber-300 to-[#dfb557] rounded-2xl blur-lg opacity-80 animate-pulse"></div>
 
               {/* ቀንዲ ናይ ስእሊ መሓዛ */}
-              <div className="relative w-full h-full rounded-2xl overflow-hidden  border border-[#dfb557]/40 shadow-[0_0_25px_rgba(223,181,87,0.3)]">
+              <div className="relative w-full h-full rounded-2xl overflow-hidden border border-[#dfb557]/50 shadow-[0_0_30px_rgba(223,181,87,0.4)] bg-black/80">
                 <img 
                   src={img_bg} 
                   alt="Featured Camera Showcase" 
                   className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-700 ease-out p-1"
                 />
-                {/* Overlay Gradient & Text */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex items-end p-3">
-                  <span className="text-[10px] sm:text-[11px] uppercase tracking-[0.25em] text-[#dfb557] font-bold group-hover:text-white transition-colors duration-300">
-                    ሓበሻ ፒክቸርስ ኣብ ምስራቅ ኣፍሪቃ ዝተመረጹ ካሜራማናት
+                
+                {/* ጽሕፍቲ ሓበሻ: ብግእዝ፣ ግዝፍ ዝበለ፣ ኣብ ማእከል ታሕቲ ብምሉእ ጸጋማውን የማናውን ሚዛን ዝተሰርዔ */}
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent py-2.5 px-3 flex justify-center items-center">
+                  <span className="text-xs sm:text-sm font-bold tracking-[0.3em] text-[#dfb557] drop-shadow-[0_2px_4px_rgba(0,0,0,0.9)] group-hover:text-white transition-colors duration-300">
+                    ሓበሻ
                   </span>
                 </div>
               </div>
