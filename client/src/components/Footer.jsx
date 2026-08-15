@@ -33,7 +33,7 @@ function Footer() {
               <li>Adalhambir946@gmail.com</li>
             </a>
             <a href="tel:+251976130175" className="hover:text-amber-400 transition-colors">
-              <li>Phone:251976130175</li>
+              <li>Phone:+251 976130175 / +251 942746150</li>
             </a>
             <a href="https://maps.google.com/?q=Addis+Ababa,+Ethiopia" className="hover:text-amber-400 transition-colors">
               <li>Location: Addis Ababa, Ethiopia</li>

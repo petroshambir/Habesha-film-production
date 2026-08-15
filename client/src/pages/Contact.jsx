@@ -105,7 +105,7 @@ export default function Contact() {
               </div>
               <div>
                 <h4 className="text-lg font-serif font-bold text-zinc-100">ፎን ኑምበር (Phone)</h4>
-                <p className="text-zinc-400 text-sm mt-1 font-light">+251 900 000 000 / +251 911 000 000</p>
+                <p className="text-zinc-400 text-sm mt-1 font-light">+251 976130175 / +251 942746150</p>
                 <p className="text-zinc-500 text-xs mt-0.5">ካብ ሰዓት ስራሕ ወጻኢ ብመልእኽቲ ክትረኽቡና ትኽእሉ</p>
               </div>
             </div>
@@ -117,7 +117,7 @@ export default function Contact() {
               </div>
               <div>
                 <h4 className="text-lg font-serif font-bold text-zinc-100">ኢመይል (Email)</h4>
-                <p className="text-zinc-400 text-sm mt-1 font-light">info@habeshapictures.com</p>
+                <p className="text-zinc-400 text-sm mt-1 font-light">Adalhambir946@gmail.com</p>
                 <p className="text-zinc-500 text-xs mt-0.5">ብቐጥታ ኢመይል ክትጽሕፉልና ትኽእሉ</p>
               </div>
             </div>
