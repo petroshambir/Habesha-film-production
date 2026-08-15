@@ -338,7 +338,7 @@ export default function Contact() {
                   +251 976130175
                 </a>
                 <br />
-                <br />
+                
                 <a href="tel:+251942746150" className="text-zinc-400 text-sm mt-1 font-light hover:text-[#dfb557] transition-colors underline underline-offset-4">
                   +251 942746150
                 </a>
