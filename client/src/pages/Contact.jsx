@@ -370,8 +370,8 @@ export default function Contact() {
               </div>
               <div>
                 <h4 className="text-lg font-serif font-bold text-zinc-100">ናይ ስራሕ ሰዓታት (Working Hours)</h4>
-                <p className="text-zinc-400 text-sm mt-1 font-light">ሰኑይ - ዓርቢ: 2:00 ንጉሆ - 12:00 ምሸት</p>
-                <p className="text-zinc-400 text-sm font-light">ቀዳም: 3:00 ንጉሆ - 8:00 ድሕሪ ቀትሪ</p>
+                <p className="text-zinc-400 text-sm mt-1 font-light">ሰኑይ - ዓርቢ: 8:00 ንጉሆ - 6:00 ምሸት</p>
+                <p className="text-zinc-400 text-sm font-light">ቀዳም: 9:00 ንጉሆ - 8:00 ምሸት</p>
                 <p className="text-zinc-500 text-xs mt-0.5">ሰንበት ዕጹው እዩ</p>
               </div>
             </div>
