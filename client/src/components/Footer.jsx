@@ -29,9 +29,15 @@ function Footer() {
         <div className="space-y-4 flex flex-col items-center md:items-start">
           <h4 className="text-sm uppercase tracking-[0.2em] text-white/50">Contact</h4>
           <ul className="space-y-2 text-sm text-zinc-400">
-            <li>Email: hello@jonistudio.com</li>
-            <li>Phone: +1 234 567 890</li>
-            <li>Location: Addis Ababa, Ethiopia</li>
+            <a href="mailto:Adalhambir946@gmail.com" className="hover:text-amber-400 transition-colors">
+              <li>Adalhambir946@gmail.com</li>
+            </a>
+            <a href="tel:+251976130175" className="hover:text-amber-400 transition-colors">
+              <li>Phone:251976130175</li>
+            </a>
+            <a href="https://maps.google.com/?q=Addis+Ababa,+Ethiopia" className="hover:text-amber-400 transition-colors">
+              <li>Location: Addis Ababa, Ethiopia</li>
+            </a>
           </ul>
         </div>
 
@@ -67,7 +73,7 @@ function Footer() {
 
       {/* ታሕተዋይ ክፋል (Copyright & Admin link) */}
       <div className="border-t border-white/5 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center gap-4 text-center text-zinc-600 text-[10px] uppercase tracking-[0.3em]">
-        <div>© 2026 JONI Studio. All rights reserved.</div>
+        <div>© 2026 HABESHA Studio. All rights reserved.</div>
         
         <Link 
           to="/admin-login" 
