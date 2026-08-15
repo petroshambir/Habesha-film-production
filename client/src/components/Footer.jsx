@@ -32,6 +32,7 @@ function Footer() {
             <a href="mailto:Adalhambir946@gmail.com" className="hover:text-amber-400 transition-colors">
               <li>Adalhambir946@gmail.com</li>
             </a>
+            <br />
             <a href="tel:+251976130175" className="hover:text-amber-400 transition-colors">
               <li>Phone:+251 976130175</li>
             </a>
