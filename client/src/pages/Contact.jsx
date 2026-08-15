@@ -334,7 +334,12 @@ export default function Contact() {
               </div>
               <div>
                 <h4 className="text-lg font-serif font-bold text-zinc-100">ፎን ናምበር (Phone)</h4>
-                <p className="text-zinc-400 text-sm mt-1 font-light">+251 976130175 / +251 942746150</p>
+                <a href="tel:+251976130175" className="text-zinc-400 text-sm mt-1 font-light hover:text-[#dfb557] transition-colors underline underline-offset-4">
+                  +251 976130175
+                </a>
+                <a href="tel:+251942746150" className="text-zinc-400 text-sm mt-1 font-light hover:text-[#dfb557] transition-colors underline underline-offset-4">
+                  +251 942746150
+                </a>
                 <p className="text-zinc-500 text-xs mt-0.5">ካብ ሰዓት ስራሕ ወጻኢ ብመልእኽቲ ክትረኽቡና ትኽእሉ</p>
               </div>
             </div>
