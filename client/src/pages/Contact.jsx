@@ -117,7 +117,10 @@ export default function Contact() {
               </div>
               <div>
                 <h4 className="text-lg font-serif font-bold text-zinc-100">ኢመይል (Email)</h4>
-                <p className="text-zinc-400 text-sm mt-1 font-light">Adalhambir946@gmail.com</p>
+                
+                <a href="mailto:Adalhambir946@gmail.com" className="hover:text-amber-400 transition-colors">
+                  <p className="text-zinc-400 text-sm mt-1 font-light">Adalhambir946@gmail.com</p>
+                </a>
                 <p className="text-zinc-500 text-xs mt-0.5">ብቐጥታ ኢመይል ክትጽሕፉልና ትኽእሉ</p>
               </div>
             </div>
