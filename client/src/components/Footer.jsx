@@ -28,7 +28,7 @@ function Footer() {
         {/* ኮንታክት */}
         <div className="space-y-4 flex flex-col items-center md:items-start">
           <h4 className="text-sm uppercase tracking-[0.2em] text-white/50">Contact</h4>
-          <ul className="space-y-4 text-sm text-zinc-400">
+          <ul className="space-y-12 text-sm text-zinc-400">
             <a href="mailto:Adalhambir946@gmail.com" className="hover:text-amber-400 transition-colors">
               <li>Adalhambir946@gmail.com</li>
             </a>
