@@ -64,9 +64,9 @@ function Footer() {
             </a>
 
             {/* ዩቱብ ስእሊ */}
-            <a href="https://www.youtube.com/@joniphotographyofficial" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
+            {/* <a href="https://www.youtube.com/@joniphotographyofficial" target="_blank" rel="noopener noreferrer" className="hover:opacity-80 transition-opacity">
               <img src={youtubeImg} alt="YouTube" className="w-8 h-8 md:w-6 md:h-6 object-contain rounded-md" />
-            </a>
+            </a> */}
 
             {/* ፌስቡክ ስእሊ */}
             <a href="https://www.facebook.com/share/1BbUufnsKQ/" className="hover:opacity-80 transition-opacity">
