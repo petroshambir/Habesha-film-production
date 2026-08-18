@@ -471,7 +471,6 @@
 // }
 
 // export default Price;
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -492,6 +491,10 @@ function Price() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [customerName, setCustomerName] = useState('');
   const [bookingDate, setBookingDate] = useState('');
+
+  // --- Editable Fields Inside Modal / Notebook Booking ---
+  const [customizedPrice, setCustomizedPrice] = useState('');
+  const [customizedDesc, setCustomizedDesc] = useState('');
 
   // --- Admin Notebook State ---
   const [notebookList, setNotebookList] = useState([]);
@@ -667,13 +670,14 @@ function Price() {
     }
   };
 
-  // When in Edit Mode, use tempPackages data for selection/testing; otherwise use live packages
   const handleSelectPackageClick = (pkgKey, isFromEdit = false) => {
     const sourcePackages = isFromEdit ? tempPackages : packages;
     const pkg = sourcePackages[pkgKey];
     setSelectedPackage(pkg);
     setCustomerName('');
     setBookingDate('');
+    setCustomizedPrice(pkg.price);
+    setCustomizedDesc(pkg.desc || '');
     setEditingNoteId(null);
     setIsBookingModalOpen(true);
   };
@@ -690,9 +694,9 @@ function Price() {
             customerName,
             bookingDate,
             packageName: selectedPackage.name,
-            packagePrice: selectedPackage.price,
+            packagePrice: customizedPrice,
             tier: selectedPackage.tier,
-            packageDesc: selectedPackage.desc || '',
+            packageDesc: customizedDesc,
             packageServices: selectedPackage.services || [],
             packageFeatures: selectedPackage.features || []
           };
@@ -707,9 +711,9 @@ function Price() {
         customerName: customerName.trim(),
         bookingDate,
         packageName: selectedPackage.name,
-        packagePrice: selectedPackage.price,
+        packagePrice: customizedPrice,
         tier: selectedPackage.tier,
-        packageDesc: selectedPackage.desc || '',
+        packageDesc: customizedDesc,
         packageServices: selectedPackage.services || [],
         packageFeatures: selectedPackage.features || [],
         timestamp: new Date().toLocaleString()
@@ -728,9 +732,12 @@ function Price() {
 
   const handleEditNoteItem = (note) => {
     const foundKey = Object.keys(packages).find(k => packages[k].name === note.packageName) || 'gold';
-    setSelectedPackage(packages[foundKey]);
+    const pkg = packages[foundKey] || packages.gold;
+    setSelectedPackage(pkg);
     setCustomerName(note.customerName);
     setBookingDate(note.bookingDate);
+    setCustomizedPrice(note.packagePrice);
+    setCustomizedDesc(note.packageDesc);
     setEditingNoteId(note.id);
     setIsBookingModalOpen(true);
   };
@@ -742,15 +749,25 @@ function Price() {
   };
 
   const handleShareReceipt = (note) => {
-    const receiptText = `✨ [Habesha Film Production - Receipt / Booking Summary] ✨\n` +
+    const receiptText = `🎥 ═══════════════════════════ 🎥\n` +
+      `   HABESHA FILM PRODUCTION\n` +
+      `   Professional Media & Wedding Cinematography\n` +
+      `🎥 ═══════════════════════════ 🎥\n\n` +
+      `✨ **OFFICIAL BOOKING RECEIPT** ✨\n` +
       `----------------------------------------\n` +
-      `👤 Customer Name: ${note.customerName}\n` +
-      `📅 Event Date: ${note.bookingDate}\n` +
-      `📦 Package: ${note.packageName} (${note.tier})\n` +
-      `💰 Total Price: ${note.packagePrice}\n` +
-      (note.packageDesc ? `📝 Description: ${note.packageDesc}\n` : '') +
+      `👤 **ስም ዓሚል (Customer):** ${note.customerName}\n` +
+      `📅 **ዕለት መደብ (Event Date):** ${note.bookingDate}\n` +
+      `📦 **ዝተመረጸ ፓኬኬጅ:** ${note.packageName} (${note.tier})\n` +
+      `💰 **ዋጋ (Total Price):** ${note.packagePrice}\n` +
+      (note.packageDesc ? `📝 **መግለጺ (Description):** ${note.packageDesc}\n` : '') +
       `----------------------------------------\n` +
-      `መጻኢ ፕሮጀክትታትኩም ብሉጽ ብዝኾነ ኣገባብ ነሰርሕ! እናመስገንና።`;
+      `📌 **ዝርዝር ኣገልግሎታት/ባህርያት:**\n` +
+      (note.packageServices && note.packageServices.length > 0 ? note.packageServices.map(s => `• ${s}`).join('\n') + '\n' : '') +
+      (note.packageFeatures && note.packageFeatures.length > 0 ? note.packageFeatures.map(f => `${f}`).join('\n') : '') + `\n\n` +
+      `═══════════════════════════════\n` +
+      `🌐 Habesha Film Production\n` +
+      `📍 Professional Studio & Media Production\n` +
+      `✨ መጻኢ ፕሮጀክትታትኩም ብሉጽ ብዝኾነ ኣገባብ ነሰርሕ! እናመስገንና።`;
 
     if (navigator.share) {
       navigator.share({
@@ -837,54 +854,61 @@ function Price() {
                   <span className="text-[10px] text-zinc-400 font-light">ዋጋ፣ መግለጺን ዝርዝርን ሒዙ ካብ ከይድምሰስ ዝዕቀብ</span>
                 </div>
 
-                <div className="space-y-4 pt-2 max-h-96 overflow-y-auto">
+                <div className="space-y-4 pt-2 max-h-[500px] overflow-y-auto">
                   {notebookList.length === 0 ? (
                     <p className="text-zinc-500 text-xs italic text-center py-4">ዝኾነ ዝተመዝገበ ዓሚል ወይ ኖት የልቦን። ካብቲ ኣብ ታሕቲ ዘሎ ኤዲት ሙድ ጌርካ ድማ "Select" ብምባል ክትምዝግቡ ትኽክሉ ኢኹም።</p>
                   ) : (
                     notebookList.map((note) => (
-                      <div key={note.id} className="bg-zinc-950 border border-zinc-800 p-5 rounded-xl space-y-3">
+                      <div key={note.id} className="bg-zinc-950 border border-zinc-800 p-5 rounded-xl space-y-4 shadow-md">
+                        
+                        {/* Header: Customer Name & Date */}
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b border-zinc-900 pb-3">
                           <div className="flex items-center gap-3">
-                            <span className="text-sm font-serif font-bold text-[#dfb557]">{note.customerName}</span>
-                            <span className="text-[10px] bg-zinc-900 border border-zinc-700 px-2 py-0.5 rounded text-zinc-300">ዕለት: {note.bookingDate}</span>
+                            <span className="text-base font-serif font-bold text-[#dfb557]">{note.customerName}</span>
+                            <span className="text-[10px] bg-zinc-900 border border-zinc-700 px-2.5 py-1 rounded-md text-zinc-300 font-semibold">📅 ዕለት: {note.bookingDate}</span>
                           </div>
                           <span className="text-[9px] text-zinc-500">ተመዝጊቡሉ: {note.timestamp}</span>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
-                          <div className="space-y-2">
-                            <p className="text-zinc-300 font-light">
-                              መረጹዎ ፓኬኬጅ: <strong className="text-white">{note.packageName} ({note.tier})</strong>
-                            </p>
-                            <p className="text-zinc-300 font-light">
-                              ዋጋ (Price): <span className="text-[#dfb557] font-bold text-sm">{note.packagePrice}</span>
-                            </p>
-                            {note.packageDesc && (
-                              <p className="text-zinc-400 font-light italic">
-                                መግለጺ (Desc): {note.packageDesc}
-                              </p>
-                            )}
+                        {/* Package Details Layout Inside Notebook */}
+                        <div className="bg-zinc-900/80 border border-[#dfb557]/30 p-4 rounded-xl space-y-3">
+                          <div className="flex justify-between items-center">
+                            <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#dfb557]">{note.tier}</span>
+                            <span className="text-lg font-serif font-bold text-[#dfb557]">{note.packagePrice}</span>
                           </div>
 
-                          <div className="space-y-1 bg-zinc-900/60 p-3 rounded-lg border border-zinc-800/80">
-                            <span className="text-[10px] text-[#dfb557] font-semibold uppercase block mb-1">ዝርዝር ኣገልግሎታት/ባህርያት:</span>
+                          <h4 className="text-xl font-serif text-white">{note.packageName} Package</h4>
+
+                          {note.packageDesc && (
+                            <p className="text-xs text-zinc-300 font-light leading-relaxed">
+                              {note.packageDesc}
+                            </p>
+                          )}
+
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2 border-t border-zinc-800 text-xs">
                             {note.packageServices && note.packageServices.length > 0 && (
-                              <ul className="text-[11px] text-zinc-300 space-y-0.5">
-                                {note.packageServices.map((s, i) => <li key={i}>• {s}</li>)}
-                              </ul>
+                              <div className="space-y-1">
+                                <span className="text-[10px] text-[#dfb557] font-semibold uppercase block">ናይ ቀረጻ ኣገልግሎታት:</span>
+                                <ul className="space-y-1 text-zinc-300 font-light">
+                                  {note.packageServices.map((s, i) => <li key={i}>{s}</li>)}
+                                </ul>
+                              </div>
                             )}
-                            {note.packageFeatures && note.packageFeatures.length > 0 && (
-                              <ul className="text-[11px] text-zinc-300 space-y-0.5 pt-1">
-                                {note.packageFeatures.map((f, i) => <li key={i}>{f}</li>)}
+
+                            <div className="space-y-1">
+                              <span className="text-[10px] text-[#dfb557] font-semibold uppercase block">ባህርያትን ረብሓታትን:</span>
+                              <ul className="space-y-1 text-zinc-300 font-light">
+                                {note.packageFeatures && note.packageFeatures.map((f, i) => <li key={i} className="flex items-center gap-2">{f}</li>)}
                               </ul>
-                            )}
+                            </div>
                           </div>
                         </div>
 
+                        {/* Action Buttons */}
                         <div className="flex justify-end items-center gap-2 pt-2 border-t border-zinc-900">
                           <button 
                             onClick={() => handleShareReceipt(note)} 
-                            className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded text-[10px] uppercase font-semibold transition-all"
+                            className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded text-[10px] uppercase font-semibold transition-all flex items-center gap-1"
                           >
                             Share 🔗
                           </button>
@@ -892,7 +916,7 @@ function Price() {
                             onClick={() => handleEditNoteItem(note)} 
                             className="px-3 py-1.5 bg-[#dfb557]/20 hover:bg-[#dfb557]/40 text-[#dfb557] rounded text-[10px] uppercase font-semibold transition-all"
                           >
-                            Edit
+                            Edit (ዋጋ/መግለጺ)
                           </button>
                           <button 
                             onClick={() => handleDeleteNote(note.id)} 
@@ -1024,7 +1048,7 @@ function Price() {
               ንመጻኢ ፕሮጀክትታትኩም ዝኸውን ዝተፈላለየ ሞያዊ ኣገልግሎታት። ካብቶም ደረጃታት እቲ ንደለይዎ ምረጹ።
             </p>
             
-            {/* Non-Edit Customer View (No Select Buttons / Clean Display View) */}
+            {/* Non-Edit Customer View (Clean Display View) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
               
               {/* 1. Premium Package */}
@@ -1140,13 +1164,13 @@ function Price() {
         )}
       </div>
 
-      {/* --- Booking Form Modal --- */}
+      {/* --- Booking Form & Price Customization Modal --- */}
       {isBookingModalOpen && selectedPackage && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-zinc-950 border-2 border-[#dfb557]/50 rounded-2xl max-w-md w-full p-6 md:p-8 shadow-2xl relative">
-            <span className="text-[9px] uppercase tracking-[0.3em] text-[#dfb557] font-semibold block mb-1">Confirmation Form</span>
-            <h3 className="text-2xl font-serif text-zinc-100 mb-2">Book {selectedPackage.name} Package</h3>
-            <p className="text-xs text-zinc-400 mb-6">ዋጋ: <span className="text-[#dfb557] font-bold">{selectedPackage.price}</span>. በጃኹም ስምኩምን ናይቲ ዕለት ቆጸራን ኣእትዉ።</p>
+          <div className="bg-zinc-950 border-2 border-[#dfb557]/50 rounded-2xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <span className="text-[9px] uppercase tracking-[0.3em] text-[#dfb557] font-semibold block mb-1">Confirmation & Customization Form</span>
+            <h3 className="text-2xl font-serif text-zinc-100 mb-2">Book / Edit {selectedPackage.name} Package</h3>
+            <p className="text-xs text-zinc-400 mb-6">እቲ ዝተመረጸ ፓኬኬጅ ዋጋን መግለጺን ክትቅይርዎ (ከተጉድልዎ ወይ ክትውስኽዎ) ትኽክሉ ኢኹም።</p>
 
             <form onSubmit={handleBookingSubmit} className="space-y-4 text-left">
               <div>
@@ -1169,6 +1193,27 @@ function Price() {
                   value={bookingDate}
                   onChange={(e) => setBookingDate(e.target.value)}
                   className="w-full bg-zinc-900 border border-zinc-700 p-3 rounded-xl text-xs text-zinc-100 focus:outline-none focus:border-[#dfb557]"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] uppercase text-[#dfb557] font-semibold block mb-1">Package Price (ዋጋ - ክትቅንሶ ወይ ክትውስኾ ትኽእል)</label>
+                <input 
+                  type="text"
+                  required
+                  value={customizedPrice}
+                  onChange={(e) => setCustomizedPrice(e.target.value)}
+                  className="w-full bg-zinc-900 border border-[#dfb557]/50 p-3 rounded-xl text-xs text-[#dfb557] font-bold focus:outline-none focus:border-[#dfb557]"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] uppercase text-zinc-400 font-semibold block mb-1">Description (መግለጺ)</label>
+                <textarea 
+                  rows="3"
+                  value={customizedDesc}
+                  onChange={(e) => setCustomizedDesc(e.target.value)}
+                  className="w-full bg-zinc-900 border border-zinc-700 p-3 rounded-xl text-xs text-zinc-300 focus:outline-none focus:border-[#dfb557] font-light"
                 />
               </div>
 
