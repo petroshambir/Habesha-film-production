@@ -473,6 +473,7 @@
 // export default Price;
 
 
+
 // import React, { useState, useEffect } from 'react';
 // import Navbar from '../components/Navbar';
 // import Footer from '../components/Footer';
@@ -488,7 +489,7 @@
 //   const [isEditGateOpen, setIsEditGateOpen] = useState(false);
 //   const [adminError, setAdminError] = useState(false);
 
-//   // ሓድሽ: ንናይ ዓሚል መዝገብ (Booking Notebook) ዝሕዝ ስቴት
+//   // ንናይ ዓሚል መዝገብ (Booking Notebook) ዝሕዝ ስቴት
 //   const [selectedPackageForBooking, setSelectedPackageForBooking] = useState(null);
 //   const [customerName, setCustomerName] = useState('');
 //   const [eventDate, setEventDate] = useState('');
@@ -685,12 +686,10 @@
 //     setIsEditGateOpen(false);
 //   };
 
-//   // ሓድሽ: ሓደ ዓሚል ክመርጽ ከሎ ናብ ኖትቡክ (Booking Form) መእተዊ ንምኽፋት
 //   const handleSelectPackage = (pkgKey) => {
 //     setSelectedPackageForBooking(packages[pkgKey]);
 //   };
 
-//   // ሓድሽ: ናይ ዓሚል መዝገብ ናብ ሰርቨር ንምልኣኽን ኣብ ሎካል ንምቕማጥን
 //   const handleSaveBooking = async (e) => {
 //     e.preventDefault();
 //     if (!customerName || !eventDate) {
@@ -724,13 +723,11 @@
 //     }
 
 //     setSavedBookings([...savedBookings, newBooking]);
-//     // ፎርም ድሕሪ ምዝገባ ምጽራይ
 //     setCustomerName('');
 //     setEventDate('');
 //     setCustomNotes('');
 //   };
 
-//   // ሓድሽ: ናብ ዋትሳፕ ወይ ቴሌግራም ሼር ንምግባር
 //   const handleShareWhatsApp = (booking) => {
 //     const text = `*Habesha Film Production - Booking Summary*\n\n` +
 //                  `👤 *Customer:* ${booking.customerName}\n` +
@@ -858,7 +855,7 @@
 //             </div>
 //           </div>
 //         ) : selectedPackageForBooking ? (
-//           /* ሓድሽ: ናይ ዓሚል መዝገብ ቅጽ (Customer Booking Notebook / Form) */
+//           /* ናይ ዓሚል መዝገብ ቅጽ (Customer Booking Notebook / Form) */
 //           <div className="max-w-xl mx-auto bg-zinc-950 border border-[#dfb557]/50 p-8 rounded-2xl shadow-2xl text-left w-full">
 //             <span className="text-[10px] uppercase tracking-widest text-[#dfb557] font-bold">Booking Notebook</span>
 //             <h2 className="text-2xl font-serif text-zinc-100 mt-1 mb-2">Register: {selectedPackageForBooking.name}</h2>
@@ -914,7 +911,6 @@
 //               </div>
 //             </form>
 
-//             {/* ዝተመዝገቡ ዓማኢት ዝረኣዩሉን ናብ ዋትሳፕ ሼር ዝብሉሉ ቦታ */}
 //             {savedBookings.length > 0 && (
 //               <div className="mt-8 pt-6 border-t border-zinc-900 space-y-4">
 //                 <h3 className="text-xs uppercase tracking-widest text-[#dfb557] font-bold">Saved Bookings (ዝተመዝገቡ)</h3>
@@ -934,13 +930,6 @@
 //                 ))}
 //               </div>
 //             )}
-//                   {/* ንሕና ኣብ ነፍሲ ወከፍ ፓኬጅ (ማለት፦ Premium, Gold, Silver, Standard) እዚ ጠውፊ እዚ ኣእቲናዮ ኣለና */}
-// <button 
-//   onClick={() => handleSelectPackage('premium')} // ንኣብነት ንፕሪሚየም
-//   className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md"
-// >
-//   Select {packages.premium.name}
-// </button>
 //           </div>
 //         ) : (
 //           <div className="max-w-7xl mx-auto text-center px-4 py-12 w-full">
@@ -1096,7 +1085,6 @@
 //             </div>
 //           </div>
 //         )}
-  
 //       </div>
 
 //       <Footer />
@@ -1361,12 +1349,17 @@ function Price() {
   };
 
   const handleShareWhatsApp = (booking) => {
-    const text = `*Habesha Film Production - Booking Summary*\n\n` +
-                 `👤 *Customer:* ${booking.customerName}\n` +
+    const text = `🎥 *Habesha Film Production - Official Receipt* 🎥\n\n` +
+                 `━━━━━━━━━━━━━━━━━━━\n` +
+                 `👤 *Customer Name:* ${booking.customerName}\n` +
                  `📅 *Event Date:* ${booking.eventDate}\n` +
-                 `📦 *Package:* ${booking.packageName} (${booking.packagePrice})\n` +
-                 `📝 *Notes:* ${booking.customNotes || 'None'}\n\n` +
-                 `ኣብ ሰዓቱ ስለዝመረጽኩምና ንመስግን!`;
+                 `📦 *Selected Package:* ${booking.packageName}\n` +
+                 `💰 *Investment/Price:* ${booking.packagePrice}\n` +
+                 `📝 *Custom Notes:* ${booking.customNotes || 'None'}\n` +
+                 `━━━━━━━━━━━━━━━━━━━\n\n` +
+                 `🙏 ንመጻኢ ፕሮጀክትታትኩም ስለመረጽኩምና ብጣዕሚ ንመስግን!\n` +
+                 `✨ *Habesha Film Production*`;
+                 
     const encoded = encodeURIComponent(text);
     window.open(`https://api.whatsapp.com/send?text=${encoded}`, '_blank');
   };
@@ -1519,7 +1512,7 @@ function Price() {
                 <label className="text-xs uppercase text-zinc-400 font-semibold block mb-1">Custom Notes / Adjustments (ተወሰኽቲ ሓበሬታ)</label>
                 <textarea 
                   rows="3"
-                  placeholder="ዝኾነ ክስተኻኸል ወይ ክውሰኽ ዝደልዎ..."
+                  placeholder="ዝኾነ ክስተኸል ወይ ክውሰኽ ዝደልዎ..."
                   value={customNotes}
                   onChange={(e) => setCustomNotes(e.target.value)}
                   className="w-full bg-zinc-900 border border-zinc-800 p-3 rounded-xl text-sm text-zinc-100 focus:outline-none focus:border-[#dfb557]"
@@ -1538,7 +1531,7 @@ function Price() {
                   type="submit" 
                   className="w-1/2 bg-[#dfb557] text-black py-3 rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-[#c99f45]"
                 >
-                  Save & Share 💾
+                  Save & Book 💾
                 </button>
               </div>
             </form>
@@ -1556,7 +1549,7 @@ function Price() {
                       onClick={() => handleShareWhatsApp(b)}
                       className="px-3 py-2 bg-green-600 hover:bg-green-500 text-white rounded-lg text-xs font-bold uppercase tracking-wider flex items-center gap-1"
                     >
-                      Share 📱
+                      Share Receipt 📱
                     </button>
                   </div>
                 ))}
@@ -1565,6 +1558,7 @@ function Price() {
           </div>
         ) : (
           <div className="max-w-7xl mx-auto text-center px-4 py-12 w-full">
+            {/* እቲ ንስኻ ጥራሕ ክትftሕዎ ዝግባእ Admin Unlock Input */}
             <div className="flex justify-end mb-4">
               {!isEditGateOpen ? (
                 <div className="flex flex-col items-end">
