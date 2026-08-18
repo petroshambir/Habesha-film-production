@@ -934,6 +934,13 @@ function Price() {
                 ))}
               </div>
             )}
+                  {/* ንሕና ኣብ ነፍሲ ወከፍ ፓኬጅ (ማለት፦ Premium, Gold, Silver, Standard) እዚ ጠውፊ እዚ ኣእቲናዮ ኣለና */}
+<button 
+  onClick={() => handleSelectPackage('premium')} // ንኣብነት ንፕሪሚየም
+  className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md"
+>
+  Select {packages.premium.name}
+</button>
           </div>
         ) : (
           <div className="max-w-7xl mx-auto text-center px-4 py-12 w-full">
@@ -1089,13 +1096,7 @@ function Price() {
             </div>
           </div>
         )}
-        {/* ንሕና ኣብ ነፍሲ ወከፍ ፓኬጅ (ማለት፦ Premium, Gold, Silver, Standard) እዚ ጠውፊ እዚ ኣእቲናዮ ኣለና */}
-<button 
-  onClick={() => handleSelectPackage('premium')} // ንኣብነት ንፕሪሚየም
-  className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md"
->
-  Select {packages.premium.name}
-</button>
+  
       </div>
 
       <Footer />
