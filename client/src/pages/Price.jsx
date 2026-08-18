@@ -472,7 +472,6 @@
 
 // export default Price;
 
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -488,8 +487,10 @@ function Price() {
   const [isEditGateOpen, setIsEditGateOpen] = useState(false);
   const [adminError, setAdminError] = useState(false);
 
-  // ናይ ኖትቡክ (Notes) ስርሕ ንምሓዝ ዝሕግዝ state
-  const [adminNotes, setAdminNotes] = useState('');
+  // --- ኖትቡክ (Notes) ዝምልከት ስቴት ---
+  const [notebookList, setNotebookList] = useState([]); // ነቲ ዝተዓቀበ ኖትስ ንምሓዝ
+  const [currentNoteText, setCurrentNoteText] = useState('');
+  const [authorName, setAuthorName] = useState('');
 
   const defaultPackages = {
     premium: { 
@@ -500,7 +501,7 @@ function Price() {
       services: [], 
       features: [
         '✓ ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)',
-        '✓ ክልተ ኤክስፐርት ካሜራማን',
+        '✓ ክልተ ኤክስፐርት ካሜራማන්',
         '✓ Cinematic Color Grading & VFX',
         '🎁 ቦናስ: ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር'
       ] 
@@ -577,7 +578,6 @@ function Price() {
   const [packages, setPackages] = useState(defaultPackages);
   const [tempPackages, setTempPackages] = useState(defaultPackages);
 
-  // ዳታ ካብ ሰርቨር ንምውራድን Authentication ንምፍታሽን
   useEffect(() => {
     fetch('https://habesha-film-production-server.onrender.com/api/packages')
       .then(res => res.json())
@@ -610,10 +610,14 @@ function Price() {
       }
     }
 
-    // ኣብ localStorage ተመሳጢሩ እንተሎ ኖትቡክ ክመጽእ ይኽእል
-    const savedNotes = localStorage.getItem('adminNotebookNotes');
+    // ንኖትቡክ ካብ localStorage ምጽዓን
+    const savedNotes = localStorage.getItem('adminNotebookList');
     if (savedNotes) {
-      setAdminNotes(savedNotes);
+      try {
+        setNotebookList(JSON.parse(savedNotes));
+      } catch (e) {
+        console.log("Error parsing notes");
+      }
     }
   }, []);
 
@@ -659,7 +663,44 @@ function Price() {
     }
   };
 
-  // ዳታ ናብ ሰርቨር ንምልኣኽን ንኦትቡክ ምዕቃብን
+  // ሓድሽ ኖት ንምውሳኽ (ስም፣ ዕለት/ሰዓት፣ ጽሑፍ ሒዙ)
+  const handleAddNote = () => {
+    if (!currentNoteText.trim()) return;
+    
+    const newNote = {
+      id: Date.now(),
+      author: authorName.trim() || 'Admin',
+      date: new Date().toLocaleString(),
+      text: currentNoteText
+    };
+
+    const updatedList = [newNote, ...notebookList];
+    setNotebookList(updatedList);
+    setCurrentNoteText('');
+    localStorage.setItem('adminNotebookList', JSON.stringify(updatedList));
+  };
+
+  // ኖት ንምስራዝ
+  const handleDeleteNote = (id) => {
+    const updatedList = notebookList.filter(note => note.id !== id);
+    setNotebookList(updatedList);
+    localStorage.setItem('adminNotebookList', JSON.stringify(updatedList));
+  };
+
+  // ንኖት ሼር ንምግባር (Share via Web Share API or Clipboard)
+  const handleShareNote = (note) => {
+    const shareContent = `📝 [Admin Note]\nBy: ${note.author}\nDate: ${note.date}\n\n${note.text}`;
+    if (navigator.share) {
+      navigator.share({
+        title: 'Habesha Film Production Note',
+        text: shareContent,
+      }).catch(err => console.log("Error sharing", err));
+    } else {
+      navigator.clipboard.writeText(shareContent);
+      alert("ኖት ናብ ክሊፕቦርድ ገዲዳ ኣላ (Copied to clipboard)!");
+    }
+  };
+
   const handleSaveAndExit = async () => {
     try {
       const response = await fetch('https://habesha-film-production-server.onrender.com/api/packages/update', {
@@ -678,9 +719,6 @@ function Price() {
       console.error("Error saving to server:", err);
       alert("ዳታ ናብ ሰርቨር ምልኣኽ ኣይከኣለን።");
     }
-    
-    // ኖትቡክ ብlocalStorage ንምዕቃብ
-    localStorage.setItem('adminNotebookNotes', adminNotes);
 
     setIsEditMode(false);
     setIsEditGateOpen(false);
@@ -725,25 +763,81 @@ function Price() {
         ) : isEditMode ? (
           <div className="max-w-5xl mx-auto text-center px-4 py-12 w-full">
             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">Administration Mode</span>
-            <h1 className="text-3xl font-serif mb-4 text-zinc-100">Edit Packages & Prices</h1>
+            <h1 className="text-3xl font-serif mb-4 text-zinc-100">Edit Packages & Notebook</h1>
             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-8"></div>
             
-            <div className="bg-zinc-950 border border-[#dfb557]/40 p-6 md:p-8 rounded-2xl space-y-6 text-left shadow-2xl">
+            <div className="bg-zinc-950 border border-[#dfb557]/40 p-6 md:p-8 rounded-2xl space-y-8 text-left shadow-2xl">
               
-              {/* --- ኖትቡክ (Admin Notebook Section) --- */}
-              <div className="bg-zinc-900 p-5 rounded-xl border border-[#dfb557]/30 space-y-2 mb-6">
-                <label className="text-xs font-bold uppercase text-[#dfb557] tracking-wider block">📝 Admin Notebook / Reminders</label>
-                <p className="text-[11px] text-zinc-400 font-light">ኣብዚ ዝደለኻዮ መዘክር (Notes) ክትጽሕፍ ትኽእል ኢኻ።</p>
-                <textarea 
-                  rows="3"
-                  placeholder="ኣብዚ ሓሳባትካ ወይ መዘክር ጽሕፍ..."
-                  value={adminNotes}
-                  onChange={(e) => setAdminNotes(e.target.value)}
-                  className="w-full bg-zinc-950 border border-zinc-700 p-3 rounded-lg text-xs text-zinc-100 focus:outline-none focus:border-[#dfb557]"
-                />
+              {/* --- Admin Notebook Section (ስም፣ ዕደት፣ ጽሑፍ፣ ሳቭ፣ ሼር) --- */}
+              <div className="bg-zinc-900 p-6 rounded-xl border border-[#dfb557]/30 space-y-4 shadow-inner">
+                <div className="flex justify-between items-center border-b border-zinc-800 pb-3">
+                  <h3 className="text-xs font-bold uppercase text-[#dfb557] tracking-wider">📝 Admin Notebook & Receipts</h3>
+                  <span className="text-[10px] text-zinc-400 font-light">ብዕለትን ብስምን ዝተሰነየ መዘክር</span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                  <input 
+                    type="text"
+                    placeholder="የካብ ሰራሕተኛ ስም (Your Name)"
+                    value={authorName}
+                    onChange={(e) => setAuthorName(e.target.value)}
+                    className="bg-zinc-950 border border-zinc-700 p-3 rounded-lg text-xs text-zinc-100 focus:outline-none focus:border-[#dfb557]"
+                  />
+                  <div className="md:col-span-2 flex gap-2">
+                    <input 
+                      type="text"
+                      placeholder="ሓድሽ መዘክር ወይ ዝርዝር ጽሕፍ..."
+                      value={currentNoteText}
+                      onChange={(e) => setCurrentNoteText(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === 'Enter') handleAddNote(); }}
+                      className="flex-grow bg-zinc-950 border border-zinc-700 p-3 rounded-lg text-xs text-zinc-100 focus:outline-none focus:border-[#dfb557]"
+                    />
+                    <button 
+                      type="button" 
+                      onClick={handleAddNote}
+                      className="px-5 bg-[#dfb557] text-black rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-[#c99f45] transition-all"
+                    >
+                      Save Note
+                    </button>
+                  </div>
+                </div>
+
+                {/* ዝተዓቀቡ ኖትስ ዝርኣዩሉ ክፍሊ */}
+                <div className="space-y-3 pt-3 max-h-60 overflow-y-auto">
+                  {notebookList.length === 0 ? (
+                    <p className="text-zinc-500 text-xs italic text-center py-2">ዝኾነ ዝተዓቀበ ኖት የልቦን።</p>
+                  ) : (
+                    notebookList.map((note) => (
+                      <div key={note.id} className="bg-zinc-950/80 border border-zinc-800 p-3 rounded-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[11px] font-bold text-[#dfb557]">{note.author}</span>
+                            <span className="text-[10px] text-zinc-500">• {note.date}</span>
+                          </div>
+                          <p className="text-xs text-zinc-200 whitespace-pre-wrap">{note.text}</p>
+                        </div>
+                        <div className="flex items-center gap-2 self-end md:self-center">
+                          <button 
+                            onClick={() => handleShareNote(note)} 
+                            className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded text-[10px] uppercase font-semibold transition-all"
+                          >
+                            Share 🔗
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteNote(note.id)} 
+                            className="px-3 py-1.5 bg-red-950/60 hover:bg-red-900 text-red-300 rounded text-[10px] uppercase font-semibold transition-all"
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))
+                  )}
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Package Inputs */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
                 {Object.keys(tempPackages).map((key) => {
                   const pkg = tempPackages[key];
                   return (
