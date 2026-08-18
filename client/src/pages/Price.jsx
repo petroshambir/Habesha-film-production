@@ -472,6 +472,7 @@
 
 // export default Price;
 
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -487,10 +488,15 @@ function Price() {
   const [isEditGateOpen, setIsEditGateOpen] = useState(false);
   const [adminError, setAdminError] = useState(false);
 
-  // --- ኖትቡክ (Notes) ዝምልከት ስቴት ---
-  const [notebookList, setNotebookList] = useState([]); // ነቲ ዝተዓቀበ ኖትስ ንምሓዝ
-  const [currentNoteText, setCurrentNoteText] = useState('');
-  const [authorName, setAuthorName] = useState('');
+  // --- Customer Selection & Booking Form Modal State ---
+  const [selectedPackage, setSelectedPackage] = useState(null);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [customerName, setCustomerName] = useState('');
+  const [bookingDate, setBookingDate] = useState('');
+
+  // --- Admin Notebook State ---
+  const [notebookList, setNotebookList] = useState([]);
+  const [editingNoteId, setEditingNoteId] = useState(null); // ንምእራይ (Edit) ክሕግዝ
 
   const defaultPackages = {
     premium: { 
@@ -610,13 +616,13 @@ function Price() {
       }
     }
 
-    // ንኖትቡክ ካብ localStorage ምጽዓን
-    const savedNotes = localStorage.getItem('adminNotebookList');
+    // ከይድምሰስ ብlocalStorage ዝተቐመጠ ኖትቡክ ምጽዓን
+    const savedNotes = localStorage.getItem('adminNotebookListPersistent');
     if (savedNotes) {
       try {
         setNotebookList(JSON.parse(savedNotes));
       } catch (e) {
-        console.log("Error parsing notes");
+        console.log("Error parsing saved notes");
       }
     }
   }, []);
@@ -663,41 +669,98 @@ function Price() {
     }
   };
 
-  // ሓድሽ ኖት ንምውሳኽ (ስም፣ ዕለት/ሰዓት፣ ጽሑፍ ሒዙ)
-  const handleAddNote = () => {
-    if (!currentNoteText.trim()) return;
-    
-    const newNote = {
-      id: Date.now(),
-      author: authorName.trim() || 'Admin',
-      date: new Date().toLocaleString(),
-      text: currentNoteText
-    };
-
-    const updatedList = [newNote, ...notebookList];
-    setNotebookList(updatedList);
-    setCurrentNoteText('');
-    localStorage.setItem('adminNotebookList', JSON.stringify(updatedList));
+  // 1. ዓሚል Select ምስ ዝብል ናብ ፎርም ይወስዶ
+  const handleSelectPackageClick = (pkgKey) => {
+    const pkg = packages[pkgKey];
+    setSelectedPackage(pkg);
+    setCustomerName('');
+    setBookingDate('');
+    setEditingNoteId(null);
+    setIsBookingModalOpen(true);
   };
 
-  // ኖት ንምስራዝ
+  // 2. ቅጥዒ (Booking Form) ምስ ሙሉእ ስም፣ ዕለትን ዋጋን ናብ ኖትቡክ ሳቭ ምግባር
+  const handleBookingSubmit = (e) => {
+    e.preventDefault();
+    if (!customerName.trim() || !bookingDate || !selectedPackage) return;
+
+    if (editingNoteId !== null) {
+      // Edit ዝገበርናዮ እንተኾይኑ ንምእራይ
+      const updatedList = notebookList.map(item => {
+        if (item.id === editingNoteId) {
+          return {
+            ...item,
+            customerName,
+            bookingDate,
+            packageName: selectedPackage.name,
+            packagePrice: selectedPackage.price,
+            tier: selectedPackage.tier
+          };
+        }
+        return item;
+      });
+      setNotebookList(updatedList);
+      localStorage.setItem('adminNotebookListPersistent', JSON.stringify(updatedList));
+    } else {
+      // ሓድሽ መዝገብ (Save New Booking/Note)
+      const newBookingRecord = {
+        id: Date.now(),
+        customerName: customerName.trim(),
+        bookingDate,
+        packageName: selectedPackage.name,
+        packagePrice: selectedPackage.price,
+        tier: selectedPackage.tier,
+        timestamp: new Date().toLocaleString()
+      };
+
+      const updatedList = [newBookingRecord, ...notebookList];
+      setNotebookList(updatedList);
+      localStorage.setItem('adminNotebookListPersistent', JSON.stringify(updatedList));
+    }
+
+    setIsBookingModalOpen(false);
+    setSelectedPackage(null);
+    setEditingNoteId(null);
+    alert("ብሰላም ኣብ Admin Notebook ተዓቂቡ እዩ!");
+  };
+
+  // 3. ኖትቡክ ንምእራይ (Edit)
+  const handleEditNoteItem = (note) => {
+    // ነቲ ኖት ዝተዛመደ ፓኬኬጅ ምድላይ
+    const foundKey = Object.keys(packages).find(k => packages[k].name === note.packageName) || 'gold';
+    setSelectedPackage(packages[foundKey]);
+    setCustomerName(note.customerName);
+    setBookingDate(note.bookingDate);
+    setEditingNoteId(note.id);
+    setIsBookingModalOpen(true);
+  };
+
+  // 4. ኖት ንምስራዝ
   const handleDeleteNote = (id) => {
     const updatedList = notebookList.filter(note => note.id !== id);
     setNotebookList(updatedList);
-    localStorage.setItem('adminNotebookList', JSON.stringify(updatedList));
+    localStorage.setItem('adminNotebookListPersistent', JSON.stringify(updatedList));
   };
 
-  // ንኖት ሼር ንምግባር (Share via Web Share API or Clipboard)
-  const handleShareNote = (note) => {
-    const shareContent = `📝 [Admin Note]\nBy: ${note.author}\nDate: ${note.date}\n\n${note.text}`;
+  // 5. ሼር ንምግባር (ንዓማዊል ዝኸውን ዌብሳይት ዝመስል ደረሰኝ/Receipt Share)
+  const handleShareReceipt = (note) => {
+    const receiptText = `✨ [Habesha Film Production - Receipt / Booking Summary] ✨\n` +
+      `----------------------------------------\n` +
+      `👤 Customer Name: ${note.customerName}\n` +
+      `📅 Event Date: ${note.bookingDate}\n` +
+      `📦 Package: ${note.packageName} (${note.tier})\n` +
+      `💰 Total Price: ${note.packagePrice}\n` +
+      `----------------------------------------\n` +
+      `መጻኢ ፕሮጀክትታትኩም ብሉጽ ብዝኾነ ኣገባብ ነሰርሕ! እናመስገንና።`;
+
     if (navigator.share) {
       navigator.share({
-        title: 'Habesha Film Production Note',
-        text: shareContent,
+        title: 'Booking Receipt - Habesha Film Production',
+        text: receiptText,
       }).catch(err => console.log("Error sharing", err));
     } else {
-      navigator.clipboard.writeText(shareContent);
-      alert("ኖት ናብ ክሊፕቦርድ ገዲዳ ኣላ (Copied to clipboard)!");
+      navigator.clipboard.writeText(receiptText);
+      alert("ደረሰኝ (Receipt) ናብ ክሊፕቦርድ ገዲዳ ኣላ! ንዓማዊል ክትልእክዋ ትኽእሉ ኢኹም (Copied to clipboard).");
     }
   };
 
@@ -763,65 +826,46 @@ function Price() {
         ) : isEditMode ? (
           <div className="max-w-5xl mx-auto text-center px-4 py-12 w-full">
             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">Administration Mode</span>
-            <h1 className="text-3xl font-serif mb-4 text-zinc-100">Edit Packages & Notebook</h1>
+            <h1 className="text-3xl font-serif mb-4 text-zinc-100">Edit Packages & Admin Notebook</h1>
             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-8"></div>
             
             <div className="bg-zinc-950 border border-[#dfb557]/40 p-6 md:p-8 rounded-2xl space-y-8 text-left shadow-2xl">
               
-              {/* --- Admin Notebook Section (ስም፣ ዕደት፣ ጽሑፍ፣ ሳቭ፣ ሼር) --- */}
+              {/* --- Admin Notebook / Bookings List Section --- */}
               <div className="bg-zinc-900 p-6 rounded-xl border border-[#dfb557]/30 space-y-4 shadow-inner">
                 <div className="flex justify-between items-center border-b border-zinc-800 pb-3">
-                  <h3 className="text-xs font-bold uppercase text-[#dfb557] tracking-wider">📝 Admin Notebook & Receipts</h3>
-                  <span className="text-[10px] text-zinc-400 font-light">ብዕለትን ብስምን ዝተሰነየ መዘክር</span>
+                  <h3 className="text-xs font-bold uppercase text-[#dfb557] tracking-wider">📝 Admin Notebook & Customer Bookings</h3>
+                  <span className="text-[10px] text-zinc-400 font-light">ዝተረጋገጸ ዳታ ካብ ከይድምሰስ ዝዕቀበሉ</span>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
-                  <input 
-                    type="text"
-                    placeholder="የካብ ሰራሕተኛ ስም (Your Name)"
-                    value={authorName}
-                    onChange={(e) => setAuthorName(e.target.value)}
-                    className="bg-zinc-950 border border-zinc-700 p-3 rounded-lg text-xs text-zinc-100 focus:outline-none focus:border-[#dfb557]"
-                  />
-                  <div className="md:col-span-2 flex gap-2">
-                    <input 
-                      type="text"
-                      placeholder="ሓድሽ መዘክር ወይ ዝርዝር ጽሕፍ..."
-                      value={currentNoteText}
-                      onChange={(e) => setCurrentNoteText(e.target.value)}
-                      onKeyDown={(e) => { if (e.key === 'Enter') handleAddNote(); }}
-                      className="flex-grow bg-zinc-950 border border-zinc-700 p-3 rounded-lg text-xs text-zinc-100 focus:outline-none focus:border-[#dfb557]"
-                    />
-                    <button 
-                      type="button" 
-                      onClick={handleAddNote}
-                      className="px-5 bg-[#dfb557] text-black rounded-lg text-xs uppercase font-bold tracking-wider hover:bg-[#c99f45] transition-all"
-                    >
-                      Save Note
-                    </button>
-                  </div>
-                </div>
-
-                {/* ዝተዓቀቡ ኖትስ ዝርኣዩሉ ክፍሊ */}
-                <div className="space-y-3 pt-3 max-h-60 overflow-y-auto">
+                <div className="space-y-3 pt-2 max-h-80 overflow-y-auto">
                   {notebookList.length === 0 ? (
-                    <p className="text-zinc-500 text-xs italic text-center py-2">ዝኾነ ዝተዓቀበ ኖት የልቦን።</p>
+                    <p className="text-zinc-500 text-xs italic text-center py-4">ዝኾነ ዝተመዝገበ ዓሚል ወይ ኖት የልቦን። ካብቲ መደበኛ ገጽ "Select" ብምባል ክትምዝግቡ ትኽክሉ ኢኹም።</p>
                   ) : (
                     notebookList.map((note) => (
-                      <div key={note.id} className="bg-zinc-950/80 border border-zinc-800 p-3 rounded-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-3">
+                      <div key={note.id} className="bg-zinc-950/90 border border-zinc-800 p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
                         <div className="space-y-1">
-                          <div className="flex items-center gap-2">
-                            <span className="text-[11px] font-bold text-[#dfb557]">{note.author}</span>
-                            <span className="text-[10px] text-zinc-500">• {note.date}</span>
+                          <div className="flex items-center gap-3">
+                            <span className="text-sm font-serif font-bold text-[#dfb557]">{note.customerName}</span>
+                            <span className="text-[10px] bg-zinc-900 border border-zinc-700 px-2 py-0.5 rounded text-zinc-300">ዕለት: {note.bookingDate}</span>
                           </div>
-                          <p className="text-xs text-zinc-200 whitespace-pre-wrap">{note.text}</p>
+                          <p className="text-xs text-zinc-300 font-light">
+                            መረጹዎ ፓኬኬጅ: <strong className="text-white">{note.packageName} ({note.tier})</strong> — ዋጋ: <span className="text-[#dfb557] font-bold">{note.packagePrice}</span>
+                          </p>
+                          <span className="text-[9px] text-zinc-500 block">ተመዝጊቡሉ: {note.timestamp}</span>
                         </div>
                         <div className="flex items-center gap-2 self-end md:self-center">
                           <button 
-                            onClick={() => handleShareNote(note)} 
+                            onClick={() => handleShareReceipt(note)} 
                             className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded text-[10px] uppercase font-semibold transition-all"
                           >
                             Share 🔗
+                          </button>
+                          <button 
+                            onClick={() => handleEditNoteItem(note)} 
+                            className="px-3 py-1.5 bg-[#dfb557]/20 hover:bg-[#dfb557]/40 text-[#dfb557] rounded text-[10px] uppercase font-semibold transition-all"
+                          >
+                            Edit
                           </button>
                           <button 
                             onClick={() => handleDeleteNote(note.id)} 
@@ -959,7 +1003,10 @@ function Price() {
                     ))}
                   </ul>
                 </div>
-                <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
+                <button 
+                  onClick={() => handleSelectPackageClick('premium')}
+                  className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md cursor-pointer"
+                >
                   Select {packages.premium.name}
                 </button>
               </div>
@@ -991,7 +1038,10 @@ function Price() {
                     ))}
                   </ul>
                 </div>
-                <button className="w-full bg-[#dfb557] text-black py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 rounded-xl shadow-lg">
+                <button 
+                  onClick={() => handleSelectPackageClick('gold')}
+                  className="w-full bg-[#dfb557] text-black py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 rounded-xl shadow-lg cursor-pointer"
+                >
                   Select {packages.gold.name}
                 </button>
               </div>
@@ -1020,7 +1070,10 @@ function Price() {
                     ))}
                   </ul>
                 </div>
-                <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
+                <button 
+                  onClick={() => handleSelectPackageClick('silver')}
+                  className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md cursor-pointer"
+                >
                   Select {packages.silver.name}
                 </button>
               </div>
@@ -1049,7 +1102,10 @@ function Price() {
                     ))}
                   </ul>
                 </div>
-                <button className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md">
+                <button 
+                  onClick={() => handleSelectPackageClick('standard')}
+                  className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md cursor-pointer"
+                >
                   Select {packages.standard.name}
                 </button>
               </div>
@@ -1058,6 +1114,58 @@ function Price() {
           </div>
         )}
       </div>
+
+      {/* --- Booking Form Modal (ዓሚል "Select" ምስ ዝብል ዝመጽእ ፎርም) --- */}
+      {isBookingModalOpen && selectedPackage && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+          <div className="bg-zinc-950 border-2 border-[#dfb557]/50 rounded-2xl max-w-md w-full p-6 md:p-8 shadow-2xl relative">
+            <span className="text-[9px] uppercase tracking-[0.3em] text-[#dfb557] font-semibold block mb-1">Confirmation Form</span>
+            <h3 className="text-2xl font-serif text-zinc-100 mb-2">Book {selectedPackage.name} Package</h3>
+            <p className="text-xs text-zinc-400 mb-6">ዋጋ: <span className="text-[#dfb557] font-bold">{selectedPackage.price}</span>. በጃኹም ስምኩምን ናይቲ ዕለት ቆጸራን ኣእትዉ።</p>
+
+            <form onSubmit={handleBookingSubmit} className="space-y-4 text-left">
+              <div>
+                <label className="text-[10px] uppercase text-zinc-400 font-semibold block mb-1">Full Name (ስም ዓሚል)</label>
+                <input 
+                  type="text"
+                  required
+                  placeholder="ኣብነት፦ ሃብቶም ዮውሃንስ"
+                  value={customerName}
+                  onChange={(e) => setCustomerName(e.target.value)}
+                  className="w-full bg-zinc-900 border border-zinc-700 p-3 rounded-xl text-xs text-zinc-100 focus:outline-none focus:border-[#dfb557]"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] uppercase text-zinc-400 font-semibold block mb-1">Event Date (ዕለት መደብ/ቆጸራ)</label>
+                <input 
+                  type="date"
+                  required
+                  value={bookingDate}
+                  onChange={(e) => setBookingDate(e.target.value)}
+                  className="w-full bg-zinc-900 border border-zinc-700 p-3 rounded-xl text-xs text-zinc-100 focus:outline-none focus:border-[#dfb557]"
+                />
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button 
+                  type="button"
+                  onClick={() => setIsBookingModalOpen(false)}
+                  className="flex-1 bg-zinc-900 text-zinc-300 py-3 rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-zinc-800 transition-all"
+                >
+                  Cancel
+                </button>
+                <button 
+                  type="submit"
+                  className="flex-1 bg-[#dfb557] text-black py-3 rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-[#c99f45] transition-all shadow-lg"
+                >
+                  {editingNoteId !== null ? 'Update Booking' : 'Save to Notebook'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
 
       <Footer />
     </div>
