@@ -472,7 +472,6 @@
 
 // export default Price;
 
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -507,7 +506,7 @@ function Price() {
       services: [], 
       features: [
         '✓ ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)',
-        '✓ ክልተ ኤክስፐርት ካሜራማන්',
+        '✓ ክልተ ኤክስፐርት ካሜራማን',
         '✓ Cinematic Color Grading & VFX',
         '🎁 ቦናስ: ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር'
       ] 
@@ -668,8 +667,10 @@ function Price() {
     }
   };
 
-  const handleSelectPackageClick = (pkgKey) => {
-    const pkg = packages[pkgKey];
+  // When in Edit Mode, use tempPackages data for selection/testing; otherwise use live packages
+  const handleSelectPackageClick = (pkgKey, isFromEdit = false) => {
+    const sourcePackages = isFromEdit ? tempPackages : packages;
+    const pkg = sourcePackages[pkgKey];
     setSelectedPackage(pkg);
     setCustomerName('');
     setBookingDate('');
@@ -758,7 +759,7 @@ function Price() {
       }).catch(err => console.log("Error sharing", err));
     } else {
       navigator.clipboard.writeText(receiptText);
-      alert("ደረሰኝ (Receipt) ናብ ክሊፕቦርድ ገዲዳ ኣላ! ንዓማዊል ክትልእክዋ ትኽእሉ ኢኹም (Copied to clipboard).");
+      alert("ደረሰኝ (Receipt) ናብ ክሊፕቦርድ ገዲዳ ኣላ! ንዓማዊል ክትልእክዋ ትኽክሉ ኢኹም (Copied to clipboard).");
     }
   };
 
@@ -829,7 +830,7 @@ function Price() {
             
             <div className="bg-zinc-950 border border-[#dfb557]/40 p-6 md:p-8 rounded-2xl space-y-8 text-left shadow-2xl">
               
-              {/* --- Admin Notebook / Bookings List Section with Price & Description Edit --- */}
+              {/* --- Admin Notebook / Bookings List Section --- */}
               <div className="bg-zinc-900 p-6 rounded-xl border border-[#dfb557]/30 space-y-4 shadow-inner">
                 <div className="flex justify-between items-center border-b border-zinc-800 pb-3">
                   <h3 className="text-xs font-bold uppercase text-[#dfb557] tracking-wider">📝 Admin Notebook & Customer Bookings</h3>
@@ -838,7 +839,7 @@ function Price() {
 
                 <div className="space-y-4 pt-2 max-h-96 overflow-y-auto">
                   {notebookList.length === 0 ? (
-                    <p className="text-zinc-500 text-xs italic text-center py-4">ዝኾነ ዝተመዝገበ ዓሚል ወይ ኖት የልቦን። ካብቲ መደበኛ ገጽ "Select" ብምባል ክትምዝግቡ ትኽክሉ ኢኹም።</p>
+                    <p className="text-zinc-500 text-xs italic text-center py-4">ዝኾነ ዝተመዝገበ ዓሚል ወይ ኖት የልቦን። ካብቲ ኣብ ታሕቲ ዘሎ ኤዲት ሙድ ጌርካ ድማ "Select" ብምባል ክትምዝግቡ ትኽክሉ ኢኹም።</p>
                   ) : (
                     notebookList.map((note) => (
                       <div key={note.id} className="bg-zinc-950 border border-zinc-800 p-5 rounded-xl space-y-3">
@@ -906,9 +907,9 @@ function Price() {
                 </div>
               </div>
 
-              {/* Package Inputs Styled Identically to Select Mode */}
+              {/* Package Inputs with Select Button included right inside Edit Mode */}
               <div className="pt-4">
-                <h3 className="text-sm font-bold uppercase text-[#dfb557] tracking-wider mb-4">⚙️ Edit Website Packages (Standard Layout)</h3>
+                <h3 className="text-sm font-bold uppercase text-[#dfb557] tracking-wider mb-4">⚙️ Edit Website Packages & Test Select</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                   {Object.keys(tempPackages).map((key) => {
                     const pkg = tempPackages[key];
@@ -975,9 +976,13 @@ function Price() {
                           </div>
                         </div>
 
-                        <div className="w-full bg-zinc-950 border border-[#dfb557]/30 text-zinc-400 py-2.5 text-[10px] uppercase font-bold tracking-[0.2em] text-center rounded-xl opacity-60">
-                          Edit Mode Preview
-                        </div>
+                        {/* Select Button inside Edit Mode for testing / recording bookings */}
+                        <button 
+                          onClick={() => handleSelectPackageClick(key, true)}
+                          className="w-full bg-[#dfb557] text-black py-2.5 text-[10px] uppercase font-bold tracking-[0.2em] hover:bg-[#c99f45] transition-all rounded-xl shadow-md cursor-pointer"
+                        >
+                          Select {pkg.name} ➔
+                        </button>
                       </div>
                     );
                   })}
@@ -1019,31 +1024,26 @@ function Price() {
               ንመጻኢ ፕሮጀክትታትኩም ዝኸውን ዝተፈላለየ ሞያዊ ኣገልግሎታት። ካብቶም ደረጃታት እቲ ንደለይዎ ምረጹ።
             </p>
             
+            {/* Non-Edit Customer View (No Select Buttons / Clean Display View) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
               
               {/* 1. Premium Package */}
-              <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
+              <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between">
                 <div>
                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">{packages.premium.tier}</span>
                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{packages.premium.name}</h3>
                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.premium.price}</p>
                   <p className="text-xs sm:text-sm text-zinc-300 mb-6 font-light leading-relaxed">{packages.premium.desc}</p>
-                  <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-8 font-light">
+                  <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-4 font-light">
                     {(packages.premium.features || []).map((feat, idx) => (
                       <li key={idx} className="flex items-center gap-2">{feat}</li>
                     ))}
                   </ul>
                 </div>
-                <button 
-                  onClick={() => handleSelectPackageClick('premium')}
-                  className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md cursor-pointer"
-                >
-                  Select {packages.premium.name}
-                </button>
               </div>
 
               {/* 2. Gold Package */}
-              <div className="bg-zinc-950 border-2 border-[#dfb557] p-6 sm:p-8 rounded-2xl shadow-2xl relative flex flex-col justify-between transition-transform hover:-translate-y-1">
+              <div className="bg-zinc-950 border-2 border-[#dfb557] p-6 sm:p-8 rounded-2xl shadow-2xl relative flex flex-col justify-between">
                 <span className="absolute -top-3 right-6 bg-[#dfb557] text-black text-[9px] uppercase font-bold tracking-[0.3em] px-3 py-1 rounded-full shadow-md">
                   {packages.gold.tier}
                 </span>
@@ -1067,22 +1067,16 @@ function Price() {
                     </div>
                   )}
 
-                  <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
+                  <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-4 font-light">
                     {(packages.gold.features || []).map((feat, idx) => (
                       <li key={idx} className="flex items-center gap-2">{feat}</li>
                     ))}
                   </ul>
                 </div>
-                <button 
-                  onClick={() => handleSelectPackageClick('gold')}
-                  className="w-full bg-[#dfb557] text-black py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 rounded-xl shadow-lg cursor-pointer"
-                >
-                  Select {packages.gold.name}
-                </button>
               </div>
 
               {/* 3. Silver Package */}
-              <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between transition-transform hover:-translate-y-1">
+              <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between">
                 <div>
                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">{packages.silver.tier}</span>
                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{packages.silver.name}</h3>
@@ -1103,22 +1097,16 @@ function Price() {
                     </div>
                   )}
 
-                  <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
+                  <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-4 font-light">
                     {(packages.silver.features || []).map((feat, idx) => (
                       <li key={idx} className="flex items-center gap-2">{feat}</li>
                     ))}
                   </ul>
                 </div>
-                <button 
-                  onClick={() => handleSelectPackageClick('silver')}
-                  className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md cursor-pointer"
-                >
-                  Select {packages.silver.name}
-                </button>
               </div>
 
               {/* 4. Standard Package */}
-              <div className="bg-zinc-950/70 border-2 border-[#dfb557]/30 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col justify-between transition-transform hover:-translate-y-1">
+              <div className="bg-zinc-950/70 border-2 border-[#dfb557]/30 p-6 sm:p-8 rounded-2xl shadow-xl flex flex-col justify-between">
                 <div>
                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-zinc-400">{packages.standard.tier}</span>
                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{packages.standard.name}</h3>
@@ -1139,18 +1127,12 @@ function Price() {
                     </div>
                   )}
 
-                  <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-8 font-light">
+                  <ul className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-4 font-light">
                     {(packages.standard.features || []).map((feat, idx) => (
                       <li key={idx} className="flex items-center gap-2">{feat}</li>
                     ))}
                   </ul>
                 </div>
-                <button 
-                  onClick={() => handleSelectPackageClick('standard')}
-                  className="w-full bg-zinc-900 border border-[#dfb557]/50 text-zinc-100 py-3 text-[11px] uppercase font-bold tracking-[0.3em] hover:bg-[#dfb557] hover:text-black transition-all duration-300 rounded-xl shadow-md cursor-pointer"
-                >
-                  Select {packages.standard.name}
-                </button>
               </div>
 
             </div>
