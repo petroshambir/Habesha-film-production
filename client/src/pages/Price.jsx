@@ -496,7 +496,7 @@ function Price() {
 
   // --- Admin Notebook State ---
   const [notebookList, setNotebookList] = useState([]);
-  const [editingNoteId, setEditingNoteId] = useState(null); // ንምእራይ (Edit) ክሕግዝ
+  const [editingNoteId, setEditingNoteId] = useState(null);
 
   const defaultPackages = {
     premium: { 
@@ -516,7 +516,7 @@ function Price() {
       tier: 'Top Tier', 
       name: 'Gold', 
       price: '300,000', 
-      desc: '', 
+      desc: 'ንዝበለጸን መስተንክራዊን መዓልቲ መርዓ ዝኸውን ምሉእ መደብ።',
       services: [
         '• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
         '• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
@@ -539,7 +539,7 @@ function Price() {
       tier: 'Advanced', 
       name: 'Silver', 
       price: '240,000', 
-      desc: '', 
+      desc: 'ሞያዊ ስራሕ ብዝተመጣጠነ ዋጋ ንምርካብ።',
       services: [
         '• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
         '• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
@@ -561,7 +561,7 @@ function Price() {
       tier: 'Standard', 
       name: 'Standard', 
       price: '190,000', 
-      desc: '', 
+      desc: 'ቀንዲ ኣገደስቲ እዋናት ንምዕቃብ ዝሕግዝ መደብ።',
       services: [
         '• ስቱዲዮ / ኣብ መስክ (1 ቪድዮ፣ 1 ፎቶ)',
         '• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
@@ -616,7 +616,6 @@ function Price() {
       }
     }
 
-    // ከይድምሰስ ብlocalStorage ዝተቐመጠ ኖትቡክ ምጽዓን
     const savedNotes = localStorage.getItem('adminNotebookListPersistent');
     if (savedNotes) {
       try {
@@ -669,7 +668,6 @@ function Price() {
     }
   };
 
-  // 1. ዓሚል Select ምስ ዝብል ናብ ፎርም ይወስዶ
   const handleSelectPackageClick = (pkgKey) => {
     const pkg = packages[pkgKey];
     setSelectedPackage(pkg);
@@ -679,13 +677,11 @@ function Price() {
     setIsBookingModalOpen(true);
   };
 
-  // 2. ቅጥዒ (Booking Form) ምስ ሙሉእ ስም፣ ዕለትን ዋጋን ናብ ኖትቡክ ሳቭ ምግባር
   const handleBookingSubmit = (e) => {
     e.preventDefault();
     if (!customerName.trim() || !bookingDate || !selectedPackage) return;
 
     if (editingNoteId !== null) {
-      // Edit ዝገበርናዮ እንተኾይኑ ንምእራይ
       const updatedList = notebookList.map(item => {
         if (item.id === editingNoteId) {
           return {
@@ -694,7 +690,10 @@ function Price() {
             bookingDate,
             packageName: selectedPackage.name,
             packagePrice: selectedPackage.price,
-            tier: selectedPackage.tier
+            tier: selectedPackage.tier,
+            packageDesc: selectedPackage.desc || '',
+            packageServices: selectedPackage.services || [],
+            packageFeatures: selectedPackage.features || []
           };
         }
         return item;
@@ -702,7 +701,6 @@ function Price() {
       setNotebookList(updatedList);
       localStorage.setItem('adminNotebookListPersistent', JSON.stringify(updatedList));
     } else {
-      // ሓድሽ መዝገብ (Save New Booking/Note)
       const newBookingRecord = {
         id: Date.now(),
         customerName: customerName.trim(),
@@ -710,6 +708,9 @@ function Price() {
         packageName: selectedPackage.name,
         packagePrice: selectedPackage.price,
         tier: selectedPackage.tier,
+        packageDesc: selectedPackage.desc || '',
+        packageServices: selectedPackage.services || [],
+        packageFeatures: selectedPackage.features || [],
         timestamp: new Date().toLocaleString()
       };
 
@@ -724,9 +725,7 @@ function Price() {
     alert("ብሰላም ኣብ Admin Notebook ተዓቂቡ እዩ!");
   };
 
-  // 3. ኖትቡክ ንምእራይ (Edit)
   const handleEditNoteItem = (note) => {
-    // ነቲ ኖት ዝተዛመደ ፓኬኬጅ ምድላይ
     const foundKey = Object.keys(packages).find(k => packages[k].name === note.packageName) || 'gold';
     setSelectedPackage(packages[foundKey]);
     setCustomerName(note.customerName);
@@ -735,14 +734,12 @@ function Price() {
     setIsBookingModalOpen(true);
   };
 
-  // 4. ኖት ንምስራዝ
   const handleDeleteNote = (id) => {
     const updatedList = notebookList.filter(note => note.id !== id);
     setNotebookList(updatedList);
     localStorage.setItem('adminNotebookListPersistent', JSON.stringify(updatedList));
   };
 
-  // 5. ሼር ንምግባር (ንዓማዊል ዝኸውን ዌብሳይት ዝመስል ደረሰኝ/Receipt Share)
   const handleShareReceipt = (note) => {
     const receiptText = `✨ [Habesha Film Production - Receipt / Booking Summary] ✨\n` +
       `----------------------------------------\n` +
@@ -750,6 +747,7 @@ function Price() {
       `📅 Event Date: ${note.bookingDate}\n` +
       `📦 Package: ${note.packageName} (${note.tier})\n` +
       `💰 Total Price: ${note.packagePrice}\n` +
+      (note.packageDesc ? `📝 Description: ${note.packageDesc}\n` : '') +
       `----------------------------------------\n` +
       `መጻኢ ፕሮጀክትታትኩም ብሉጽ ብዝኾነ ኣገባብ ነሰርሕ! እናመስገንና።`;
 
@@ -824,37 +822,65 @@ function Price() {
             </form>
           </div>
         ) : isEditMode ? (
-          <div className="max-w-5xl mx-auto text-center px-4 py-12 w-full">
+          <div className="max-w-7xl mx-auto text-center px-4 py-12 w-full">
             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">Administration Mode</span>
             <h1 className="text-3xl font-serif mb-4 text-zinc-100">Edit Packages & Admin Notebook</h1>
             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-8"></div>
             
             <div className="bg-zinc-950 border border-[#dfb557]/40 p-6 md:p-8 rounded-2xl space-y-8 text-left shadow-2xl">
               
-              {/* --- Admin Notebook / Bookings List Section --- */}
+              {/* --- Admin Notebook / Bookings List Section with Price & Description Edit --- */}
               <div className="bg-zinc-900 p-6 rounded-xl border border-[#dfb557]/30 space-y-4 shadow-inner">
                 <div className="flex justify-between items-center border-b border-zinc-800 pb-3">
                   <h3 className="text-xs font-bold uppercase text-[#dfb557] tracking-wider">📝 Admin Notebook & Customer Bookings</h3>
-                  <span className="text-[10px] text-zinc-400 font-light">ዝተረጋገጸ ዳታ ካብ ከይድምሰስ ዝዕቀበሉ</span>
+                  <span className="text-[10px] text-zinc-400 font-light">ዋጋ፣ መግለጺን ዝርዝርን ሒዙ ካብ ከይድምሰስ ዝዕቀብ</span>
                 </div>
 
-                <div className="space-y-3 pt-2 max-h-80 overflow-y-auto">
+                <div className="space-y-4 pt-2 max-h-96 overflow-y-auto">
                   {notebookList.length === 0 ? (
                     <p className="text-zinc-500 text-xs italic text-center py-4">ዝኾነ ዝተመዝገበ ዓሚል ወይ ኖት የልቦን። ካብቲ መደበኛ ገጽ "Select" ብምባል ክትምዝግቡ ትኽክሉ ኢኹም።</p>
                   ) : (
                     notebookList.map((note) => (
-                      <div key={note.id} className="bg-zinc-950/90 border border-zinc-800 p-4 rounded-xl flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                        <div className="space-y-1">
+                      <div key={note.id} className="bg-zinc-950 border border-zinc-800 p-5 rounded-xl space-y-3">
+                        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b border-zinc-900 pb-3">
                           <div className="flex items-center gap-3">
                             <span className="text-sm font-serif font-bold text-[#dfb557]">{note.customerName}</span>
                             <span className="text-[10px] bg-zinc-900 border border-zinc-700 px-2 py-0.5 rounded text-zinc-300">ዕለት: {note.bookingDate}</span>
                           </div>
-                          <p className="text-xs text-zinc-300 font-light">
-                            መረጹዎ ፓኬኬጅ: <strong className="text-white">{note.packageName} ({note.tier})</strong> — ዋጋ: <span className="text-[#dfb557] font-bold">{note.packagePrice}</span>
-                          </p>
-                          <span className="text-[9px] text-zinc-500 block">ተመዝጊቡሉ: {note.timestamp}</span>
+                          <span className="text-[9px] text-zinc-500">ተመዝጊቡሉ: {note.timestamp}</span>
                         </div>
-                        <div className="flex items-center gap-2 self-end md:self-center">
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+                          <div className="space-y-2">
+                            <p className="text-zinc-300 font-light">
+                              መረጹዎ ፓኬኬጅ: <strong className="text-white">{note.packageName} ({note.tier})</strong>
+                            </p>
+                            <p className="text-zinc-300 font-light">
+                              ዋጋ (Price): <span className="text-[#dfb557] font-bold text-sm">{note.packagePrice}</span>
+                            </p>
+                            {note.packageDesc && (
+                              <p className="text-zinc-400 font-light italic">
+                                መግለጺ (Desc): {note.packageDesc}
+                              </p>
+                            )}
+                          </div>
+
+                          <div className="space-y-1 bg-zinc-900/60 p-3 rounded-lg border border-zinc-800/80">
+                            <span className="text-[10px] text-[#dfb557] font-semibold uppercase block mb-1">ዝርዝር ኣገልግሎታት/ባህርያት:</span>
+                            {note.packageServices && note.packageServices.length > 0 && (
+                              <ul className="text-[11px] text-zinc-300 space-y-0.5">
+                                {note.packageServices.map((s, i) => <li key={i}>• {s}</li>)}
+                              </ul>
+                            )}
+                            {note.packageFeatures && note.packageFeatures.length > 0 && (
+                              <ul className="text-[11px] text-zinc-300 space-y-0.5 pt-1">
+                                {note.packageFeatures.map((f, i) => <li key={i}>{f}</li>)}
+                              </ul>
+                            )}
+                          </div>
+                        </div>
+
+                        <div className="flex justify-end items-center gap-2 pt-2 border-t border-zinc-900">
                           <button 
                             onClick={() => handleShareReceipt(note)} 
                             className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded text-[10px] uppercase font-semibold transition-all"
@@ -880,77 +906,82 @@ function Price() {
                 </div>
               </div>
 
-              {/* Package Inputs */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4">
-                {Object.keys(tempPackages).map((key) => {
-                  const pkg = tempPackages[key];
-                  return (
-                    <div key={key} className="bg-zinc-900 p-5 rounded-xl border border-zinc-800 space-y-3">
-                      <h3 className="text-sm font-bold uppercase text-[#dfb557]">{key} Package</h3>
-                      
-                      <div>
-                        <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Tier Title</label>
-                        <input 
-                          value={pkg.tier || ''} 
-                          onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, tier: e.target.value}})}
-                          className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
-                        />
-                      </div>
+              {/* Package Inputs Styled Identically to Select Mode */}
+              <div className="pt-4">
+                <h3 className="text-sm font-bold uppercase text-[#dfb557] tracking-wider mb-4">⚙️ Edit Website Packages (Standard Layout)</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {Object.keys(tempPackages).map((key) => {
+                    const pkg = tempPackages[key];
+                    return (
+                      <div key={key} className="bg-zinc-900 border-2 border-[#dfb557]/40 p-6 rounded-2xl shadow-xl flex flex-col justify-between space-y-4">
+                        <div className="space-y-3">
+                          <div>
+                            <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">Tier Title</label>
+                            <input 
+                              value={pkg.tier || ''} 
+                              onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, tier: e.target.value}})}
+                              className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100 font-bold uppercase text-[#dfb557]"
+                            />
+                          </div>
 
-                      <div>
-                        <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Name</label>
-                        <input 
-                          value={pkg.name || ''} 
-                          onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, name: e.target.value}})}
-                          className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
-                        />
-                      </div>
+                          <div>
+                            <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">Package Name</label>
+                            <input 
+                              value={pkg.name || ''} 
+                              onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, name: e.target.value}})}
+                              className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100 font-serif font-bold text-lg"
+                            />
+                          </div>
 
-                      <div>
-                        <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Price</label>
-                        <input 
-                          value={pkg.price || ''} 
-                          onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, price: e.target.value}})}
-                          className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100 font-bold text-[#dfb557]"
-                        />
-                      </div>
+                          <div>
+                            <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">Price (ዋጋ)</label>
+                            <input 
+                              value={pkg.price || ''} 
+                              onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, price: e.target.value}})}
+                              className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100 font-bold text-[#dfb557]"
+                            />
+                          </div>
 
-                      {key === 'premium' && (
-                        <div>
-                          <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Description</label>
-                          <textarea 
-                            rows="2"
-                            value={pkg.desc || ''} 
-                            onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, desc: e.target.value}})}
-                            className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
-                          />
+                          <div>
+                            <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">Description (መግለጺ)</label>
+                            <textarea 
+                              rows="2"
+                              value={pkg.desc || ''} 
+                              onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, desc: e.target.value}})}
+                              className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-300 font-light"
+                            />
+                          </div>
+
+                          {pkg.services && (
+                            <div>
+                              <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">Services (Newline separated)</label>
+                              <textarea 
+                                rows="3"
+                                value={(pkg.services || []).join('\n')} 
+                                onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, services: e.target.value.split('\n')}})}
+                                className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-[11px] text-zinc-300"
+                              />
+                            </div>
+                          )}
+
+                          <div>
+                            <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">Features (Newline separated)</label>
+                            <textarea 
+                              rows="4"
+                              value={(pkg.features || []).join('\n')} 
+                              onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, features: e.target.value.split('\n')}})}
+                              className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-[11px] text-zinc-300"
+                            />
+                          </div>
                         </div>
-                      )}
 
-                      {pkg.services && (
-                        <div>
-                          <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Services (Newline separated)</label>
-                          <textarea 
-                            rows="4"
-                            value={(pkg.services || []).join('\n')} 
-                            onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, services: e.target.value.split('\n')}})}
-                            className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
-                          />
+                        <div className="w-full bg-zinc-950 border border-[#dfb557]/30 text-zinc-400 py-2.5 text-[10px] uppercase font-bold tracking-[0.2em] text-center rounded-xl opacity-60">
+                          Edit Mode Preview
                         </div>
-                      )}
-
-                      <div>
-                        <label className="text-[10px] uppercase text-zinc-400 font-semibold block">Features List (Newline separated)</label>
-                        <textarea 
-                          rows="5"
-                          value={(pkg.features || []).join('\n')} 
-                          onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, features: e.target.value.split('\n')}})}
-                          className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100"
-                        />
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
 
               <div className="flex justify-end gap-4 pt-4 border-t border-zinc-900">
@@ -1021,6 +1052,10 @@ function Price() {
                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{packages.gold.name}</h3>
                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.gold.price}</p>
                   
+                  {packages.gold.desc && (
+                    <p className="text-xs text-zinc-300 mb-4 font-light">{packages.gold.desc}</p>
+                  )}
+
                   {packages.gold.services && packages.gold.services.length > 0 && (
                     <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
                       <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
@@ -1053,6 +1088,10 @@ function Price() {
                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{packages.silver.name}</h3>
                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.silver.price}</p>
                   
+                  {packages.silver.desc && (
+                    <p className="text-xs text-zinc-300 mb-4 font-light">{packages.silver.desc}</p>
+                  )}
+
                   {packages.silver.services && packages.silver.services.length > 0 && (
                     <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
                       <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
@@ -1085,6 +1124,10 @@ function Price() {
                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{packages.standard.name}</h3>
                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.standard.price}</p>
                   
+                  {packages.standard.desc && (
+                    <p className="text-xs text-zinc-300 mb-4 font-light">{packages.standard.desc}</p>
+                  )}
+
                   {packages.standard.services && packages.standard.services.length > 0 && (
                     <div className="text-xs sm:text-sm text-zinc-300 mb-4 font-light space-y-1.5 border-b border-zinc-800 pb-3">
                       <p className="text-[#dfb557] font-semibold uppercase tracking-wider text-[10px]">ናይ ቀረጻ ኣገልግሎታት:</p>
@@ -1115,7 +1158,7 @@ function Price() {
         )}
       </div>
 
-      {/* --- Booking Form Modal (ዓሚል "Select" ምስ ዝብል ዝመጽእ ፎርም) --- */}
+      {/* --- Booking Form Modal --- */}
       {isBookingModalOpen && selectedPackage && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-zinc-950 border-2 border-[#dfb557]/50 rounded-2xl max-w-md w-full p-6 md:p-8 shadow-2xl relative">
