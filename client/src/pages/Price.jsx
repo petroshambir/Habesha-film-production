@@ -683,11 +683,11 @@ function Price() {
     setEditingNoteId(null);
     setIsBookingModalOpen(true);
   };
-const handleBookingSubmit = (e) => {
+  
+  const handleBookingSubmit = (e) => {
     e.preventDefault();
     if (!customerName.trim() || !bookingDate || !selectedPackage) return;
 
-    // እዚ ንላዕለዎት ክልተ ኩነታት (Edit ወይ New) ብሓደ ንምሓዝ ዝጠቅም ጽሩይ አሰራርሓ እዩ:
     const newBookingRecord = {
       id: editingNoteId !== null ? editingNoteId : Date.now(),
       customerName: customerName.trim(),
@@ -695,7 +695,7 @@ const handleBookingSubmit = (e) => {
       packageName: selectedPackage.name,
       packagePrice: customizedPrice,
       tier: selectedPackage.tier,
-      // packageDesc ኣብዚ ተወጊዱ ኣሎ (ካብ ደገ ተወሳኺ መግለጺ እንተደሊኻ ክትውስኾ ትኽእል ኢኻ)
+      // packageDesc ተወጊዱ ኣሎ፤ ንናይ ቀረጻ ኣገልግሎታትን ባህርያትን ጥራይ ተሓዚሉ ኣሎ
       packageServices: selectedPackage.services || [],
       packageFeatures: selectedPackage.features || [],
       timestamp: new Date().toLocaleString()
@@ -816,18 +816,25 @@ const handleBookingSubmit = (e) => {
   //   }
   // };
   const handleShareReceipt = (note) => {
-    const receiptText = `🎥 ═══════════════════════════ 🎥\n` +
-      `    HABESHA FILM PRODUCTION\n` +
-      `🎥 ═══════════════════════════ 🎥\n\n` +
-      `👤 **ስም ዓሚል:** ${note.customerName}\n` +
-      `📅 **ዕለት መደብ:** ${note.bookingDate}\n` +
-      `📦 **ፓኬኬጅ:** ${note.packageName} (${note.tier})\n` +
-      `💰 **ዋጋ:** ${note.packagePrice}\n\n` +
-      `🛠 **ናይ ቀረጻ ኣገልግሎታት:**\n` +
-      (note.packageServices && note.packageServices.length > 0 ? note.packageServices.map(s => `• ${s}`).join('\n') : 'የለዉን') + `\n\n` +
-      `✨ **ባህርያት/ረብሓታት:**\n` +
-      (note.packageFeatures && note.packageFeatures.length > 0 ? note.packageFeatures.map(f => `✓ ${f}`).join('\n') : 'የለዉን') + `\n\n` +
-      `═══════════════════════════════\n` +
+    const receiptText = 
+      `┌────────────────────────────────────────┐\n` +
+      `│     ✨ HABESHA FILM PRODUCTION ✨     │\n` +
+      `└────────────────────────────────────────┘\n\n` +
+      `👤 ስም ዓሚል: ${note.customerName}\n` +
+      `📅 ዕለት መደብ: ${note.bookingDate}\n` +
+      `📦 ፓኬኬጅ: ${note.packageName} (${note.tier})\n` +
+      `💰 ዋጋ: ${note.packagePrice}\n\n` +
+      `────────────────────────────────────────\n` +
+      `🛠 ናይ ቀረጻ ኣገልግሎታት:\n` +
+      (note.packageServices && note.packageServices.length > 0 
+        ? note.packageServices.map(s => `  ${s}`).join('\n') 
+        : '  • ሕጂ ንጊዜው ዝተወሰነ ኣገልግሎት የለን') + `\n\n` +
+      `✨ ባህርያት/ረብሓታት:\n` +
+      (note.packageFeatures && note.packageFeatures.length > 0 
+        ? note.packageFeatures.map(f => `  ${f}`).join('\n') 
+        : '  • የለዉን') + `\n\n` +
+      `────────────────────────────────────────\n` +
+      `🌐 Habesha Film Production Studio\n` +
       `✨ መጻኢ ፕሮጀክትታትኩም ብሉጽ ብዝኾነ ኣገባብ ነሰርሕ!`;
 
     if (navigator.share) {
@@ -837,7 +844,7 @@ const handleBookingSubmit = (e) => {
       }).catch(err => console.log("Error sharing", err));
     } else {
       navigator.clipboard.writeText(receiptText);
-      alert("ደረሰኝ (Receipt) ናብ ክሊፕቦርድ ገዲዳ ኣላ! ንዓማዊል ክትልእክዋ ትኽክሉ ኢኹም (Copied to clipboard).");
+      alert("ደረሰኝ (Receipt) ናብ ክሊፕቦርድ ገዲዳ ኣላ! ንዓማዊል ክትልእክዋ ትኽክሉ ኢኹም።");
     }
   };
 
