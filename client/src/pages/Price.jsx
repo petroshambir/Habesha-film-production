@@ -1313,7 +1313,6 @@
 // export default Price;
 
 
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -1347,7 +1346,11 @@ function Price() {
       tier: 'Ultimate VIP',
       name: 'Premium',
       price: '$1,000+',
-      services: [],
+      services: [
+        '• ቪድዮ ቀረጻ (Unlimited)',
+        '• ክልተ ኤክስፐርት ካሜራማን',
+        '• Cinematic Color Grading & VFX'
+      ],
       features: [
         '✓ ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)',
         '✓ ክልተ ኤክስፐርት ካሜራማን',
@@ -1518,7 +1521,7 @@ function Price() {
     setEditingNoteId(null);
     setIsBookingModalOpen(true);
   };
- 
+
   const handleBookingSubmit = (e) => {
     e.preventDefault();
     if (!customerName.trim() || !bookingDate || !selectedPackage) return;
@@ -1643,7 +1646,7 @@ function Price() {
             <h2 className="text-2xl md:text-3xl font-serif mb-3 text-zinc-100">Protected Price Page</h2>
             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4"></div>
             <p className="text-xs md:text-sm text-zinc-400 mb-6 font-light">እዚ ገጽ ብሚጢራዊ ፓስኮድ ዝተዓጸወ እዩ። በጃኹም ፓስኮድ ኣእትዉ።</p>
-           
+
             <form onSubmit={handleLogin} className="space-y-4">
               <input
                 type="password"
@@ -1667,9 +1670,9 @@ function Price() {
             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">Administration Mode</span>
             <h1 className="text-3xl font-serif mb-4 text-zinc-100">Edit Packages & Admin Notebook</h1>
             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-8"></div>
-           
+
             <div className="bg-zinc-950 border border-[#dfb557]/40 p-6 md:p-8 rounded-2xl space-y-8 text-left shadow-2xl">
-             
+
               {/* --- Admin Notebook / Bookings List Section --- */}
               <div className="bg-zinc-900 p-6 rounded-xl border border-[#dfb557]/30 space-y-4 shadow-inner">
                 <div className="flex justify-between items-center border-b border-zinc-800 pb-3">
@@ -1683,7 +1686,7 @@ function Price() {
                   ) : (
                     notebookList.map((note) => (
                       <div key={note.id} className="bg-zinc-950 border border-zinc-800 p-5 rounded-xl space-y-4 shadow-md">
-                       
+
                         {/* Header: Customer Name & Date */}
                         <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-2 border-b border-zinc-900 pb-3">
                           <div className="flex items-center gap-3">
@@ -1784,17 +1787,15 @@ function Price() {
                             />
                           </div>
 
-                          {pkg.services && (
-                            <div>
-                              <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">Services (Newline separated)</label>
-                              <textarea
-                                rows="3"
-                                value={(pkg.services || []).join('\n')}
-                                onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, services: e.target.value.split('\n')}})}
-                                className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-[11px] text-zinc-300"
-                              />
-                            </div>
-                          )}
+                          <div>
+                            <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">Services (Newline separated)</label>
+                            <textarea
+                              rows="3"
+                              value={(pkg.services || []).join('\n')}
+                              onChange={(e) => setTempPackages({...tempPackages, [key]: {...pkg, services: e.target.value.split('\n')}})}
+                              className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-[11px] text-zinc-300"
+                            />
+                          </div>
 
                           <div>
                             <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">Features (Newline separated)</label>
@@ -1854,16 +1855,25 @@ function Price() {
             <p className="text-zinc-400 text-sm md:text-base mb-16 max-w-2xl mx-auto font-light">
               ንመጻኢ ፕሮጀክትታትኩም ዝኸውን ዝተፈላለየ ሞያዊ ኣገልግሎታት። ካብቶም ደረጃታት እቲ ንደለይዎ ምረጹ።
             </p>
-           
+
             {/* Non-Edit Customer View (Clean Display View) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
-             
+
               {/* 1. Premium Package */}
               <div className="bg-zinc-950/90 border-2 border-[#dfb557]/50 p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between">
                 <div>
                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">{packages.premium.tier}</span>
                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{packages.premium.name}</h3>
                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.premium.price}</p>
+                  
+                  {packages.premium.services && packages.premium.services.length > 0 && (
+                    <div className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-4 font-light border-b border-zinc-900 pb-4">
+                      {packages.premium.services.map((serv, idx) => (
+                        <p key={idx}>{serv}</p>
+                      ))}
+                    </div>
+                  )}
+
                   <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-6 font-light">
                     {(packages.premium.features || []).map((feat, idx) => (
                       <li key={idx} className="flex items-center gap-2">{feat}</li>
@@ -1887,7 +1897,7 @@ function Price() {
                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">Exclusive</span>
                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{packages.gold.name}</h3>
                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.gold.price}</p>
-                 
+
                   {packages.gold.services && packages.gold.services.length > 0 && (
                     <div className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-4 font-light border-b border-zinc-900 pb-4">
                       {packages.gold.services.map((serv, idx) => (
@@ -1916,7 +1926,7 @@ function Price() {
                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">{packages.silver.tier}</span>
                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{packages.silver.name}</h3>
                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.silver.price}</p>
-                 
+
                   {packages.silver.services && packages.silver.services.length > 0 && (
                     <div className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-4 font-light border-b border-zinc-900 pb-4">
                       {packages.silver.services.map((serv, idx) => (
@@ -1945,7 +1955,7 @@ function Price() {
                   <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">{packages.standard.tier}</span>
                   <h3 className="text-2xl font-serif mt-1 mb-2 text-zinc-100">{packages.standard.name}</h3>
                   <p className="text-3xl font-serif font-bold text-[#dfb557] mb-6">{packages.standard.price}</p>
-                 
+
                   {packages.standard.services && packages.standard.services.length > 0 && (
                     <div className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-4 font-light border-b border-zinc-900 pb-4">
                       {packages.standard.services.map((serv, idx) => (
@@ -1976,15 +1986,12 @@ function Price() {
       {/* Booking & Customization Modal */}
       {isBookingModalOpen && selectedPackage && (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-          <div className="bg-zinc-950 border-2 border-[#dfb557] p-6 md:p-8 rounded-2xl max-w-md w-full shadow-2xl space-y-6">
-            <div className="flex justify-between items-center border-b border-zinc-800 pb-4">
-              <div>
-                <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#dfb557]">{selectedPackage.tier}</span>
-                <h3 className="text-xl font-serif text-white">{selectedPackage.name} Booking</h3>
-              </div>
-              <button
+          <div className="bg-zinc-950 border border-[#dfb557]/40 p-6 md:p-8 rounded-2xl max-w-md w-full shadow-2xl space-y-6">
+            <div className="flex justify-between items-center border-b border-zinc-900 pb-3">
+              <h3 className="text-lg font-serif text-[#dfb557]">ዝርዝር መረጻ ንዓሚል ምዝገባ</h3>
+              <button 
                 onClick={() => setIsBookingModalOpen(false)}
-                className="text-zinc-400 hover:text-white text-lg font-bold"
+                className="text-zinc-400 hover:text-white text-sm font-bold"
               >
                 ✕
               </button>
@@ -1996,10 +2003,10 @@ function Price() {
                 <input
                   type="text"
                   required
-                  placeholder="ንኣብነት፦ ዳዊት ዮውሃንስ"
+                  placeholder="ኣብነት: ኣቤል ዳዊት"
                   value={customerName}
                   onChange={(e) => setCustomerName(e.target.value)}
-                  className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-xl focus:outline-none focus:border-[#dfb557] text-sm text-zinc-100"
+                  className="w-full bg-zinc-900 border border-zinc-700 p-3 rounded-xl text-xs text-zinc-100 focus:outline-none focus:border-[#dfb557]"
                 />
               </div>
 
@@ -2010,17 +2017,28 @@ function Price() {
                   required
                   value={bookingDate}
                   onChange={(e) => setBookingDate(e.target.value)}
-                  className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-xl focus:outline-none focus:border-[#dfb557] text-sm text-zinc-100"
+                  className="w-full bg-zinc-900 border border-zinc-700 p-3 rounded-xl text-xs text-zinc-100 focus:outline-none focus:border-[#dfb557]"
                 />
               </div>
 
               <div>
-                <label className="text-[10px] uppercase text-zinc-400 font-semibold block mb-1">ዋጋ (Price Customization)</label>
+                <label className="text-[10px] uppercase text-zinc-400 font-semibold block mb-1">ዝተመረጸ ፓኬኬጅ (Package)</label>
                 <input
                   type="text"
+                  disabled
+                  value={`${selectedPackage.name} (${selectedPackage.tier})`}
+                  className="w-full bg-zinc-900/50 border border-zinc-800 p-3 rounded-xl text-xs text-zinc-400 cursor-not-allowed"
+                />
+              </div>
+
+              <div>
+                <label className="text-[10px] uppercase text-zinc-400 font-semibold block mb-1">ዋጋ (Customizable Price)</label>
+                <input
+                  type="text"
+                  required
                   value={customizedPrice}
                   onChange={(e) => setCustomizedPrice(e.target.value)}
-                  className="w-full px-4 py-3 bg-zinc-900 border border-zinc-700 rounded-xl focus:outline-none focus:border-[#dfb557] text-sm text-[#dfb557] font-bold"
+                  className="w-full bg-zinc-900 border border-zinc-700 p-3 rounded-xl text-xs text-[#dfb557] font-bold focus:outline-none focus:border-[#dfb557]"
                 />
               </div>
 
@@ -2028,15 +2046,15 @@ function Price() {
                 <button
                   type="button"
                   onClick={() => setIsBookingModalOpen(false)}
-                  className="w-1/2 py-3 bg-zinc-900 text-zinc-300 rounded-xl text-xs uppercase font-bold tracking-wider hover:bg-zinc-800 transition-all"
+                  className="w-1/2 bg-zinc-900 text-zinc-300 py-3 rounded-xl text-xs uppercase font-bold hover:bg-zinc-800 transition-all"
                 >
-                  ሰርዝ (Cancel)
+                  ሰርዝ
                 </button>
                 <button
                   type="submit"
-                  className="w-1/2 py-3 bg-[#dfb557] text-black rounded-xl text-xs uppercase font-bold tracking-wider hover:bg-[#c99f45] transition-all"
+                  className="w-1/2 bg-[#dfb557] text-black py-3 rounded-xl text-xs uppercase font-bold hover:bg-[#c99f45] transition-all shadow-lg"
                 >
-                  ዓቐብ (Save)
+                  ኣቐመጥ (Save)
                 </button>
               </div>
             </form>
