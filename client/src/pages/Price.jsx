@@ -2069,6 +2069,7 @@
 
 // export default Price;
 
+
 import React, { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -2096,9 +2097,6 @@ function Price() {
   // --- Admin Notebook State ---
   const [notebookList, setNotebookList] = useState([]);
   const [editingNoteId, setEditingNoteId] = useState(null);
-
-  // --- Receipt Preview Modal State ---
-  const [receiptModalData, setReceiptModalData] = useState(null);
 
   const defaultPackages = {
     premium: {
@@ -2297,17 +2295,17 @@ function Price() {
       timestamp: new Date().toLocaleString()
     };
 
-    let updatedList;
     if (editingNoteId !== null) {
-      updatedList = notebookList.map(item =>
+      const updatedList = notebookList.map(item =>
         item.id === editingNoteId ? newBookingRecord : item
       );
+      setNotebookList(updatedList);
+      localStorage.setItem('adminNotebookListPersistent', JSON.stringify(updatedList));
     } else {
-      updatedList = [newBookingRecord, ...notebookList];
+      const updatedList = [newBookingRecord, ...notebookList];
+      setNotebookList(updatedList);
+      localStorage.setItem('adminNotebookListPersistent', JSON.stringify(updatedList));
     }
-
-    setNotebookList(updatedList);
-    localStorage.setItem('adminNotebookListPersistent', JSON.stringify(updatedList));
 
     setIsBookingModalOpen(false);
     setSelectedPackage(null);
@@ -2485,12 +2483,6 @@ function Price() {
 
                         {/* Action Buttons */}
                         <div className="flex justify-end items-center gap-2 pt-2 border-t border-zinc-900">
-                          <button
-                            onClick={() => setReceiptModalData(note)}
-                            className="px-3 py-1.5 bg-[#dfb557]/30 hover:bg-[#dfb557]/50 text-[#dfb557] rounded text-[10px] uppercase font-semibold transition-all flex items-center gap-1"
-                          >
-                            Bill/Receipt 🧾
-                          </button>
                           <button
                             onClick={() => handleShareReceipt(note)}
                             className="px-3 py-1.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded text-[10px] uppercase font-semibold transition-all flex items-center gap-1"
@@ -2827,95 +2819,9 @@ function Price() {
         </div>
       )}
 
-      {/* --- Bill/Receipt Popup Modal (Black Background, White Text, Gold Border) --- */}
-      {receiptModalData && (
-        <div className="fixed inset-0 bg-black/85 backdrop-blur-md z-50 flex items-center justify-center p-4">
-          <div className="bg-black border-2 border-[#dfb557] p-6 md:p-8 rounded-2xl max-w-lg w-full text-zinc-100 shadow-[0_0_30px_rgba(223,181,87,0.2)] space-y-6 relative">
-            <button 
-              onClick={() => setReceiptModalData(null)}
-              className="absolute top-4 right-4 text-[#dfb557] hover:text-white text-lg font-bold"
-            >
-              ✕
-            </button>
-
-            {/* Receipt Header */}
-            <div className="text-center border-b border-[#dfb557]/40 pb-4 space-y-1">
-              <span className="text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block">Official Bill & Receipt</span>
-              <h2 className="text-xl md:text-2xl font-serif text-[#dfb557]">✨ HABESHA FILM PRODUCTION ✨</h2>
-              <p className="text-[11px] text-zinc-400 font-light">ሞያዊ ቀረጻን ፕሮዳክሽንን</p>
-            </div>
-
-            {/* Customer & Booking Details */}
-            <div className="grid grid-cols-2 gap-4 text-xs bg-zinc-950 border border-zinc-800 p-4 rounded-xl">
-              <div>
-                <span className="text-[10px] text-zinc-400 uppercase block">ስም ዓሚል:</span>
-                <strong className="text-sm font-serif text-[#dfb557]">{receiptModalData.customerName}</strong>
-              </div>
-              <div>
-                <span className="text-[10px] text-zinc-400 uppercase block">ዕለት መደብ:</span>
-                <strong className="text-sm text-white">{receiptModalData.bookingDate}</strong>
-              </div>
-              <div className="col-span-2 pt-2 border-t border-zinc-900 flex justify-between items-center">
-                <div>
-                  <span className="text-[10px] text-zinc-400 uppercase block">ፓኬኬጅ:</span>
-                  <span className="text-xs font-bold text-white">{receiptModalData.packageName} ({receiptModalData.tier})</span>
-                </div>
-                <div className="text-right">
-                  <span className="text-[10px] text-zinc-400 uppercase block">ዋጋ:</span>
-                  <span className="text-base font-serif font-bold text-[#dfb557]">{receiptModalData.packagePrice}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Services & Features List */}
-            <div className="space-y-3 text-xs max-h-[220px] overflow-y-auto pr-1">
-              {receiptModalData.packageServices && receiptModalData.packageServices.length > 0 && (
-                <div>
-                  <span className="text-[10px] text-[#dfb557] font-semibold uppercase block mb-1">🛠 ናይ ቀረጻ ኣገልግሎታት:</span>
-                  <ul className="space-y-1 text-zinc-300 font-light pl-2">
-                    {receiptModalData.packageServices.map((s, idx) => (
-                      <li key={idx}>{s}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-
-              {receiptModalData.packageFeatures && receiptModalData.packageFeatures.length > 0 && (
-                <div className="pt-2">
-                  <span className="text-[10px] text-[#dfb557] font-semibold uppercase block mb-1">✨ ባህርያትን ረብሓታትን:</span>
-                  <ul className="space-y-1 text-zinc-300 font-light pl-2">
-                    {receiptModalData.packageFeatures.map((f, idx) => (
-                      <li key={idx}>{f}</li>
-                    ))}
-                  </ul>
-                </div>
-              )}
-            </div>
-
-            {/* Receipt Footer Actions */}
-            <div className="flex gap-3 pt-4 border-t border-[#dfb557]/40">
-              <button
-                onClick={() => {
-                  handleShareReceipt(receiptModalData);
-                }}
-                className="w-1/2 bg-zinc-900 hover:bg-zinc-800 text-zinc-100 border border-zinc-700 py-3 rounded-xl text-xs uppercase font-bold tracking-wider transition-all"
-              >
-                Copy / Share 🔗
-              </button>
-              <button
-                onClick={() => setReceiptModalData(null)}
-                className="w-1/2 bg-[#dfb557] hover:bg-[#c99f45] text-black py-3 rounded-xl text-xs uppercase font-bold tracking-wider transition-all shadow-lg"
-              >
-                ዕጸዎ (Close)
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
-
       <Footer />
     </div>
   );
 }
-//
+
 export default Price;
