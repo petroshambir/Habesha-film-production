@@ -2822,4 +2822,4 @@ function Price() {
     </div>
   );
 }
-export default price;
+export default Price;
