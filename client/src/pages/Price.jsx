@@ -24009,16 +24009,22 @@ function Price() {
 
     const loadNotebook = async () => {
       try {
-        const response = await fetch(NOTEBOOK_API, {
-          method: 'GET',
-          cache: 'no-store',
-          headers: {
-            Accept: 'application/json',
-            'Cache-Control': 'no-cache, no-store, must-revalidate',
-            Pragma: 'no-cache',
-          },
-        });
-
+        // const response = await fetch(NOTEBOOK_API, {
+        //   method: 'GET',
+        //   cache: 'no-store',
+        //   headers: {
+        //     Accept: 'application/json',
+        //     'Cache-Control': 'no-cache, no-store, must-revalidate',
+        //     Pragma: 'no-cache',
+        //   },
+        // });
+const response = await fetch(NOTEBOOK_API, {
+  method: 'GET',
+  cache: 'no-store',
+  headers: {
+    Accept: 'application/json',
+  },
+});
         if (!response.ok) {
           throw new Error(
             `Notebook API error: ${response.status}`
@@ -24103,6 +24109,14 @@ function Price() {
           passcode: passcode.trim(),
         }),
       });
+      
+      const response = await fetch(PACKAGES_API, {
+  method: 'GET',
+  cache: 'no-store',
+  headers: {
+    Accept: 'application/json',
+  },
+});
 
       const data = await response.json();
 
@@ -24224,18 +24238,29 @@ function Price() {
         payload
       );
 
+      // const response = await fetch(
+      //   PACKAGES_UPDATE_API,
+      //   {
+      //     method: 'POST',
+      //     headers: {
+      //       'Content-Type': 'application/json',
+      //       Accept: 'application/json',
+      //       'Cache-Control': 'no-cache',
+      //     },
+      //     body: JSON.stringify(payload),
+      //   }
+      // );
       const response = await fetch(
-        PACKAGES_UPDATE_API,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Accept: 'application/json',
-            'Cache-Control': 'no-cache',
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+  PACKAGES_UPDATE_API,
+  {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify(payload),
+  }
+);
 
       let data = null;
 
@@ -24549,22 +24574,28 @@ function Price() {
           '✅ Notebook ብሰላም ተስተካኺሉ።'
         );
       } else {
-        const response = await fetch(
-          NOTEBOOK_API,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type':
-                'application/json',
-              Accept:
-                'application/json',
-            },
-            body: JSON.stringify(
-              bookingPayload
-            ),
-          }
-        );
-
+        // const response = await fetch(
+        //   NOTEBOOK_API,
+        //   {
+        //     method: 'POST',
+        //     headers: {
+        //       'Content-Type':
+        //         'application/json',
+        //       Accept:
+        //         'application/json',
+        //     },
+        //     body: JSON.stringify(
+        //       bookingPayload
+        //     ),
+        //   }
+        // );
+const response = await fetch(NOTEBOOK_API, {
+  method: 'GET',
+  cache: 'no-store',
+  headers: {
+    Accept: 'application/json',
+  },
+});
         const data =
           await response.json();
 
