@@ -18655,6 +18655,2270 @@
 
 // export default Price;
 
+// import React, { useState, useEffect } from 'react';
+// import html2canvas from 'html2canvas';
+// import Navbar from '../components/Navbar';
+// import Footer from '../components/Footer';
+
+// function Price() {
+//   const [isAuthenticated, setIsAuthenticated] = useState(false);
+//   const [isEditMode, setIsEditMode] = useState(false);
+
+//   const [passcode, setPasscode] = useState('');
+//   const [error, setError] = useState(false);
+//   const [loading, setLoading] = useState(false);
+
+//   const [adminPasscode, setAdminPasscode] = useState('');
+//   const [isEditGateOpen, setIsEditGateOpen] = useState(false);
+//   const [adminError, setAdminError] = useState(false);
+
+//   const [selectedPackage, setSelectedPackage] = useState(null);
+//   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+
+//   const [customerName, setCustomerName] = useState('');
+//   const [bookingDate, setBookingDate] = useState('');
+//   const [customizedPrice, setCustomizedPrice] = useState('');
+
+//   const [editingNoteId, setEditingNoteId] = useState(null);
+
+//   const [notebookList, setNotebookList] = useState([]);
+
+//   // =========================================================
+//   // MOBILE NOTEBOOK OPEN / CLOSE
+//   // =========================================================
+
+//   const [isNotebookOpen, setIsNotebookOpen] = useState(false);
+
+//   // =========================================================
+//   // NOTEBOOK API
+//   // =========================================================
+
+//   const NOTEBOOK_API =
+//     'https://habesha-film-production-server.onrender.com/api/notebook';
+
+//   const defaultPackages = {
+//     premium: {
+//       tier: 'Ultimate VIP',
+//       name: 'Premium',
+//       price: '$1,000+',
+//       services: [
+//         '• ቪድዮ ቀረጻ (Unlimited)',
+//         '• ክልተ ኤክስፐርት ካሜራማን',
+//         '• Cinematic Color Grading & VFX',
+//       ],
+//       features: [
+//         '✓ ዘይተወሰነ ሰዓታት ቀረጻ (Unlimited)',
+//         '✓ ክልተ ኤክስፐርት ካሜራማን',
+//         '✓ Cinematic Color Grading & VFX',
+//         '🎁 ቦናስ: ምሉእ ድሮን ቀረጻ + ሓደ ነጻ ዌብሳይት ባነር',
+//       ],
+//     },
+
+//     gold: {
+//       tier: 'Top Tier',
+//       name: 'Gold',
+//       price: '300,000',
+//       services: [
+//         '• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+//         '• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+//         '• መዓልቲ መርዓ (5 ካሜራ: 4 ቪድዮ፣ 1 ፎቶ)',
+//         '• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)',
+//         '• ኩሉ ሶፍት ኮፒ (All Soft Copy)',
+//       ],
+//       features: [
+//         '✓ 800 ፎቶዎች (10×15)',
+//         '✓ 2 ላሚኔትድ ፎቶ (30×90 & 30×60)',
+//         '✓ 2 ሳይን ቦርድ (30×45)',
+//         '✓ 3 ቦርድ (50×80, 40×60, 30×45)',
+//         '✓ 400 ምስጋና ካርድ (Thank You Card)',
+//         '✓ 8 ዩኤስቢ ፍላሽ (64 GB)',
+//         '✓ 2 ባነር',
+//         '✓ 2 ራማ / ቆብዕ (Cap)',
+//       ],
+//     },
+
+//     silver: {
+//       tier: 'Advanced',
+//       name: 'Silver',
+//       price: '240,000',
+//       services: [
+//         '• ስቱዲዮ / ኣብ መስክ (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+//         '• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+//         '• መዓልቲ መርዓ (4 ካሜራ: 3 ቪድዮ፣ 1 ፎቶ)',
+//         '• ሓማውቲ (1 ቪድዮ፣ 1 ፎቶ)',
+//       ],
+//       features: [
+//         '✓ 500 ፎቶዎች (10×15)',
+//         '✓ 2 ላሚኔትድ ፎቶ (30×90 & 40×60)',
+//         '✓ 1 ሳይን ቦርድ (30×45)',
+//         '✓ 2 ቦርድ (50×80 & 40×60)',
+//         '✓ 250 ምስጋና ካርድ (Thank You Card)',
+//         '✓ 6 ዩኤስቢ ፍላሽ (64 GB)',
+//         '✓ 2 ባነር',
+//         '✓ 2 ራማ / ቆብዕ (Cap)',
+//       ],
+//     },
+
+//     standard: {
+//       tier: 'Standard',
+//       name: 'Standard',
+//       price: '190,000',
+//       services: [
+//         '• ስቱዲዮ / ኣብ መስክ (1 ቪድዮ፣ 1 ፎቶ)',
+//         '• ቃል ኪዳን (2 ካሜራ: 1 ቪድዮ፣ 1 ፎቶ)',
+//         '• መዓልቲ መርዓ (3 ካሜራ: 2 ቪድዮ፣ 1 ፎቶ)',
+//         '• ሓማውቲ (2 ካሜራ: 1 ፎቶ፣ 1 ቪድዮ)',
+//       ],
+//       features: [
+//         '✓ 300 ፎቶዎች (10×15)',
+//         '✓ 1 ላሚኔትድ ፎቶ (30×90)',
+//         '✓ 1 ሳይን ቦርድ (30×45)',
+//         '✓ 1 ቦርድ (50×80)',
+//         '✓ 200 ምስጋና ካርድ (Thank You Card)',
+//         '✓ 4 ዩኤስቢ ፍላሽ (64 GB)',
+//         '✓ 2 ባነር',
+//         '✓ 2 ራማ / ቆብዕ (Cap)',
+//       ],
+//     },
+//   };
+
+//   const [packages, setPackages] = useState(defaultPackages);
+//   const [tempPackages, setTempPackages] = useState(defaultPackages);
+
+//   // =========================================================
+//   // LOAD DATA
+//   // =========================================================
+
+//   useEffect(() => {
+//     fetch(
+//       'https://habesha-film-production-server.onrender.com/api/packages'
+//     )
+//       .then((res) => res.json())
+//       .then((data) => {
+//         if (data) {
+//           const mergedData = {
+//             premium: {
+//               ...defaultPackages.premium,
+//               ...data.premium,
+//               services: Array.isArray(data.premium?.services)
+//                 ? data.premium.services
+//                 : defaultPackages.premium.services,
+//               features: Array.isArray(data.premium?.features)
+//                 ? data.premium.features
+//                 : defaultPackages.premium.features,
+//             },
+
+//             gold: {
+//               ...defaultPackages.gold,
+//               ...data.gold,
+//               services: Array.isArray(data.gold?.services)
+//                 ? data.gold.services
+//                 : defaultPackages.gold.services,
+//               features: Array.isArray(data.gold?.features)
+//                 ? data.gold.features
+//                 : defaultPackages.gold.features,
+//             },
+
+//             silver: {
+//               ...defaultPackages.silver,
+//               ...data.silver,
+//               services: Array.isArray(data.silver?.services)
+//                 ? data.silver.services
+//                 : defaultPackages.silver.services,
+//               features: Array.isArray(data.silver?.features)
+//                 ? data.silver.features
+//                 : defaultPackages.silver.features,
+//             },
+
+//             standard: {
+//               ...defaultPackages.standard,
+//               ...data.standard,
+//               services: Array.isArray(data.standard?.services)
+//                 ? data.standard.services
+//                 : defaultPackages.standard.services,
+//               features: Array.isArray(data.standard?.features)
+//                 ? data.standard.features
+//                 : defaultPackages.standard.features,
+//             },
+//           };
+
+//           setPackages(mergedData);
+//           setTempPackages(mergedData);
+//         }
+//       })
+//       .catch((err) => {
+//         console.log('Failed to fetch packages:', err);
+//       });
+
+//     // =======================================================
+//     // AUTH DATA
+//     // =======================================================
+
+//     const authData = localStorage.getItem('priceAuthData');
+
+//     if (authData) {
+//       try {
+//         const { expiry } = JSON.parse(authData);
+
+//         if (new Date().getTime() < expiry) {
+//           setIsAuthenticated(true);
+//         } else {
+//           localStorage.removeItem('priceAuthData');
+//           setIsAuthenticated(false);
+//         }
+//       } catch (e) {
+//         localStorage.removeItem('priceAuthData');
+//       }
+//     }
+
+//     // =======================================================
+//     // LOAD NOTEBOOK FROM MONGODB
+//     // =======================================================
+
+//     fetch(NOTEBOOK_API)
+//       .then((res) => {
+//         if (!res.ok) {
+//           throw new Error(
+//             `Notebook API error: ${res.status}`
+//           );
+//         }
+
+//         return res.json();
+//       })
+//       .then((data) => {
+//         if (Array.isArray(data)) {
+//           setNotebookList(data);
+//         } else if (Array.isArray(data?.notebooks)) {
+//           setNotebookList(data.notebooks);
+//         } else {
+//           setNotebookList([]);
+//         }
+//       })
+//       .catch((err) => {
+//         console.error(
+//           'Failed to load Admin Notebook from MongoDB:',
+//           err
+//         );
+
+//         setNotebookList([]);
+//       });
+//   }, []);
+
+//   // =========================================================
+//   // LOGIN
+//   // =========================================================
+
+//   const handleLogin = async (e) => {
+//     e.preventDefault();
+
+//     setLoading(true);
+//     setError(false);
+
+//     try {
+//       const response = await fetch(
+//         'https://habesha-film-production-server.onrender.com/api/auth/verify-passcode',
+//         {
+//           method: 'POST',
+//           headers: {
+//             'Content-Type': 'application/json',
+//           },
+//           body: JSON.stringify({
+//             passcode,
+//           }),
+//         }
+//       );
+
+//       const data = await response.json();
+
+//       if (response.ok && data.success) {
+//         setIsAuthenticated(true);
+
+//         const expiryDuration = 10 * 60 * 1000;
+
+//         const authData = {
+//           value: 'true',
+//           expiry: new Date().getTime() + expiryDuration,
+//         };
+
+//         localStorage.setItem(
+//           'priceAuthData',
+//           JSON.stringify(authData)
+//         );
+//       } else {
+//         setError(true);
+//       }
+//     } catch (err) {
+//       console.error('Error verifying passcode:', err);
+//       setError(true);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   // =========================================================
+//   // ADMIN EDIT GATE
+//   // =========================================================
+
+//   const handleEditGateSubmit = (e) => {
+//     e.preventDefault();
+
+//     if (adminPasscode === 'ADMIN2026') {
+//       setIsEditGateOpen(true);
+//       setIsEditMode(true);
+//       setAdminError(false);
+//       setAdminPasscode('');
+//     } else {
+//       setAdminError(true);
+//     }
+//   };
+
+//   // =========================================================
+//   // SELECT PACKAGE
+//   // =========================================================
+
+//   const handleSelectPackageClick = (pkgKey) => {
+//     if (!isEditMode) return;
+
+//     const pkg = tempPackages[pkgKey];
+
+//     if (!pkg) {
+//       console.error('Package not found:', pkgKey);
+//       return;
+//     }
+
+//     const independentPackageCopy = {
+//       tier: pkg.tier || '',
+//       name: pkg.name || '',
+//       price: pkg.price || '',
+
+//       services: Array.isArray(pkg.services)
+//         ? [...pkg.services]
+//         : [],
+
+//       features: Array.isArray(pkg.features)
+//         ? [...pkg.features]
+//         : [],
+//     };
+
+//     setSelectedPackage(independentPackageCopy);
+
+//     setCustomerName('');
+//     setBookingDate('');
+//     setCustomizedPrice(independentPackageCopy.price);
+
+//     setEditingNoteId(null);
+
+//     setIsBookingModalOpen(true);
+//   };
+
+//   // =========================================================
+//   // UPDATE SELECTED NOTE PACKAGE ONLY
+//   // =========================================================
+
+//   const updateSelectedPackageField = (field, value) => {
+//     setSelectedPackage((prev) => {
+//       if (!prev) return prev;
+
+//       return {
+//         ...prev,
+//         [field]: value,
+//       };
+//     });
+//   };
+
+//   const updateSelectedPackageArray = (
+//     field,
+//     value
+//   ) => {
+//     setSelectedPackage((prev) => {
+//       if (!prev) return prev;
+
+//       return {
+//         ...prev,
+
+//         [field]: value
+//           .split('\n')
+//           .map((item) => item.trim())
+//           .filter((item) => item.length > 0),
+//       };
+//     });
+//   };
+
+//   // =========================================================
+//   // SAVE NOTEBOOK TO MONGODB
+//   // =========================================================
+
+//   const handleBookingSubmit = async (e) => {
+//     e.preventDefault();
+
+//     if (
+//       !customerName.trim() ||
+//       !bookingDate ||
+//       !selectedPackage
+//     ) {
+//       return;
+//     }
+
+//     const newBookingRecord = {
+//       id:
+//         editingNoteId !== null
+//           ? editingNoteId
+//           : Date.now(),
+
+//       customerName: customerName.trim(),
+
+//       bookingDate,
+
+//       packageName: selectedPackage.name || '',
+
+//       packagePrice: customizedPrice,
+
+//       tier: selectedPackage.tier || '',
+
+//       packageServices: Array.isArray(
+//         selectedPackage.services
+//       )
+//         ? [...selectedPackage.services]
+//         : [],
+
+//       packageFeatures: Array.isArray(
+//         selectedPackage.features
+//       )
+//         ? [...selectedPackage.features]
+//         : [],
+
+//       timestamp:
+//         editingNoteId !== null
+//           ? notebookList.find(
+//               (item) => item.id === editingNoteId
+//             )?.timestamp ||
+//             new Date().toLocaleString()
+//           : new Date().toLocaleString(),
+//     };
+
+//     try {
+//       // =====================================================
+//       // UPDATE EXISTING NOTE
+//       // =====================================================
+
+//       if (editingNoteId !== null) {
+//         const response = await fetch(
+//           `${NOTEBOOK_API}/${editingNoteId}`,
+//           {
+//             method: 'PUT',
+//             headers: {
+//               'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify(newBookingRecord),
+//           }
+//         );
+
+//         if (!response.ok) {
+//           throw new Error(
+//             `Failed to update notebook: ${response.status}`
+//           );
+//         }
+
+//         const data = await response.json();
+
+//         const updatedNote =
+//           data?.notebook ||
+//           data?.note ||
+//           data;
+
+//         const updatedList = notebookList.map((item) =>
+//           String(item.id) === String(editingNoteId)
+//             ? updatedNote
+//             : item
+//         );
+
+//         setNotebookList(updatedList);
+
+//         alert(
+//           'ዝነበረ Notebook ብሰላም ተስተካኺሉ እዩ!'
+//         );
+//       }
+
+//       // =====================================================
+//       // CREATE NEW NOTE
+//       // =====================================================
+
+//       else {
+//         const response = await fetch(
+//           NOTEBOOK_API,
+//           {
+//             method: 'POST',
+//             headers: {
+//               'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify(
+//               newBookingRecord
+//             ),
+//           }
+//         );
+
+//         if (!response.ok) {
+//           throw new Error(
+//             `Failed to save notebook: ${response.status}`
+//           );
+//         }
+
+//         const data = await response.json();
+
+//         const savedNote =
+//           data?.notebook ||
+//           data?.note ||
+//           data;
+
+//         setNotebookList((prev) => [
+//           savedNote,
+//           ...prev,
+//         ]);
+
+//         alert(
+//           'ብሰላም ኣብ Admin Notebook ኣብ MongoDB ተዓቂቡ እዩ!'
+//         );
+//       }
+
+//       setIsBookingModalOpen(false);
+//       setSelectedPackage(null);
+//       setEditingNoteId(null);
+//     } catch (err) {
+//       console.error(
+//         'Error saving notebook to MongoDB:',
+//         err
+//       );
+
+//       alert(
+//         'Notebook ናብ MongoDB ምዕቃብ ኣይተዓወተን። በጃኻ Backend API ኣረጋግጽ።'
+//       );
+//     }
+//   };
+
+//   // =========================================================
+//   // EDIT NOTEBOOK
+//   // =========================================================
+
+//   const handleEditNoteItem = (note) => {
+//     const foundKey = Object.keys(packages).find(
+//       (key) =>
+//         packages[key].name === note.packageName
+//     );
+
+//     const pkg =
+//       packages[foundKey] || packages.gold;
+
+//     const independentNotebookCopy = {
+//       tier:
+//         note.tier ||
+//         pkg.tier ||
+//         '',
+
+//       name:
+//         note.packageName ||
+//         pkg.name ||
+//         '',
+
+//       price:
+//         note.packagePrice ||
+//         pkg.price ||
+//         '',
+
+//       services: Array.isArray(
+//         note.packageServices
+//       )
+//         ? [...note.packageServices]
+//         : Array.isArray(pkg.services)
+//         ? [...pkg.services]
+//         : [],
+
+//       features: Array.isArray(
+//         note.packageFeatures
+//       )
+//         ? [...note.packageFeatures]
+//         : Array.isArray(pkg.features)
+//         ? [...pkg.features]
+//         : [],
+//     };
+
+//     setSelectedPackage(
+//       independentNotebookCopy
+//     );
+
+//     setCustomerName(
+//       note.customerName || ''
+//     );
+
+//     setBookingDate(
+//       note.bookingDate || ''
+//     );
+
+//     setCustomizedPrice(
+//       note.packagePrice || ''
+//     );
+
+//     setEditingNoteId(note.id);
+
+//     setIsBookingModalOpen(true);
+//   };
+
+//   // =========================================================
+//   // DELETE NOTE FROM MONGODB
+//   // =========================================================
+
+//   const handleDeleteNote = async (id) => {
+//     const confirmDelete = window.confirm(
+//       'እዚ Notebook ብርግጸኝነት ክትድምስሶ ትደሊዶ?'
+//     );
+
+//     if (!confirmDelete) {
+//       return;
+//     }
+
+//     try {
+//       const response = await fetch(
+//         `${NOTEBOOK_API}/${id}`,
+//         {
+//           method: 'DELETE',
+//         }
+//       );
+
+//       if (!response.ok) {
+//         throw new Error(
+//           `Failed to delete notebook: ${response.status}`
+//         );
+//       }
+
+//       setNotebookList((prev) =>
+//         prev.filter(
+//           (note) =>
+//             String(note.id) !== String(id)
+//         )
+//       );
+//     } catch (err) {
+//       console.error(
+//         'Error deleting notebook from MongoDB:',
+//         err
+//       );
+
+//       alert(
+//         'Notebook ካብ MongoDB ምድምሳስ ኣይተዓወተን።'
+//       );
+//     }
+//   };
+
+//   // =========================================================
+//   // ESCAPE HTML
+//   // =========================================================
+
+//   const escapeHtml = (value) =>
+//     String(value ?? '')
+//       .replace(/&/g, '&amp;')
+//       .replace(/</g, '&lt;')
+//       .replace(/>/g, '&gt;')
+//       .replace(/"/g, '&quot;')
+//       .replace(/'/g, '&#039;');
+
+//   // =========================================================
+//   // SHARE RECEIPT
+//   // =========================================================
+
+//   const handleShareReceipt = async (note) => {
+//     const servicesHtml =
+//       Array.isArray(note.packageServices) &&
+//       note.packageServices.length > 0
+//         ? note.packageServices
+//             .map(
+//               (service) =>
+//                 `<li>${escapeHtml(service)}</li>`
+//             )
+//             .join('')
+//         : '<li>ሕጂ ንጊዜው ዝተወሰነ ኣገልግሎት የለን</li>';
+
+//     const featuresHtml =
+//       Array.isArray(note.packageFeatures) &&
+//       note.packageFeatures.length > 0
+//         ? note.packageFeatures
+//             .map(
+//               (feature) =>
+//                 `<li>${escapeHtml(feature)}</li>`
+//             )
+//             .join('')
+//         : '<li>የለን</li>';
+
+//     const receiptHtml = `
+//       <div
+//         id="receipt-share-card"
+//         style="
+//           width:900px;
+//           box-sizing:border-box;
+//           background:#050505;
+//           color:#ffffff;
+//           padding:42px;
+//           font-family:Arial,'Noto Sans Ethiopic',sans-serif;
+//           border:4px solid #dfb557;
+//           border-radius:24px;
+//           position:relative;
+//           overflow:hidden;
+//         "
+//       >
+
+//         <div
+//           style="
+//             position:absolute;
+//             inset:14px;
+//             border:1px solid rgba(223,181,87,.45);
+//             border-radius:16px;
+//             pointer-events:none;
+//           "
+//         ></div>
+
+//         <div
+//           style="
+//             text-align:center;
+//             position:relative;
+//             z-index:1;
+//           "
+//         >
+//           <div
+//             style="
+//               color:#dfb557;
+//               font-size:18px;
+//               font-weight:700;
+//               letter-spacing:5px;
+//               margin-bottom:10px;
+//             "
+//           >
+//             HABESHA FILM PRODUCTION
+//           </div>
+
+//           <div
+//             style="
+//               color:#ffffff;
+//               font-size:28px;
+//               font-weight:700;
+//               margin-bottom:8px;
+//             "
+//           >
+//             BOOKING RECEIPT
+//           </div>
+
+//           <div
+//             style="
+//               width:90px;
+//               height:3px;
+//               background:#dfb557;
+//               margin:0 auto 26px;
+//             "
+//           ></div>
+//         </div>
+
+//         <div
+//           style="
+//             position:relative;
+//             z-index:1;
+//             border:1px solid rgba(223,181,87,.55);
+//             border-radius:16px;
+//             padding:24px;
+//             background:#0b0b0b;
+//           "
+//         >
+
+//           <div
+//             style="
+//               display:flex;
+//               justify-content:space-between;
+//               gap:24px;
+//               margin-bottom:16px;
+//             "
+//           >
+
+//             <div>
+//               <div
+//                 style="
+//                   color:#dfb557;
+//                   font-size:12px;
+//                   font-weight:700;
+//                   letter-spacing:2px;
+//                   margin-bottom:6px;
+//                 "
+//               >
+//                 CUSTOMER NAME
+//               </div>
+
+//               <div
+//                 style="
+//                   font-size:22px;
+//                   font-weight:700;
+//                   color:#ffffff;
+//                 "
+//               >
+//                 ${escapeHtml(note.customerName)}
+//               </div>
+//             </div>
+
+//             <div style="text-align:right;">
+//               <div
+//                 style="
+//                   color:#dfb557;
+//                   font-size:12px;
+//                   font-weight:700;
+//                   letter-spacing:2px;
+//                   margin-bottom:6px;
+//                 "
+//               >
+//                 BOOKING DATE
+//               </div>
+
+//               <div
+//                 style="
+//                   font-size:18px;
+//                   font-weight:600;
+//                   color:#ffffff;
+//                 "
+//               >
+//                 ${escapeHtml(note.bookingDate)}
+//               </div>
+//             </div>
+
+//           </div>
+
+//           <div
+//             style="
+//               height:1px;
+//               background:rgba(223,181,87,.35);
+//               margin:18px 0;
+//             "
+//           ></div>
+
+//           <div
+//             style="
+//               display:flex;
+//               justify-content:space-between;
+//               align-items:center;
+//               gap:20px;
+//             "
+//           >
+
+//             <div>
+
+//               <div
+//                 style="
+//                   color:#dfb557;
+//                   font-size:11px;
+//                   font-weight:700;
+//                   letter-spacing:2px;
+//                   margin-bottom:6px;
+//                 "
+//               >
+//                 PACKAGE
+//               </div>
+
+//               <div
+//                 style="
+//                   font-size:25px;
+//                   font-weight:700;
+//                   color:#ffffff;
+//                 "
+//               >
+//                 ${escapeHtml(note.packageName)}
+//               </div>
+
+//               <div
+//                 style="
+//                   font-size:13px;
+//                   color:#dfb557;
+//                   margin-top:5px;
+//                 "
+//               >
+//                 ${escapeHtml(note.tier)}
+//               </div>
+
+//             </div>
+
+//             <div
+//               style="
+//                 color:#dfb557;
+//                 font-size:28px;
+//                 font-weight:800;
+//                 white-space:nowrap;
+//               "
+//             >
+//               ${escapeHtml(note.packagePrice)}
+//             </div>
+
+//           </div>
+
+//           <div
+//             style="
+//               height:1px;
+//               background:rgba(223,181,87,.35);
+//               margin:22px 0;
+//             "
+//           ></div>
+
+//           <div
+//             style="
+//               display:grid;
+//               grid-template-columns:1fr 1fr;
+//               gap:28px;
+//             "
+//           >
+
+//             <div>
+
+//               <div
+//                 style="
+//                   color:#dfb557;
+//                   font-size:13px;
+//                   font-weight:700;
+//                   letter-spacing:1.5px;
+//                   margin-bottom:10px;
+//                 "
+//               >
+//                 SERVICES
+//               </div>
+
+//               <ul
+//                 style="
+//                   margin:0;
+//                   padding-left:20px;
+//                   color:#ffffff;
+//                   font-size:14px;
+//                   line-height:1.7;
+//                 "
+//               >
+//                 ${servicesHtml}
+//               </ul>
+
+//             </div>
+
+//             <div>
+
+//               <div
+//                 style="
+//                   color:#dfb557;
+//                   font-size:13px;
+//                   font-weight:700;
+//                   letter-spacing:1.5px;
+//                   margin-bottom:10px;
+//                 "
+//               >
+//                 FEATURES
+//               </div>
+
+//               <ul
+//                 style="
+//                   margin:0;
+//                   padding-left:20px;
+//                   color:#ffffff;
+//                   font-size:14px;
+//                   line-height:1.7;
+//                 "
+//               >
+//                 ${featuresHtml}
+//               </ul>
+
+//             </div>
+
+//           </div>
+
+//         </div>
+
+//         <div
+//           style="
+//             text-align:center;
+//             position:relative;
+//             z-index:1;
+//             margin-top:24px;
+//             color:#ffffff;
+//             font-size:13px;
+//             line-height:1.7;
+//           "
+//         >
+
+//           <div
+//             style="
+//               color:#dfb557;
+//               font-weight:700;
+//               letter-spacing:2px;
+//             "
+//           >
+//             HABESHA FILM PRODUCTION STUDIO
+//           </div>
+
+//           <div>
+//             ✨ መጻኢ ፕሮጀክትታትኩም ብሉጽ ብዝኾነ ኣገባብ ነሰርሕ! ✨
+//           </div>
+
+//         </div>
+
+//       </div>
+//     `;
+
+//     let container = null;
+
+//     try {
+//       container = document.createElement('div');
+
+//       container.style.position = 'fixed';
+//       container.style.left = '-100000px';
+//       container.style.top = '0';
+//       container.style.width = '900px';
+//       container.style.zIndex = '-1';
+
+//       container.innerHTML = receiptHtml;
+
+//       document.body.appendChild(container);
+
+//       const receiptElement =
+//         container.querySelector(
+//           '#receipt-share-card'
+//         );
+
+//       await new Promise((resolve) =>
+//         requestAnimationFrame(resolve)
+//       );
+
+//       const canvas = await html2canvas(
+//         receiptElement,
+//         {
+//           backgroundColor: '#050505',
+//           scale: 2,
+//           useCORS: true,
+//           logging: false,
+//         }
+//       );
+
+//       const blob = await new Promise(
+//         (resolve) =>
+//           canvas.toBlob(
+//             resolve,
+//             'image/png',
+//             1
+//           )
+//       );
+
+//       if (!blob) {
+//         throw new Error(
+//           'Could not create receipt image.'
+//         );
+//       }
+
+//       const file = new File(
+//         [blob],
+//         `Habesha-Film-Receipt-${Date.now()}.png`,
+//         {
+//           type: 'image/png',
+//         }
+//       );
+
+//       if (
+//         navigator.share &&
+//         (!navigator.canShare ||
+//           navigator.canShare({
+//             files: [file],
+//           }))
+//       ) {
+//         await navigator.share({
+//           title:
+//             'Booking Receipt - Habesha Film Production',
+//           text:
+//             'Booking Receipt - Habesha Film Production',
+//           files: [file],
+//         });
+//       } else {
+//         const imageUrl =
+//           URL.createObjectURL(blob);
+
+//         const link =
+//           document.createElement('a');
+
+//         link.href = imageUrl;
+
+//         link.download = file.name;
+
+//         document.body.appendChild(link);
+
+//         link.click();
+
+//         link.remove();
+
+//         URL.revokeObjectURL(imageUrl);
+
+//         alert(
+//           'እቲ Receipt ብPNG ስእሊ ተዳልዩ ኣሎ። እቲ ስእሊ ኣብ WhatsApp ወይ ካልእ app ክትልእኮ ትኽእል።'
+//         );
+//       }
+//     } catch (err) {
+//       console.error(
+//         'Error creating/sharing receipt:',
+//         err
+//       );
+
+//       if (err?.name !== 'AbortError') {
+//         alert(
+//           'Receipt ስእሊ ምፍጣር ወይ ምስዳድ ኣይተዓወተን።'
+//         );
+//       }
+//     } finally {
+//       if (
+//         container &&
+//         container.parentNode
+//       ) {
+//         container.parentNode.removeChild(
+//           container
+//         );
+//       }
+//     }
+//   };
+
+//   // =========================================================
+//   // SAVE MAIN WEBSITE PACKAGES
+//   // =========================================================
+
+//   const handleSaveAndExit = async () => {
+//     try {
+//       const response = await fetch(
+//         'https://habesha-film-production-server.onrender.com/api/packages/update',
+//         {
+//           method: 'POST',
+//           headers: {
+//             'Content-Type': 'application/json',
+//           },
+//           body: JSON.stringify(tempPackages),
+//         }
+//       );
+
+//       if (response.ok) {
+//         setPackages(tempPackages);
+
+//         alert(
+//           'ዳታ ብሰላም ተሰዲዱ ኣብ ኩሉ ዲቫይስ ክረአ እዩ!'
+//         );
+//       } else {
+//         alert('ሰርቨር ጌጋ ኣለዎ።');
+//       }
+//     } catch (err) {
+//       console.error(
+//         'Error saving to server:',
+//         err
+//       );
+
+//       alert(
+//         'ዳታ ናብ ሰርቨር ምልኣኽ ኣይከኣለን።'
+//       );
+//     }
+
+//     setIsEditMode(false);
+//     setIsEditGateOpen(false);
+//   };
+
+//   // =========================================================
+//   // CANCEL MAIN EDIT MODE
+//   // =========================================================
+
+//   const handleCancelEdit = () => {
+//     setTempPackages(packages);
+
+//     setIsEditMode(false);
+//     setIsEditGateOpen(false);
+//   };
+
+//   // =========================================================
+//   // CLOSE BOOKING / NOTEBOOK MODAL
+//   // =========================================================
+
+//   const handleCloseBookingModal = () => {
+//     setIsBookingModalOpen(false);
+//     setSelectedPackage(null);
+//     setEditingNoteId(null);
+//   };
+
+//   // =========================================================
+//   // MAIN PACKAGE EDIT HELPERS
+//   // =========================================================
+
+//   const updateTempPackageField = (
+//     key,
+//     field,
+//     value
+//   ) => {
+//     setTempPackages((prev) => ({
+//       ...prev,
+
+//       [key]: {
+//         ...prev[key],
+//         [field]: value,
+//       },
+//     }));
+//   };
+
+//   const updateTempPackageArray = (
+//     key,
+//     field,
+//     value
+//   ) => {
+//     setTempPackages((prev) => ({
+//       ...prev,
+
+//       [key]: {
+//         ...prev[key],
+
+//         [field]: value
+//           .split('\n')
+//           .map((item) => item.trim())
+//           .filter(
+//             (item) => item.length > 0
+//           ),
+//       },
+//     }));
+//   };
+
+//   // =========================================================
+//   // RENDER
+//   // =========================================================
+
+//   return (
+//     <div className="min-h-screen bg-[#050505] text-zinc-100 font-sans selection:bg-[#dfb557]/30 selection:text-[#dfb557] overflow-x-hidden flex flex-col justify-between">
+
+//       <Navbar />
+
+//       <div className="flex-grow flex items-center justify-center px-4 py-32">
+
+//         {/* LOGIN */}
+
+//         {!isAuthenticated ? (
+
+//           <div className="bg-zinc-950 p-8 md:p-12 shadow-2xl border-2 border-[#dfb557]/40 rounded-2xl max-w-md w-full text-center relative">
+
+//             <span className="text-[9px] md:text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-2">
+//               Secure Access
+//             </span>
+
+//             <h2 className="text-2xl md:text-3xl font-serif mb-3 text-zinc-100">
+//               Protected Price Page
+//             </h2>
+
+//             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4" />
+
+//             <p className="text-xs md:text-sm text-zinc-400 mb-6 font-light">
+//               እዚ ገጽ ብሚጢራዊ ፓስኮድ ዝተዓጸወ እዩ። በጃኹም ፓስኮድ ኣእትዉ።
+//             </p>
+
+//             <form
+//               onSubmit={handleLogin}
+//               className="space-y-4"
+//             >
+
+//               <input
+//                 type="password"
+//                 placeholder="Enter Passcode"
+//                 value={passcode}
+//                 onChange={(e) =>
+//                   setPasscode(e.target.value)
+//                 }
+//                 className="w-full px-4 py-3 bg-zinc-900 border border-[#dfb557]/50 rounded-xl focus:outline-none focus:border-[#dfb557] text-center tracking-widest text-lg text-zinc-100 placeholder-zinc-500 shadow-inner"
+//               />
+
+//               <button
+//                 type="submit"
+//                 disabled={loading}
+//                 className="w-full bg-[#dfb557] text-black py-3 uppercase text-xs font-bold tracking-[0.3em] hover:bg-[#c99f45] transition-all duration-300 disabled:opacity-50 rounded-xl shadow-lg"
+//               >
+//                 {loading
+//                   ? 'Checking...'
+//                   : 'Submit'}
+//               </button>
+
+//               {error && (
+//                 <p className="text-red-400 text-xs mt-2 font-medium">
+//                   ጌጋ ፓስኮድ! ደጊምካ ፈትን።
+//                 </p>
+//               )}
+
+//             </form>
+
+//           </div>
+
+//         ) : isEditMode ? (
+
+//           /* =====================================================
+//              ADMIN EDIT MODE
+//           ===================================================== */
+
+//           <div className="max-w-7xl mx-auto text-center px-2 sm:px-4 py-6 sm:py-12 w-full min-w-0">
+
+//             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
+//               Administration Mode
+//             </span>
+
+//             <h1 className="text-3xl font-serif mb-4 text-zinc-100">
+//               Edit Packages & Admin Notebook
+//             </h1>
+
+//             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-8" />
+
+//             <div className="bg-zinc-950 border border-[#dfb557]/40 p-3 sm:p-6 md:p-8 rounded-2xl space-y-6 sm:space-y-8 text-left shadow-2xl min-w-0">
+
+//               {/* =================================================
+//                   NOTEBOOK
+//               ================================================= */}
+
+//               <div className="bg-zinc-900 rounded-xl border border-[#dfb557]/30 shadow-inner overflow-hidden min-w-0">
+
+//                 {/* NOTEBOOK HEADER / TOGGLE */}
+
+//                 <button
+//                   type="button"
+//                   onClick={() =>
+//                     setIsNotebookOpen(
+//                       (prev) => !prev
+//                     )
+//                   }
+//                   className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-6 text-left hover:bg-zinc-800/60 transition-all"
+//                 >
+
+//                   <div className="flex items-start sm:items-center gap-2 sm:gap-3 min-w-0 pr-2">
+
+//                     <span className="text-xs font-bold uppercase text-[#dfb557] tracking-wider">
+//                       📝 Admin Notebook & Customer Bookings
+//                     </span>
+
+//                     <span className="hidden sm:inline text-[10px] text-zinc-400 font-light">
+//                       ዋጋ፣ ኣገልግሎትን ባህርያትን ሒዙ ይዕቀብ
+//                     </span>
+
+//                   </div>
+
+//                   <span
+//                     className={`flex-shrink-0 text-[#dfb557] text-sm transition-transform duration-300 ${
+//                       isNotebookOpen
+//                         ? 'rotate-180'
+//                         : ''
+//                     }`}
+//                   >
+//                     ▼
+//                   </span>
+
+//                 </button>
+
+//                 {/* NOTEBOOK CONTENT */}
+
+//                 {isNotebookOpen && (
+
+//                   <div className="px-3 sm:px-6 pb-4 sm:pb-6 pt-2 border-t border-zinc-800">
+
+//                     <div className="space-y-3 sm:space-y-4 max-h-[60vh] sm:max-h-[500px] overflow-y-auto pr-0 sm:pr-1 overscroll-contain">
+
+//                       {notebookList.length === 0 ? (
+
+//                         <p className="text-zinc-500 text-xs italic text-center py-4">
+//                           ዝኾነ ዝተመዝገበ ዓሚል የልቦን። ካብቲ ኣብ ታሕቲ ዘሎ Edit Mode ጌርካ Select ብምባል ክትምዝግብ ትኽእል።
+//                         </p>
+
+//                       ) : (
+
+//                         notebookList.map((note) => (
+
+//                           <div
+//                             key={note.id}
+//                             className="bg-zinc-950 border border-zinc-800 p-3 sm:p-5 rounded-xl space-y-3 sm:space-y-4 shadow-md min-w-0"
+//                           >
+
+//                             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3 border-b border-zinc-900 pb-3 min-w-0">
+
+//                               <div className="flex items-center gap-2 sm:gap-3 flex-wrap min-w-0">
+
+//                                 <span className="text-base font-serif font-bold text-[#dfb557]">
+//                                   {note.customerName}
+//                                 </span>
+
+//                                 <span className="text-[10px] bg-zinc-900 border border-zinc-700 px-2.5 py-1 rounded-md text-zinc-300 font-semibold">
+//                                   📅 ዕለት: {note.bookingDate}
+//                                 </span>
+
+//                               </div>
+
+//                               <span className="text-[9px] text-zinc-500">
+//                                 ተመዝጊቡሉ: {note.timestamp}
+//                               </span>
+
+//                             </div>
+
+//                             <div className="bg-zinc-900/80 border border-[#dfb557]/30 p-3 sm:p-4 rounded-xl space-y-3 sm:space-y-4 min-w-0 overflow-hidden">
+
+//                               <div className="flex justify-between items-start sm:items-center gap-3">
+
+//                                 <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#dfb557]">
+//                                   {note.tier}
+//                                 </span>
+
+//                                 <span className="text-lg font-serif font-bold text-[#dfb557]">
+//                                   {note.packagePrice}
+//                                 </span>
+
+//                               </div>
+
+//                               <h4 className="text-lg sm:text-xl font-serif text-white break-words">
+//                                 {note.packageName} Package
+//                               </h4>
+
+//                               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 pt-3 border-t border-zinc-800">
+
+//                                 <div className="space-y-2">
+
+//                                   <span className="text-[10px] text-[#dfb557] font-semibold uppercase block">
+//                                     SERVICES
+//                                   </span>
+
+//                                   <ul className="space-y-1 text-xs text-zinc-300">
+
+//                                     {Array.isArray(
+//                                       note.packageServices
+//                                     ) &&
+//                                     note.packageServices.length > 0 ? (
+
+//                                       note.packageServices.map(
+//                                         (service, index) => (
+//                                           <li key={index}>
+//                                             {service}
+//                                           </li>
+//                                         )
+//                                       )
+
+//                                     ) : (
+
+//                                       <li className="text-zinc-500">
+//                                         የለን
+//                                       </li>
+
+//                                     )}
+
+//                                   </ul>
+
+//                                 </div>
+
+//                                 <div className="space-y-2">
+
+//                                   <span className="text-[10px] text-[#dfb557] font-semibold uppercase block">
+//                                     FEATURES
+//                                   </span>
+
+//                                   <ul className="space-y-1 text-xs text-zinc-300">
+
+//                                     {Array.isArray(
+//                                       note.packageFeatures
+//                                     ) &&
+//                                     note.packageFeatures.length > 0 ? (
+
+//                                       note.packageFeatures.map(
+//                                         (feature, index) => (
+//                                           <li key={index}>
+//                                             {feature}
+//                                           </li>
+//                                         )
+//                                       )
+
+//                                     ) : (
+
+//                                       <li className="text-zinc-500">
+//                                         የለን
+//                                       </li>
+
+//                                     )}
+
+//                                   </ul>
+
+//                                 </div>
+
+//                               </div>
+
+//                             </div>
+
+//                             <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-zinc-900">
+
+//                               <button
+//                                 onClick={() =>
+//                                   handleShareReceipt(note)
+//                                 }
+//                                 className="w-full px-3 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg text-[10px] uppercase font-semibold transition-all flex items-center justify-center gap-1 min-h-[42px]"
+//                               >
+//                                 Share 🔗
+//                               </button>
+
+//                               <button
+//                                 onClick={() =>
+//                                   handleEditNoteItem(note)
+//                                 }
+//                                 className="w-full px-3 py-2.5 bg-[#dfb557]/20 hover:bg-[#dfb557]/40 text-[#dfb557] rounded-lg text-[10px] uppercase font-semibold transition-all min-h-[42px]"
+//                               >
+//                                 Edit
+//                               </button>
+
+//                               <button
+//                                 onClick={() =>
+//                                   handleDeleteNote(note.id)
+//                                 }
+//                                 className="w-full px-3 py-2.5 bg-red-950/60 hover:bg-red-900 text-red-300 rounded-lg text-[10px] uppercase font-semibold transition-all min-h-[42px]"
+//                               >
+//                                 Delete
+//                               </button>
+
+//                             </div>
+
+//                           </div>
+
+//                         ))
+//                       )}
+
+//                     </div>
+
+//                   </div>
+
+//                 )}
+
+//               </div>
+
+//               {/* =================================================
+//                   MAIN WEBSITE PACKAGE EDIT
+//               ================================================= */}
+
+//               <div className="pt-2 sm:pt-4">
+
+//                 <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-4">
+
+//                   <h3 className="text-sm font-bold uppercase text-[#dfb557] tracking-wider">
+//                     ⚙️ Edit Website Packages & Test Select
+//                   </h3>
+
+//                   <span className="lg:hidden text-[9px] text-zinc-500 uppercase tracking-[0.16em]">
+//                     ← Swipe packages →
+//                   </span>
+
+//                 </div>
+
+//                 <div className="flex lg:grid lg:grid-cols-4 gap-4 sm:gap-6 overflow-x-auto lg:overflow-x-visible snap-x snap-mandatory lg:snap-none pb-4 lg:pb-0 -mx-1 sm:-mx-0 px-1 sm:px-0 overscroll-x-contain">
+
+//                   {Object.keys(tempPackages).map((key) => {
+
+//                     const pkg = tempPackages[key];
+
+//                     return (
+
+//                       <div
+//                         key={key}
+//                         className="flex-none w-[86vw] sm:w-[68vw] md:w-[48vw] lg:w-auto snap-start bg-zinc-900 border-2 border-[#dfb557]/40 p-4 sm:p-6 rounded-2xl shadow-xl flex flex-col justify-between space-y-4 min-w-0"
+//                       >
+
+//                         <div className="space-y-3">
+
+//                           {/* TIER */}
+
+//                           <div>
+
+//                             <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">
+//                               Tier Title
+//                             </label>
+
+//                             <input
+//                               value={pkg.tier || ''}
+//                               onChange={(e) =>
+//                                 updateTempPackageField(
+//                                   key,
+//                                   'tier',
+//                                   e.target.value
+//                                 )
+//                               }
+//                               className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100 font-bold"
+//                             />
+
+//                           </div>
+
+//                           {/* NAME */}
+
+//                           <div>
+
+//                             <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">
+//                               Package Name
+//                             </label>
+
+//                             <input
+//                               value={pkg.name || ''}
+//                               onChange={(e) =>
+//                                 updateTempPackageField(
+//                                   key,
+//                                   'name',
+//                                   e.target.value
+//                                 )
+//                               }
+//                               className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100 font-serif font-bold text-lg"
+//                             />
+
+//                           </div>
+
+//                           {/* PRICE */}
+
+//                           <div>
+
+//                             <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">
+//                               Price (ዋጋ)
+//                             </label>
+
+//                             <input
+//                               value={pkg.price || ''}
+//                               onChange={(e) =>
+//                                 updateTempPackageField(
+//                                   key,
+//                                   'price',
+//                                   e.target.value
+//                                 )
+//                               }
+//                               className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-[#dfb557] font-bold"
+//                             />
+
+//                           </div>
+
+//                           {/* SERVICES */}
+
+//                           <div>
+
+//                             <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">
+//                               Services
+//                             </label>
+
+//                             <textarea
+//                               rows="5"
+//                               value={(pkg.services || []).join('\n')}
+//                               onChange={(e) =>
+//                                 updateTempPackageArray(
+//                                   key,
+//                                   'services',
+//                                   e.target.value
+//                                 )
+//                               }
+//                               className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-[11px] text-zinc-300"
+//                               placeholder="One service per line"
+//                             />
+
+//                           </div>
+
+//                           {/* FEATURES */}
+
+//                           <div>
+
+//                             <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">
+//                               Features
+//                             </label>
+
+//                             <textarea
+//                               rows="6"
+//                               value={(pkg.features || []).join('\n')}
+//                               onChange={(e) =>
+//                                 updateTempPackageArray(
+//                                   key,
+//                                   'features',
+//                                   e.target.value
+//                                 )
+//                               }
+//                               className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-[11px] text-zinc-300"
+//                               placeholder="One feature per line"
+//                             />
+
+//                           </div>
+
+//                         </div>
+
+//                         <button
+//                           type="button"
+//                           onClick={() =>
+//                             handleSelectPackageClick(key)
+//                           }
+//                           className="w-full bg-[#dfb557] text-black py-2.5 text-[10px] uppercase font-bold tracking-[0.2em] hover:bg-[#c99f45] transition-all rounded-xl shadow-md cursor-pointer"
+//                         >
+//                           Select {pkg.name} ➔
+//                         </button>
+
+//                       </div>
+
+//                     );
+//                   })}
+
+//                 </div>
+
+//               </div>
+
+//               {/* SAVE / CANCEL MAIN PACKAGE EDIT */}
+
+//               <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-4 pt-4 border-t border-zinc-900">
+
+//                 <button
+//                   type="button"
+//                   onClick={handleCancelEdit}
+//                   className="w-full sm:w-auto px-6 py-3 bg-zinc-900 text-zinc-300 rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-zinc-800 transition-all"
+//                 >
+//                   Cancel
+//                 </button>
+
+//                 <button
+//                   type="button"
+//                   onClick={handleSaveAndExit}
+//                   className="w-full sm:w-auto px-6 py-3 bg-[#dfb557] text-black rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-[#c99f45] transition-all"
+//                 >
+//                   Save Changes
+//                 </button>
+
+//               </div>
+
+//             </div>
+
+//           </div>
+
+//         ) : (
+
+//           /* =====================================================
+//              CUSTOMER VIEW
+//           ===================================================== */
+
+//           <div className="max-w-7xl mx-auto text-center px-2 sm:px-4 py-6 sm:py-12 w-full min-w-0">
+
+//             <div className="flex justify-end mb-4">
+
+//               {!isEditGateOpen ? (
+
+//                 <div className="flex flex-col items-end">
+
+//                   <div className="flex items-center gap-2 bg-zinc-900 p-2 rounded-xl border border-[#dfb557]/40 shadow-lg">
+
+//                     <input
+//                       type="password"
+//                       placeholder="Admin Code"
+//                       value={adminPasscode}
+//                       onChange={(e) =>
+//                         setAdminPasscode(
+//                           e.target.value
+//                         )
+//                       }
+//                       className="bg-transparent text-zinc-100 text-xs px-2 focus:outline-none w-28"
+//                     />
+
+//                     <button
+//                       type="button"
+//                       onClick={
+//                         handleEditGateSubmit
+//                       }
+//                       className="px-3 py-1.5 bg-[#dfb557] text-black rounded-lg text-[10px] font-bold uppercase tracking-widest hover:bg-[#c99f45] transition-all"
+//                     >
+//                       Unlock
+//                     </button>
+
+//                   </div>
+
+//                   {adminError && (
+//                     <p className="text-red-400 text-[10px] mt-1 font-medium">
+//                       Wrong Admin Code!
+//                     </p>
+//                   )}
+
+//                 </div>
+
+//               ) : (
+
+//                 <button
+//                   type="button"
+//                   onClick={() =>
+//                     setIsEditMode(true)
+//                   }
+//                   className="px-4 py-2 bg-[#dfb557] text-black rounded-xl text-xs uppercase font-semibold tracking-widest shadow-md hover:bg-[#c99f45] transition-all"
+//                 >
+//                   Enter Edit Mode ⚙️
+//                 </button>
+
+//               )}
+
+//             </div>
+
+//             <span className="text-[10px] md:text-[11px] tracking-[0.5em] uppercase text-[#dfb557] font-medium block mb-2">
+//               Investment & Tiers
+//             </span>
+
+//             <h1 className="text-3xl sm:text-4xl md:text-5xl font-serif mb-4 text-zinc-100">
+//               Our Professional Packages
+//             </h1>
+
+//             <div className="w-12 h-[1px] bg-[#dfb557]/40 mx-auto mb-4" />
+
+//             <p className="text-zinc-400 text-sm md:text-base mb-16 max-w-2xl mx-auto font-light">
+//               ንመጻኢ ፕሮጀክትታትኩም ዝኸውን ዝተፈላለየ ሞያዊ ኣገልግሎታት። ካብቶም ደረጃታት እቲ ንደለይዎ ምረጹ።
+//             </p>
+
+//             <div className="flex lg:grid lg:grid-cols-4 gap-5 lg:gap-6 text-left overflow-x-auto lg:overflow-x-visible snap-x snap-mandatory lg:snap-none pb-5 lg:pb-0 -mx-4 px-4 lg:mx-0 lg:px-0 scrollbar-thin scrollbar-thumb-[#dfb557]/50 scrollbar-track-zinc-900">
+
+//               {Object.keys(packages).map((key) => {
+
+//                 const pkg = packages[key];
+
+//                 return (
+
+//                   <div
+//                     key={key}
+//                     className={`flex-none w-[82vw] sm:w-[65vw] md:w-[45vw] lg:w-auto snap-start bg-zinc-950/90 border-2 ${
+//                       key === 'gold'
+//                         ? 'border-[#dfb557]'
+//                         : 'border-[#dfb557]/50'
+//                     } p-6 sm:p-8 rounded-2xl shadow-2xl flex flex-col justify-between relative`}
+//                   >
+
+//                     {key === 'gold' && (
+//                       <span className="absolute -top-3 right-6 bg-[#dfb557] text-black text-[9px] uppercase font-bold tracking-[0.3em] px-3 py-1 rounded-full shadow-md">
+//                         {pkg.tier}
+//                       </span>
+//                     )}
+
+//                     <div>
+
+//                       <span className="text-[10px] uppercase font-bold tracking-[0.3em] text-[#dfb557]">
+//                         {key === 'gold'
+//                           ? 'Exclusive'
+//                           : pkg.tier}
+//                       </span>
+
+//                       <h3 className="text-xl sm:text-2xl font-serif mt-1 mb-2 text-zinc-100 break-words">
+//                         {pkg.name}
+//                       </h3>
+
+//                       <p className="text-2xl sm:text-3xl font-serif font-bold text-[#dfb557] mb-6 break-words">
+//                         {pkg.price}
+//                       </p>
+
+//                       {pkg.services &&
+//                         pkg.services.length > 0 && (
+
+//                           <div className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-4 font-light border-b border-zinc-900 pb-4">
+
+//                             {pkg.services.map(
+//                               (service, index) => (
+
+//                                 <p key={index}>
+//                                   {service}
+//                                 </p>
+
+//                               )
+//                             )}
+
+//                           </div>
+
+//                         )}
+
+//                       <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-6 font-light">
+
+//                         {(pkg.features || []).map(
+//                           (feature, index) => (
+
+//                             <li
+//                               key={index}
+//                               className="flex items-center gap-2"
+//                             >
+//                               {feature}
+//                             </li>
+
+//                           )
+//                         )}
+
+//                       </ul>
+
+//                     </div>
+
+//                   </div>
+
+//                 );
+//               })}
+
+//             </div>
+
+//             <div className="lg:hidden flex items-center justify-center gap-2 mt-2 text-[9px] text-zinc-500 uppercase tracking-[0.2em]">
+//               <span>←</span>
+//               <span>Swipe to view packages</span>
+//               <span>→</span>
+//             </div>
+
+//           </div>
+
+//         )}
+
+//       </div>
+
+//       {/* =======================================================
+//           NOTEBOOK / EDIT MODAL
+//       ======================================================= */}
+
+//       {isBookingModalOpen &&
+//         selectedPackage && (
+
+//           <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-start sm:items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain">
+
+//             <div className="bg-zinc-950 border border-[#dfb557]/40 p-4 sm:p-6 md:p-8 rounded-2xl max-w-5xl w-full max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-2rem)] overflow-y-auto shadow-2xl space-y-5 sm:space-y-6 my-0 sm:my-8">
+
+//               <div className="flex justify-between items-start gap-3 border-b border-zinc-900 pb-3">
+
+//                 <div>
+
+//                   <h3 className="text-base sm:text-lg font-serif text-[#dfb557] leading-snug">
+//                     {editingNoteId !== null
+//                       ? '✏️ Edit Admin Notebook'
+//                       : 'ዝርዝር መረጻ ንዓሚል ምዝገባ'}
+//                   </h3>
+
+//                   <span className="text-[10px] text-zinc-500">
+//                     {editingNoteId !== null
+//                       ? 'ዝርዝር ናይዚ Notebook ጥራሕ እዩ ዝቕየር'
+//                       : 'Selected package is an independent copy'}
+//                   </span>
+
+//                 </div>
+
+//                 <button
+//                   type="button"
+//                   onClick={
+//                     handleCloseBookingModal
+//                   }
+//                   className="text-zinc-400 hover:text-white text-sm font-bold"
+//                 >
+//                   ✕
+//                 </button>
+
+//               </div>
+
+//               <form
+//                 onSubmit={
+//                   handleBookingSubmit
+//                 }
+//                 className="space-y-5"
+//               >
+
+//                 {/* CUSTOMER NAME + DATE */}
+
+//                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+
+//                   <div>
+
+//                     <label className="text-[10px] uppercase text-zinc-400 font-semibold block mb-1">
+//                       ስም ዓሚል (Customer Name)
+//                     </label>
+
+//                     <input
+//                       type="text"
+//                       required
+//                       placeholder="ኣብነት: ኣቤል ዳዊት"
+//                       value={customerName}
+//                       onChange={(e) =>
+//                         setCustomerName(
+//                           e.target.value
+//                         )
+//                       }
+//                       className="w-full min-w-0 bg-zinc-900 border border-zinc-700 p-3 rounded-xl text-xs text-zinc-100 focus:outline-none focus:border-[#dfb557]"
+//                     />
+
+//                   </div>
+
+//                   <div>
+
+//                     <label className="text-[10px] uppercase text-zinc-400 font-semibold block mb-1">
+//                       ዕለት መደብ (Booking Date)
+//                     </label>
+
+//                     <input
+//                       type="date"
+//                       required
+//                       value={bookingDate}
+//                       onChange={(e) =>
+//                         setBookingDate(
+//                           e.target.value
+//                         )
+//                       }
+//                       className="w-full min-w-0 bg-zinc-900 border border-zinc-700 p-3 rounded-xl text-xs text-zinc-100 focus:outline-none focus:border-[#dfb557]"
+//                     />
+
+//                   </div>
+
+//                 </div>
+
+//                 {/* PACKAGE NAME + TIER */}
+
+//                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+
+//                   <div>
+
+//                     <label className="text-[10px] uppercase text-zinc-400 font-semibold block mb-1">
+//                       Package Name
+//                     </label>
+
+//                     <input
+//                       type="text"
+//                       value={
+//                         selectedPackage.name || ''
+//                       }
+//                       onChange={(e) =>
+//                         updateSelectedPackageField(
+//                           'name',
+//                           e.target.value
+//                         )
+//                       }
+//                       className="w-full min-w-0 bg-zinc-900 border border-zinc-700 p-3 rounded-xl text-xs text-zinc-100 font-bold focus:outline-none focus:border-[#dfb557]"
+//                     />
+
+//                   </div>
+
+//                   <div>
+
+//                     <label className="text-[10px] uppercase text-zinc-400 font-semibold block mb-1">
+//                       Tier
+//                     </label>
+
+//                     <input
+//                       type="text"
+//                       value={
+//                         selectedPackage.tier || ''
+//                       }
+//                       onChange={(e) =>
+//                         updateSelectedPackageField(
+//                           'tier',
+//                           e.target.value
+//                         )
+//                       }
+//                       className="w-full min-w-0 bg-zinc-900 border border-zinc-700 p-3 rounded-xl text-xs text-zinc-100 font-bold focus:outline-none focus:border-[#dfb557]"
+//                     />
+
+//                   </div>
+
+//                 </div>
+
+//                 {/* PRICE */}
+
+//                 <div>
+
+//                   <label className="text-[10px] uppercase text-zinc-400 font-semibold block mb-1">
+//                     ዋጋ (Customizable Price)
+//                   </label>
+
+//                   <input
+//                     type="text"
+//                     required
+//                     value={customizedPrice}
+//                     onChange={(e) => {
+//                       setCustomizedPrice(
+//                         e.target.value
+//                       );
+
+//                       updateSelectedPackageField(
+//                         'price',
+//                         e.target.value
+//                       );
+//                     }}
+//                     className="w-full min-w-0 bg-zinc-900 border border-zinc-700 p-3 rounded-xl text-xs text-[#dfb557] font-bold focus:outline-none focus:border-[#dfb557]"
+//                   />
+
+//                 </div>
+
+//                 {/* SERVICES + FEATURES EDITABLE */}
+
+//                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+
+//                   {/* SERVICES */}
+
+//                   <div className="bg-zinc-900 border border-[#dfb557]/30 rounded-xl p-3 sm:p-5 min-w-0">
+
+//                     <div className="flex justify-between items-center mb-3">
+
+//                       <h4 className="text-[10px] uppercase tracking-widest font-bold text-[#dfb557]">
+//                         SERVICES
+//                       </h4>
+
+//                       <span className="text-[9px] text-zinc-500">
+//                         {selectedPackage.services?.length || 0}{' '}
+//                         items
+//                       </span>
+
+//                     </div>
+
+//                     <textarea
+//                       rows="12"
+//                       value={
+//                         (
+//                           selectedPackage.services ||
+//                           []
+//                         ).join('\n')
+//                       }
+//                       onChange={(e) =>
+//                         updateSelectedPackageArray(
+//                           'services',
+//                           e.target.value
+//                         )
+//                       }
+//                       className="w-full min-w-0 bg-zinc-950 border border-zinc-700 p-3 rounded-xl text-xs text-zinc-300 focus:outline-none focus:border-[#dfb557] resize-y"
+//                       placeholder="One service per line"
+//                     />
+
+//                     <p className="text-[9px] text-zinc-500 mt-2">
+//                       ነፍሲ ወከፍ Service ኣብ ሓደ መስመር ጽሓፍ።
+//                     </p>
+
+//                   </div>
+
+//                   {/* FEATURES */}
+
+//                   <div className="bg-zinc-900 border border-[#dfb557]/30 rounded-xl p-3 sm:p-5 min-w-0">
+
+//                     <div className="flex justify-between items-center mb-3">
+
+//                       <h4 className="text-[10px] uppercase tracking-widest font-bold text-[#dfb557]">
+//                         FEATURES
+//                       </h4>
+
+//                       <span className="text-[9px] text-zinc-500">
+//                         {selectedPackage.features?.length || 0}{' '}
+//                         items
+//                       </span>
+
+//                     </div>
+
+//                     <textarea
+//                       rows="12"
+//                       value={
+//                         (
+//                           selectedPackage.features ||
+//                           []
+//                         ).join('\n')
+//                       }
+//                       onChange={(e) =>
+//                         updateSelectedPackageArray(
+//                           'features',
+//                           e.target.value
+//                         )
+//                       }
+//                       className="w-full min-w-0 bg-zinc-950 border border-zinc-700 p-3 rounded-xl text-xs text-zinc-300 focus:outline-none focus:border-[#dfb557] resize-y"
+//                       placeholder="One feature per line"
+//                     />
+
+//                     <p className="text-[9px] text-zinc-500 mt-2">
+//                       ነፍሲ ወከፍ Feature ኣብ ሓደ መስመር ጽሓፍ።
+//                     </p>
+
+//                   </div>
+
+//                 </div>
+
+//                 {/* PREVIEW */}
+
+//                 <div className="bg-zinc-900/60 border border-zinc-800 rounded-xl p-3 sm:p-5">
+
+//                   <div className="flex justify-between items-center mb-4">
+
+//                     <h4 className="text-[10px] uppercase tracking-widest font-bold text-[#dfb557]">
+//                       Notebook Preview
+//                     </h4>
+
+//                     <span className="text-[9px] text-zinc-500">
+//                       እዚ ናይ Notebook copy ጥራሕ እዩ
+//                     </span>
+
+//                   </div>
+
+//                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+
+//                     <div>
+
+//                       <p className="text-[9px] text-zinc-500 uppercase mb-1">
+//                         Customer
+//                       </p>
+
+//                       <p className="text-sm text-white font-semibold">
+//                         {customerName || '—'}
+//                       </p>
+
+//                     </div>
+
+//                     <div>
+
+//                       <p className="text-[9px] text-zinc-500 uppercase mb-1">
+//                         Date
+//                       </p>
+
+//                       <p className="text-sm text-white">
+//                         {bookingDate || '—'}
+//                       </p>
+
+//                     </div>
+
+//                     <div>
+
+//                       <p className="text-[9px] text-zinc-500 uppercase mb-1">
+//                         Package
+//                       </p>
+
+//                       <p className="text-sm text-white font-semibold">
+//                         {selectedPackage.name || '—'}
+//                       </p>
+
+//                     </div>
+
+//                     <div>
+
+//                       <p className="text-[9px] text-zinc-500 uppercase mb-1">
+//                         Price
+//                       </p>
+
+//                       <p className="text-sm text-[#dfb557] font-bold">
+//                         {customizedPrice || '—'}
+//                       </p>
+
+//                     </div>
+
+//                   </div>
+
+//                 </div>
+
+//                 {/* SAVE / CANCEL */}
+
+//                 <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-2 border-t border-zinc-900">
+
+//                   <button
+//                     type="button"
+//                     onClick={
+//                       handleCloseBookingModal
+//                     }
+//                     className="w-full sm:w-1/2 bg-zinc-900 text-zinc-300 py-3 rounded-xl text-xs uppercase font-bold hover:bg-zinc-800 transition-all min-h-[44px]"
+//                   >
+//                     ሰርዝ
+//                   </button>
+
+//                   <button
+//                     type="submit"
+//                     className="w-full sm:w-1/2 bg-[#dfb557] text-black py-3 rounded-xl text-xs uppercase font-bold hover:bg-[#c99f45] transition-all shadow-lg min-h-[44px]"
+//                   >
+//                     {editingNoteId !== null
+//                       ? 'Update / Save'
+//                       : 'ኣቐመጥ (Save)'}
+//                   </button>
+
+//                 </div>
+
+//               </form>
+
+//             </div>
+
+//           </div>
+
+//         )}
+
+//       <Footer />
+
+//     </div>
+//   );
+// }
+// //
+// export default Price;
+
 import React, { useState, useEffect } from 'react';
 import html2canvas from 'html2canvas';
 import Navbar from '../components/Navbar';
@@ -18695,6 +20959,19 @@ function Price() {
 
   const NOTEBOOK_API =
     'https://habesha-film-production-server.onrender.com/api/notebook';
+
+  const PACKAGES_API =
+    'https://habesha-film-production-server.onrender.com/api/packages';
+
+  const PACKAGES_UPDATE_API =
+    'https://habesha-film-production-server.onrender.com/api/packages/update';
+
+  const AUTH_API =
+    'https://habesha-film-production-server.onrender.com/api/auth/verify-passcode';
+
+  // =========================================================
+  // DEFAULT PACKAGES
+  // =========================================================
 
   const defaultPackages = {
     premium: {
@@ -18786,15 +21063,134 @@ function Price() {
   const [tempPackages, setTempPackages] = useState(defaultPackages);
 
   // =========================================================
+  // IMPORTANT NOTEBOOK HELPERS
+  // =========================================================
+
+  /*
+    MongoDB backend ካብ ዝተፈላለየ response shape እንተመለሰ
+    ኩሉ ክንቅበሎ ኢና።
+  */
+
+  const normalizeNotebook = (note) => {
+    if (!note || typeof note !== 'object') {
+      return null;
+    }
+
+    const normalizedId =
+      note.id ??
+      note._id ??
+      note._id?.$oid ??
+      note.id?.$oid ??
+      null;
+
+    return {
+      ...note,
+
+      /*
+        MongoDB _id እንተኾይኑ ን id እውን ንምልኣኽ ንጥቀመሉ።
+        _id ግን ኣይንድምስሶን።
+      */
+      id: normalizedId,
+
+      _id: note._id ?? normalizedId,
+
+      customerName: note.customerName || '',
+
+      bookingDate: note.bookingDate || '',
+
+      packageName: note.packageName || '',
+
+      packagePrice: note.packagePrice || '',
+
+      tier: note.tier || '',
+
+      packageServices: Array.isArray(note.packageServices)
+        ? note.packageServices
+        : [],
+
+      packageFeatures: Array.isArray(note.packageFeatures)
+        ? note.packageFeatures
+        : [],
+
+      timestamp:
+        note.timestamp ||
+        note.createdAt ||
+        new Date().toLocaleString(),
+    };
+  };
+
+  /*
+    Backend response እዞም ኩሎም ክኾኑ ይኽእሉ፦
+
+    []
+    { notebooks: [] }
+    { notes: [] }
+    { data: [] }
+    { bookings: [] }
+    { result: [] }
+  */
+
+  const extractNotebookArray = (data) => {
+    if (Array.isArray(data)) {
+      return data;
+    }
+
+    if (Array.isArray(data?.notebooks)) {
+      return data.notebooks;
+    }
+
+    if (Array.isArray(data?.notes)) {
+      return data.notes;
+    }
+
+    if (Array.isArray(data?.bookings)) {
+      return data.bookings;
+    }
+
+    if (Array.isArray(data?.data)) {
+      return data.data;
+    }
+
+    if (Array.isArray(data?.result)) {
+      return data.result;
+    }
+
+    return [];
+  };
+
+  const getNotebookId = (note) => {
+    return (
+      note?.id ??
+      note?._id ??
+      note?._id?.$oid ??
+      note?.id?.$oid ??
+      null
+    );
+  };
+
+  // =========================================================
   // LOAD DATA
   // =========================================================
 
   useEffect(() => {
-    fetch(
-      'https://habesha-film-production-server.onrender.com/api/packages'
-    )
+    let isMounted = true;
+
+    // =======================================================
+    // LOAD PACKAGES
+    // =======================================================
+
+    fetch(PACKAGES_API, {
+      method: 'GET',
+      cache: 'no-store',
+      headers: {
+        Accept: 'application/json',
+        'Cache-Control': 'no-cache',
+      },
+    })
       .then((res) => res.json())
       .then((data) => {
+        if (!isMounted) return;
+
         if (data) {
           const mergedData = {
             premium: {
@@ -18875,33 +21271,67 @@ function Price() {
     // LOAD NOTEBOOK FROM MONGODB
     // =======================================================
 
-    fetch(NOTEBOOK_API)
-      .then((res) => {
-        if (!res.ok) {
+    const loadNotebook = async () => {
+      try {
+        const response = await fetch(NOTEBOOK_API, {
+          method: 'GET',
+
+          /*
+            IMPORTANT:
+            Browser cache ከም ዘይጥቀም ንገብሮ።
+          */
+          cache: 'no-store',
+
+          headers: {
+            Accept: 'application/json',
+            'Cache-Control': 'no-cache',
+            Pragma: 'no-cache',
+          },
+        });
+
+        if (!response.ok) {
           throw new Error(
-            `Notebook API error: ${res.status}`
+            `Notebook API error: ${response.status}`
           );
         }
 
-        return res.json();
-      })
-      .then((data) => {
-        if (Array.isArray(data)) {
-          setNotebookList(data);
-        } else if (Array.isArray(data?.notebooks)) {
-          setNotebookList(data.notebooks);
-        } else {
-          setNotebookList([]);
+        const data = await response.json();
+
+        console.log('Notebook GET response:', data);
+
+        const rawList = extractNotebookArray(data);
+
+        const normalizedList = rawList
+          .map(normalizeNotebook)
+          .filter(Boolean);
+
+        console.log(
+          'Notebook records loaded from MongoDB:',
+          normalizedList
+        );
+
+        if (isMounted) {
+          setNotebookList(normalizedList);
         }
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error(
           'Failed to load Admin Notebook from MongoDB:',
           err
         );
 
-        setNotebookList([]);
-      });
+        /*
+          ኣብ error ጥራይ [] ኣይንገብሮን።
+          ስለዚ ኣብ transient network/server error
+          ኣብ UI ዝነበረ data ኣይጠፍእን።
+        */
+      }
+    };
+
+    loadNotebook();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   // =========================================================
@@ -18915,18 +21345,15 @@ function Price() {
     setError(false);
 
     try {
-      const response = await fetch(
-        'https://habesha-film-production-server.onrender.com/api/auth/verify-passcode',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            passcode,
-          }),
-        }
-      );
+      const response = await fetch(AUTH_API, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          passcode,
+        }),
+      });
 
       const data = await response.json();
 
@@ -18948,7 +21375,11 @@ function Price() {
         setError(true);
       }
     } catch (err) {
-      console.error('Error verifying passcode:', err);
+      console.error(
+        'Error verifying passcode:',
+        err
+      );
+
       setError(true);
     } finally {
       setLoading(false);
@@ -18982,7 +21413,11 @@ function Price() {
     const pkg = tempPackages[pkgKey];
 
     if (!pkg) {
-      console.error('Package not found:', pkgKey);
+      console.error(
+        'Package not found:',
+        pkgKey
+      );
+
       return;
     }
 
@@ -19000,11 +21435,15 @@ function Price() {
         : [],
     };
 
-    setSelectedPackage(independentPackageCopy);
+    setSelectedPackage(
+      independentPackageCopy
+    );
 
     setCustomerName('');
     setBookingDate('');
-    setCustomizedPrice(independentPackageCopy.price);
+    setCustomizedPrice(
+      independentPackageCopy.price
+    );
 
     setEditingNoteId(null);
 
@@ -19015,7 +21454,10 @@ function Price() {
   // UPDATE SELECTED NOTE PACKAGE ONLY
   // =========================================================
 
-  const updateSelectedPackageField = (field, value) => {
+  const updateSelectedPackageField = (
+    field,
+    value
+  ) => {
     setSelectedPackage((prev) => {
       if (!prev) return prev;
 
@@ -19039,7 +21481,9 @@ function Price() {
         [field]: value
           .split('\n')
           .map((item) => item.trim())
-          .filter((item) => item.length > 0),
+          .filter(
+            (item) => item.length > 0
+          ),
       };
     });
   };
@@ -19059,38 +21503,60 @@ function Price() {
       return;
     }
 
+    /*
+      IMPORTANT:
+      Existing MongoDB ID እንተሃልዩ ንዕኡ ንጥቀም።
+      New record ከኣ local unique ID ንህቦ፣ backend MongoDB
+      _id እንተፈጠረ ካብ response ንወስዶ።
+    */
+
+    const currentEditingId =
+      editingNoteId !== null
+        ? editingNoteId
+        : null;
+
     const newBookingRecord = {
       id:
-        editingNoteId !== null
-          ? editingNoteId
+        currentEditingId !== null
+          ? currentEditingId
           : Date.now(),
 
-      customerName: customerName.trim(),
+      customerName:
+        customerName.trim(),
 
       bookingDate,
 
-      packageName: selectedPackage.name || '',
+      packageName:
+        selectedPackage.name || '',
 
-      packagePrice: customizedPrice,
+      packagePrice:
+        customizedPrice,
 
-      tier: selectedPackage.tier || '',
+      tier:
+        selectedPackage.tier || '',
 
-      packageServices: Array.isArray(
-        selectedPackage.services
-      )
-        ? [...selectedPackage.services]
-        : [],
+      packageServices:
+        Array.isArray(
+          selectedPackage.services
+        )
+          ? [...selectedPackage.services]
+          : [],
 
-      packageFeatures: Array.isArray(
-        selectedPackage.features
-      )
-        ? [...selectedPackage.features]
-        : [],
+      packageFeatures:
+        Array.isArray(
+          selectedPackage.features
+        )
+          ? [...selectedPackage.features]
+          : [],
 
       timestamp:
-        editingNoteId !== null
+        currentEditingId !== null
           ? notebookList.find(
-              (item) => item.id === editingNoteId
+              (item) =>
+                String(
+                  getNotebookId(item)
+                ) ===
+                String(currentEditingId)
             )?.timestamp ||
             new Date().toLocaleString()
           : new Date().toLocaleString(),
@@ -19101,15 +21567,25 @@ function Price() {
       // UPDATE EXISTING NOTE
       // =====================================================
 
-      if (editingNoteId !== null) {
+      if (currentEditingId !== null) {
         const response = await fetch(
-          `${NOTEBOOK_API}/${editingNoteId}`,
+          `${NOTEBOOK_API}/${encodeURIComponent(
+            currentEditingId
+          )}`,
           {
             method: 'PUT',
+
             headers: {
-              'Content-Type': 'application/json',
+              'Content-Type':
+                'application/json',
+
+              Accept:
+                'application/json',
             },
-            body: JSON.stringify(newBookingRecord),
+
+            body: JSON.stringify(
+              newBookingRecord
+            ),
           }
         );
 
@@ -19119,20 +21595,42 @@ function Price() {
           );
         }
 
-        const data = await response.json();
+        const data =
+          await response.json();
 
-        const updatedNote =
-          data?.notebook ||
-          data?.note ||
-          data;
-
-        const updatedList = notebookList.map((item) =>
-          String(item.id) === String(editingNoteId)
-            ? updatedNote
-            : item
+        console.log(
+          'Notebook PUT response:',
+          data
         );
 
-        setNotebookList(updatedList);
+        const updatedNote =
+          normalizeNotebook(
+            data?.notebook ||
+              data?.note ||
+              data?.data ||
+              data
+          );
+
+        if (!updatedNote) {
+          throw new Error(
+            'Updated notebook response is empty.'
+          );
+        }
+
+        const updatedList =
+          notebookList.map((item) => {
+            const itemId =
+              getNotebookId(item);
+
+            return String(itemId) ===
+              String(currentEditingId)
+              ? updatedNote
+              : item;
+          });
+
+        setNotebookList(
+          updatedList
+        );
 
         alert(
           'ዝነበረ Notebook ብሰላም ተስተካኺሉ እዩ!'
@@ -19148,9 +21646,15 @@ function Price() {
           NOTEBOOK_API,
           {
             method: 'POST',
+
             headers: {
-              'Content-Type': 'application/json',
+              'Content-Type':
+                'application/json',
+
+              Accept:
+                'application/json',
             },
+
             body: JSON.stringify(
               newBookingRecord
             ),
@@ -19163,17 +21667,34 @@ function Price() {
           );
         }
 
-        const data = await response.json();
+        const data =
+          await response.json();
+
+        console.log(
+          'Notebook POST response:',
+          data
+        );
 
         const savedNote =
-          data?.notebook ||
-          data?.note ||
-          data;
+          normalizeNotebook(
+            data?.notebook ||
+              data?.note ||
+              data?.data ||
+              data
+          );
 
-        setNotebookList((prev) => [
-          savedNote,
-          ...prev,
-        ]);
+        if (!savedNote) {
+          throw new Error(
+            'Saved notebook response is empty.'
+          );
+        }
+
+        setNotebookList(
+          (prev) => [
+            savedNote,
+            ...prev,
+          ]
+        );
 
         alert(
           'ብሰላም ኣብ Admin Notebook ኣብ MongoDB ተዓቂቡ እዩ!'
@@ -19200,13 +21721,16 @@ function Price() {
   // =========================================================
 
   const handleEditNoteItem = (note) => {
-    const foundKey = Object.keys(packages).find(
-      (key) =>
-        packages[key].name === note.packageName
-    );
+    const foundKey =
+      Object.keys(packages).find(
+        (key) =>
+          packages[key].name ===
+          note.packageName
+      );
 
     const pkg =
-      packages[foundKey] || packages.gold;
+      packages[foundKey] ||
+      packages.gold;
 
     const independentNotebookCopy = {
       tier:
@@ -19224,21 +21748,27 @@ function Price() {
         pkg.price ||
         '',
 
-      services: Array.isArray(
-        note.packageServices
-      )
-        ? [...note.packageServices]
-        : Array.isArray(pkg.services)
-        ? [...pkg.services]
-        : [],
+      services:
+        Array.isArray(
+          note.packageServices
+        )
+          ? [...note.packageServices]
+          : Array.isArray(
+              pkg.services
+            )
+          ? [...pkg.services]
+          : [],
 
-      features: Array.isArray(
-        note.packageFeatures
-      )
-        ? [...note.packageFeatures]
-        : Array.isArray(pkg.features)
-        ? [...pkg.features]
-        : [],
+      features:
+        Array.isArray(
+          note.packageFeatures
+        )
+          ? [...note.packageFeatures]
+          : Array.isArray(
+              pkg.features
+            )
+          ? [...pkg.features]
+          : [],
     };
 
     setSelectedPackage(
@@ -19257,7 +21787,14 @@ function Price() {
       note.packagePrice || ''
     );
 
-    setEditingNoteId(note.id);
+    /*
+      IMPORTANT:
+      MongoDB _id እንተኾይኑ እውን ንስኻ
+      ክትedit ክትክእል ኢኻ።
+    */
+    setEditingNoteId(
+      getNotebookId(note)
+    );
 
     setIsBookingModalOpen(true);
   };
@@ -19267,9 +21804,10 @@ function Price() {
   // =========================================================
 
   const handleDeleteNote = async (id) => {
-    const confirmDelete = window.confirm(
-      'እዚ Notebook ብርግጸኝነት ክትድምስሶ ትደሊዶ?'
-    );
+    const confirmDelete =
+      window.confirm(
+        'እዚ Notebook ብርግጸኝነት ክትድምስሶ ትደሊዶ?'
+      );
 
     if (!confirmDelete) {
       return;
@@ -19277,9 +21815,16 @@ function Price() {
 
     try {
       const response = await fetch(
-        `${NOTEBOOK_API}/${id}`,
+        `${NOTEBOOK_API}/${encodeURIComponent(
+          id
+        )}`,
         {
           method: 'DELETE',
+
+          headers: {
+            Accept:
+              'application/json',
+          },
         }
       );
 
@@ -19289,11 +21834,22 @@ function Price() {
         );
       }
 
-      setNotebookList((prev) =>
-        prev.filter(
-          (note) =>
-            String(note.id) !== String(id)
-        )
+      console.log(
+        'Notebook deleted:',
+        id
+      );
+
+      setNotebookList(
+        (prev) =>
+          prev.filter((note) => {
+            const noteId =
+              getNotebookId(note);
+
+            return (
+              String(noteId) !==
+              String(id)
+            );
+          })
       );
     } catch (err) {
       console.error(
@@ -19313,35 +21869,60 @@ function Price() {
 
   const escapeHtml = (value) =>
     String(value ?? '')
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
+      .replace(
+        /&/g,
+        '&amp;'
+      )
+      .replace(
+        /</g,
+        '&lt;'
+      )
+      .replace(
+        />/g,
+        '&gt;'
+      )
+      .replace(
+        /"/g,
+        '&quot;'
+      )
+      .replace(
+        /'/g,
+        '&#039;'
+      );
 
   // =========================================================
   // SHARE RECEIPT
   // =========================================================
 
-  const handleShareReceipt = async (note) => {
+  const handleShareReceipt = async (
+    note
+  ) => {
     const servicesHtml =
-      Array.isArray(note.packageServices) &&
+      Array.isArray(
+        note.packageServices
+      ) &&
       note.packageServices.length > 0
         ? note.packageServices
             .map(
               (service) =>
-                `<li>${escapeHtml(service)}</li>`
+                `<li>${escapeHtml(
+                  service
+                )}</li>`
             )
             .join('')
         : '<li>ሕጂ ንጊዜው ዝተወሰነ ኣገልግሎት የለን</li>';
 
     const featuresHtml =
-      Array.isArray(note.packageFeatures) &&
+      Array.isArray(
+        note.packageFeatures
+      ) &&
       note.packageFeatures.length > 0
         ? note.packageFeatures
             .map(
               (feature) =>
-                `<li>${escapeHtml(feature)}</li>`
+                `<li>${escapeHtml(
+                  feature
+                )}</li>`
             )
             .join('')
         : '<li>የለን</li>';
@@ -19453,7 +22034,9 @@ function Price() {
                   color:#ffffff;
                 "
               >
-                ${escapeHtml(note.customerName)}
+                ${escapeHtml(
+                  note.customerName
+                )}
               </div>
             </div>
 
@@ -19477,7 +22060,9 @@ function Price() {
                   color:#ffffff;
                 "
               >
-                ${escapeHtml(note.bookingDate)}
+                ${escapeHtml(
+                  note.bookingDate
+                )}
               </div>
             </div>
 
@@ -19521,7 +22106,9 @@ function Price() {
                   color:#ffffff;
                 "
               >
-                ${escapeHtml(note.packageName)}
+                ${escapeHtml(
+                  note.packageName
+                )}
               </div>
 
               <div
@@ -19531,7 +22118,9 @@ function Price() {
                   margin-top:5px;
                 "
               >
-                ${escapeHtml(note.tier)}
+                ${escapeHtml(
+                  note.tier
+                )}
               </div>
 
             </div>
@@ -19544,7 +22133,9 @@ function Price() {
                 white-space:nowrap;
               "
             >
-              ${escapeHtml(note.packagePrice)}
+              ${escapeHtml(
+                note.packagePrice
+              )}
             </div>
 
           </div>
@@ -19659,45 +22250,68 @@ function Price() {
     let container = null;
 
     try {
-      container = document.createElement('div');
+      container =
+        document.createElement(
+          'div'
+        );
 
-      container.style.position = 'fixed';
-      container.style.left = '-100000px';
+      container.style.position =
+        'fixed';
+
+      container.style.left =
+        '-100000px';
+
       container.style.top = '0';
-      container.style.width = '900px';
-      container.style.zIndex = '-1';
 
-      container.innerHTML = receiptHtml;
+      container.style.width =
+        '900px';
 
-      document.body.appendChild(container);
+      container.style.zIndex =
+        '-1';
+
+      container.innerHTML =
+        receiptHtml;
+
+      document.body.appendChild(
+        container
+      );
 
       const receiptElement =
         container.querySelector(
           '#receipt-share-card'
         );
 
-      await new Promise((resolve) =>
-        requestAnimationFrame(resolve)
-      );
-
-      const canvas = await html2canvas(
-        receiptElement,
-        {
-          backgroundColor: '#050505',
-          scale: 2,
-          useCORS: true,
-          logging: false,
-        }
-      );
-
-      const blob = await new Promise(
+      await new Promise(
         (resolve) =>
-          canvas.toBlob(
-            resolve,
-            'image/png',
-            1
+          requestAnimationFrame(
+            resolve
           )
       );
+
+      const canvas =
+        await html2canvas(
+          receiptElement,
+          {
+            backgroundColor:
+              '#050505',
+
+            scale: 2,
+
+            useCORS: true,
+
+            logging: false,
+          }
+        );
+
+      const blob =
+        await new Promise(
+          (resolve) =>
+            canvas.toBlob(
+              resolve,
+              'image/png',
+              1
+            )
+        );
 
       if (!blob) {
         throw new Error(
@@ -19705,13 +22319,14 @@ function Price() {
         );
       }
 
-      const file = new File(
-        [blob],
-        `Habesha-Film-Receipt-${Date.now()}.png`,
-        {
-          type: 'image/png',
-        }
-      );
+      const file =
+        new File(
+          [blob],
+          `Habesha-Film-Receipt-${Date.now()}.png`,
+          {
+            type: 'image/png',
+          }
+        );
 
       if (
         navigator.share &&
@@ -19723,28 +22338,39 @@ function Price() {
         await navigator.share({
           title:
             'Booking Receipt - Habesha Film Production',
+
           text:
             'Booking Receipt - Habesha Film Production',
+
           files: [file],
         });
       } else {
         const imageUrl =
-          URL.createObjectURL(blob);
+          URL.createObjectURL(
+            blob
+          );
 
         const link =
-          document.createElement('a');
+          document.createElement(
+            'a'
+          );
 
         link.href = imageUrl;
 
-        link.download = file.name;
+        link.download =
+          file.name;
 
-        document.body.appendChild(link);
+        document.body.appendChild(
+          link
+        );
 
         link.click();
 
         link.remove();
 
-        URL.revokeObjectURL(imageUrl);
+        URL.revokeObjectURL(
+          imageUrl
+        );
 
         alert(
           'እቲ Receipt ብPNG ስእሊ ተዳልዩ ኣሎ። እቲ ስእሊ ኣብ WhatsApp ወይ ካልእ app ክትልእኮ ትኽእል።'
@@ -19756,7 +22382,10 @@ function Price() {
         err
       );
 
-      if (err?.name !== 'AbortError') {
+      if (
+        err?.name !==
+        'AbortError'
+      ) {
         alert(
           'Receipt ስእሊ ምፍጣር ወይ ምስዳድ ኣይተዓወተን።'
         );
@@ -19777,49 +22406,62 @@ function Price() {
   // SAVE MAIN WEBSITE PACKAGES
   // =========================================================
 
-  const handleSaveAndExit = async () => {
-    try {
-      const response = await fetch(
-        'https://habesha-film-production-server.onrender.com/api/packages/update',
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(tempPackages),
-        }
-      );
+  const handleSaveAndExit =
+    async () => {
+      try {
+        const response =
+          await fetch(
+            PACKAGES_UPDATE_API,
+            {
+              method: 'POST',
 
-      if (response.ok) {
-        setPackages(tempPackages);
+              headers: {
+                'Content-Type':
+                  'application/json',
+              },
+
+              body: JSON.stringify(
+                tempPackages
+              ),
+            }
+          );
+
+        if (response.ok) {
+          setPackages(
+            tempPackages
+          );
+
+          alert(
+            'ዳታ ብሰላም ተሰዲዱ ኣብ ኩሉ ዲቫይስ ክረአ እዩ!'
+          );
+        } else {
+          alert(
+            'ሰርቨር ጌጋ ኣለዎ።'
+          );
+        }
+      } catch (err) {
+        console.error(
+          'Error saving to server:',
+          err
+        );
 
         alert(
-          'ዳታ ብሰላም ተሰዲዱ ኣብ ኩሉ ዲቫይስ ክረአ እዩ!'
+          'ዳታ ናብ ሰርቨር ምልኣኽ ኣይከኣለን።'
         );
-      } else {
-        alert('ሰርቨር ጌጋ ኣለዎ።');
       }
-    } catch (err) {
-      console.error(
-        'Error saving to server:',
-        err
-      );
 
-      alert(
-        'ዳታ ናብ ሰርቨር ምልኣኽ ኣይከኣለን።'
-      );
-    }
-
-    setIsEditMode(false);
-    setIsEditGateOpen(false);
-  };
+      setIsEditMode(false);
+      setIsEditGateOpen(false);
+    };
 
   // =========================================================
   // CANCEL MAIN EDIT MODE
   // =========================================================
 
   const handleCancelEdit = () => {
-    setTempPackages(packages);
+    setTempPackages(
+      packages
+    );
 
     setIsEditMode(false);
     setIsEditGateOpen(false);
@@ -19829,11 +22471,20 @@ function Price() {
   // CLOSE BOOKING / NOTEBOOK MODAL
   // =========================================================
 
-  const handleCloseBookingModal = () => {
-    setIsBookingModalOpen(false);
-    setSelectedPackage(null);
-    setEditingNoteId(null);
-  };
+  const handleCloseBookingModal =
+    () => {
+      setIsBookingModalOpen(
+        false
+      );
+
+      setSelectedPackage(
+        null
+      );
+
+      setEditingNoteId(
+        null
+      );
+    };
 
   // =========================================================
   // MAIN PACKAGE EDIT HELPERS
@@ -19844,14 +22495,17 @@ function Price() {
     field,
     value
   ) => {
-    setTempPackages((prev) => ({
-      ...prev,
+    setTempPackages(
+      (prev) => ({
+        ...prev,
 
-      [key]: {
-        ...prev[key],
-        [field]: value,
-      },
-    }));
+        [key]: {
+          ...prev[key],
+
+          [field]: value,
+        },
+      })
+    );
   };
 
   const updateTempPackageArray = (
@@ -19859,20 +22513,26 @@ function Price() {
     field,
     value
   ) => {
-    setTempPackages((prev) => ({
-      ...prev,
+    setTempPackages(
+      (prev) => ({
+        ...prev,
 
-      [key]: {
-        ...prev[key],
+        [key]: {
+          ...prev[key],
 
-        [field]: value
-          .split('\n')
-          .map((item) => item.trim())
-          .filter(
-            (item) => item.length > 0
-          ),
-      },
-    }));
+          [field]: value
+            .split('\n')
+            .map(
+              (item) =>
+                item.trim()
+            )
+            .filter(
+              (item) =>
+                item.length > 0
+            ),
+        },
+      })
+    );
   };
 
   // =========================================================
@@ -19889,7 +22549,6 @@ function Price() {
         {/* LOGIN */}
 
         {!isAuthenticated ? (
-
           <div className="bg-zinc-950 p-8 md:p-12 shadow-2xl border-2 border-[#dfb557]/40 rounded-2xl max-w-md w-full text-center relative">
 
             <span className="text-[9px] md:text-[10px] tracking-[0.4em] uppercase text-[#dfb557] font-semibold block mb-2">
@@ -19907,7 +22566,9 @@ function Price() {
             </p>
 
             <form
-              onSubmit={handleLogin}
+              onSubmit={
+                handleLogin
+              }
               className="space-y-4"
             >
 
@@ -19916,7 +22577,9 @@ function Price() {
                 placeholder="Enter Passcode"
                 value={passcode}
                 onChange={(e) =>
-                  setPasscode(e.target.value)
+                  setPasscode(
+                    e.target.value
+                  )
                 }
                 className="w-full px-4 py-3 bg-zinc-900 border border-[#dfb557]/50 rounded-xl focus:outline-none focus:border-[#dfb557] text-center tracking-widest text-lg text-zinc-100 placeholder-zinc-500 shadow-inner"
               />
@@ -19938,9 +22601,7 @@ function Price() {
               )}
 
             </form>
-
           </div>
-
         ) : isEditMode ? (
 
           /* =====================================================
@@ -19967,13 +22628,14 @@ function Price() {
 
               <div className="bg-zinc-900 rounded-xl border border-[#dfb557]/30 shadow-inner overflow-hidden min-w-0">
 
-                {/* NOTEBOOK HEADER / TOGGLE */}
+                {/* NOTEBOOK HEADER */}
 
                 <button
                   type="button"
                   onClick={() =>
                     setIsNotebookOpen(
-                      (prev) => !prev
+                      (prev) =>
+                        !prev
                     )
                   }
                   className="w-full flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4 p-3 sm:p-6 text-left hover:bg-zinc-800/60 transition-all"
@@ -20006,176 +22668,211 @@ function Price() {
                 {/* NOTEBOOK CONTENT */}
 
                 {isNotebookOpen && (
-
                   <div className="px-3 sm:px-6 pb-4 sm:pb-6 pt-2 border-t border-zinc-800">
 
                     <div className="space-y-3 sm:space-y-4 max-h-[60vh] sm:max-h-[500px] overflow-y-auto pr-0 sm:pr-1 overscroll-contain">
 
-                      {notebookList.length === 0 ? (
-
+                      {notebookList.length ===
+                      0 ? (
                         <p className="text-zinc-500 text-xs italic text-center py-4">
                           ዝኾነ ዝተመዝገበ ዓሚል የልቦን። ካብቲ ኣብ ታሕቲ ዘሎ Edit Mode ጌርካ Select ብምባል ክትምዝግብ ትኽእል።
                         </p>
-
                       ) : (
+                        notebookList.map(
+                          (note) => (
+                            <div
+                              key={String(
+                                getNotebookId(
+                                  note
+                                )
+                              )}
+                              className="bg-zinc-950 border border-zinc-800 p-3 sm:p-5 rounded-xl space-y-3 sm:space-y-4 shadow-md min-w-0"
+                            >
 
-                        notebookList.map((note) => (
+                              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3 border-b border-zinc-900 pb-3 min-w-0">
 
-                          <div
-                            key={note.id}
-                            className="bg-zinc-950 border border-zinc-800 p-3 sm:p-5 rounded-xl space-y-3 sm:space-y-4 shadow-md min-w-0"
-                          >
+                                <div className="flex items-center gap-2 sm:gap-3 flex-wrap min-w-0">
 
-                            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-3 border-b border-zinc-900 pb-3 min-w-0">
-
-                              <div className="flex items-center gap-2 sm:gap-3 flex-wrap min-w-0">
-
-                                <span className="text-base font-serif font-bold text-[#dfb557]">
-                                  {note.customerName}
-                                </span>
-
-                                <span className="text-[10px] bg-zinc-900 border border-zinc-700 px-2.5 py-1 rounded-md text-zinc-300 font-semibold">
-                                  📅 ዕለት: {note.bookingDate}
-                                </span>
-
-                              </div>
-
-                              <span className="text-[9px] text-zinc-500">
-                                ተመዝጊቡሉ: {note.timestamp}
-                              </span>
-
-                            </div>
-
-                            <div className="bg-zinc-900/80 border border-[#dfb557]/30 p-3 sm:p-4 rounded-xl space-y-3 sm:space-y-4 min-w-0 overflow-hidden">
-
-                              <div className="flex justify-between items-start sm:items-center gap-3">
-
-                                <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#dfb557]">
-                                  {note.tier}
-                                </span>
-
-                                <span className="text-lg font-serif font-bold text-[#dfb557]">
-                                  {note.packagePrice}
-                                </span>
-
-                              </div>
-
-                              <h4 className="text-lg sm:text-xl font-serif text-white break-words">
-                                {note.packageName} Package
-                              </h4>
-
-                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 pt-3 border-t border-zinc-800">
-
-                                <div className="space-y-2">
-
-                                  <span className="text-[10px] text-[#dfb557] font-semibold uppercase block">
-                                    SERVICES
+                                  <span className="text-base font-serif font-bold text-[#dfb557]">
+                                    {
+                                      note.customerName
+                                    }
                                   </span>
 
-                                  <ul className="space-y-1 text-xs text-zinc-300">
+                                  <span className="text-[10px] bg-zinc-900 border border-zinc-700 px-2.5 py-1 rounded-md text-zinc-300 font-semibold">
+                                    📅 ዕለት:{' '}
+                                    {
+                                      note.bookingDate
+                                    }
+                                  </span>
 
-                                    {Array.isArray(
+                                </div>
+
+                                <span className="text-[9px] text-zinc-500">
+                                  ተመዝጊቡሉ:{' '}
+                                  {
+                                    note.timestamp
+                                  }
+                                </span>
+
+                              </div>
+
+                              <div className="bg-zinc-900/80 border border-[#dfb557]/30 p-3 sm:p-4 rounded-xl space-y-3 sm:space-y-4 min-w-0 overflow-hidden">
+
+                                <div className="flex justify-between items-start sm:items-center gap-3">
+
+                                  <span className="text-[10px] uppercase font-bold tracking-[0.2em] text-[#dfb557]">
+                                    {note.tier}
+                                  </span>
+
+                                  <span className="text-lg font-serif font-bold text-[#dfb557]">
+                                    {
+                                      note.packagePrice
+                                    }
+                                  </span>
+
+                                </div>
+
+                                <h4 className="text-lg sm:text-xl font-serif text-white break-words">
+                                  {
+                                    note.packageName
+                                  }{' '}
+                                  Package
+                                </h4>
+
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5 pt-3 border-t border-zinc-800">
+
+                                  <div className="space-y-2">
+
+                                    <span className="text-[10px] text-[#dfb557] font-semibold uppercase block">
+                                      SERVICES
+                                    </span>
+
+                                    <ul className="space-y-1 text-xs text-zinc-300">
+
+                                      {Array.isArray(
+                                        note.packageServices
+                                      ) &&
                                       note.packageServices
-                                    ) &&
-                                    note.packageServices.length > 0 ? (
-
-                                      note.packageServices.map(
-                                        (service, index) => (
-                                          <li key={index}>
-                                            {service}
-                                          </li>
+                                        .length >
+                                        0 ? (
+                                        note.packageServices.map(
+                                          (
+                                            service,
+                                            index
+                                          ) => (
+                                            <li
+                                              key={
+                                                index
+                                              }
+                                            >
+                                              {
+                                                service
+                                              }
+                                            </li>
+                                          )
                                         )
-                                      )
+                                      ) : (
+                                        <li className="text-zinc-500">
+                                          የለን
+                                        </li>
+                                      )}
 
-                                    ) : (
+                                    </ul>
 
-                                      <li className="text-zinc-500">
-                                        የለን
-                                      </li>
+                                  </div>
 
-                                    )}
+                                  <div className="space-y-2">
 
-                                  </ul>
+                                    <span className="text-[10px] text-[#dfb557] font-semibold uppercase block">
+                                      FEATURES
+                                    </span>
 
-                                </div>
+                                    <ul className="space-y-1 text-xs text-zinc-300">
 
-                                <div className="space-y-2">
-
-                                  <span className="text-[10px] text-[#dfb557] font-semibold uppercase block">
-                                    FEATURES
-                                  </span>
-
-                                  <ul className="space-y-1 text-xs text-zinc-300">
-
-                                    {Array.isArray(
+                                      {Array.isArray(
+                                        note.packageFeatures
+                                      ) &&
                                       note.packageFeatures
-                                    ) &&
-                                    note.packageFeatures.length > 0 ? (
-
-                                      note.packageFeatures.map(
-                                        (feature, index) => (
-                                          <li key={index}>
-                                            {feature}
-                                          </li>
+                                        .length >
+                                        0 ? (
+                                        note.packageFeatures.map(
+                                          (
+                                            feature,
+                                            index
+                                          ) => (
+                                            <li
+                                              key={
+                                                index
+                                              }
+                                            >
+                                              {
+                                                feature
+                                              }
+                                            </li>
+                                          )
                                         )
-                                      )
+                                      ) : (
+                                        <li className="text-zinc-500">
+                                          የለን
+                                        </li>
+                                      )}
 
-                                    ) : (
+                                    </ul>
 
-                                      <li className="text-zinc-500">
-                                        የለን
-                                      </li>
-
-                                    )}
-
-                                  </ul>
+                                  </div>
 
                                 </div>
 
                               </div>
 
+                              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-zinc-900">
+
+                                <button
+                                  onClick={() =>
+                                    handleShareReceipt(
+                                      note
+                                    )
+                                  }
+                                  className="w-full px-3 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg text-[10px] uppercase font-semibold transition-all flex items-center justify-center gap-1 min-h-[42px]"
+                                >
+                                  Share 🔗
+                                </button>
+
+                                <button
+                                  onClick={() =>
+                                    handleEditNoteItem(
+                                      note
+                                    )
+                                  }
+                                  className="w-full px-3 py-2.5 bg-[#dfb557]/20 hover:bg-[#dfb557]/40 text-[#dfb557] rounded-lg text-[10px] uppercase font-semibold transition-all min-h-[42px]"
+                                >
+                                  Edit
+                                </button>
+
+                                <button
+                                  onClick={() =>
+                                    handleDeleteNote(
+                                      getNotebookId(
+                                        note
+                                      )
+                                    )
+                                  }
+                                  className="w-full px-3 py-2.5 bg-red-950/60 hover:bg-red-900 text-red-300 rounded-lg text-[10px] uppercase font-semibold transition-all min-h-[42px]"
+                                >
+                                  Delete
+                                </button>
+
+                              </div>
+
                             </div>
-
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-2 border-t border-zinc-900">
-
-                              <button
-                                onClick={() =>
-                                  handleShareReceipt(note)
-                                }
-                                className="w-full px-3 py-2.5 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 rounded-lg text-[10px] uppercase font-semibold transition-all flex items-center justify-center gap-1 min-h-[42px]"
-                              >
-                                Share 🔗
-                              </button>
-
-                              <button
-                                onClick={() =>
-                                  handleEditNoteItem(note)
-                                }
-                                className="w-full px-3 py-2.5 bg-[#dfb557]/20 hover:bg-[#dfb557]/40 text-[#dfb557] rounded-lg text-[10px] uppercase font-semibold transition-all min-h-[42px]"
-                              >
-                                Edit
-                              </button>
-
-                              <button
-                                onClick={() =>
-                                  handleDeleteNote(note.id)
-                                }
-                                className="w-full px-3 py-2.5 bg-red-950/60 hover:bg-red-900 text-red-300 rounded-lg text-[10px] uppercase font-semibold transition-all min-h-[42px]"
-                              >
-                                Delete
-                              </button>
-
-                            </div>
-
-                          </div>
-
-                        ))
+                          )
+                        )
                       )}
 
                     </div>
 
                   </div>
-
                 )}
 
               </div>
@@ -20200,12 +22897,15 @@ function Price() {
 
                 <div className="flex lg:grid lg:grid-cols-4 gap-4 sm:gap-6 overflow-x-auto lg:overflow-x-visible snap-x snap-mandatory lg:snap-none pb-4 lg:pb-0 -mx-1 sm:-mx-0 px-1 sm:px-0 overscroll-x-contain">
 
-                  {Object.keys(tempPackages).map((key) => {
-
-                    const pkg = tempPackages[key];
+                  {Object.keys(
+                    tempPackages
+                  ).map((key) => {
+                    const pkg =
+                      tempPackages[
+                        key
+                      ];
 
                     return (
-
                       <div
                         key={key}
                         className="flex-none w-[86vw] sm:w-[68vw] md:w-[48vw] lg:w-auto snap-start bg-zinc-900 border-2 border-[#dfb557]/40 p-4 sm:p-6 rounded-2xl shadow-xl flex flex-col justify-between space-y-4 min-w-0"
@@ -20216,115 +22916,139 @@ function Price() {
                           {/* TIER */}
 
                           <div>
-
                             <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">
                               Tier Title
                             </label>
 
                             <input
-                              value={pkg.tier || ''}
-                              onChange={(e) =>
+                              value={
+                                pkg.tier ||
+                                ''
+                              }
+                              onChange={(
+                                e
+                              ) =>
                                 updateTempPackageField(
                                   key,
                                   'tier',
-                                  e.target.value
+                                  e.target
+                                    .value
                                 )
                               }
                               className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100 font-bold"
                             />
-
                           </div>
 
                           {/* NAME */}
 
                           <div>
-
                             <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">
                               Package Name
                             </label>
 
                             <input
-                              value={pkg.name || ''}
-                              onChange={(e) =>
+                              value={
+                                pkg.name ||
+                                ''
+                              }
+                              onChange={(
+                                e
+                              ) =>
                                 updateTempPackageField(
                                   key,
                                   'name',
-                                  e.target.value
+                                  e.target
+                                    .value
                                 )
                               }
                               className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-zinc-100 font-serif font-bold text-lg"
                             />
-
                           </div>
 
                           {/* PRICE */}
 
                           <div>
-
                             <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">
                               Price (ዋጋ)
                             </label>
 
                             <input
-                              value={pkg.price || ''}
-                              onChange={(e) =>
+                              value={
+                                pkg.price ||
+                                ''
+                              }
+                              onChange={(
+                                e
+                              ) =>
                                 updateTempPackageField(
                                   key,
                                   'price',
-                                  e.target.value
+                                  e.target
+                                    .value
                                 )
                               }
                               className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-xs text-[#dfb557] font-bold"
                             />
-
                           </div>
 
                           {/* SERVICES */}
 
                           <div>
-
                             <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">
                               Services
                             </label>
 
                             <textarea
                               rows="5"
-                              value={(pkg.services || []).join('\n')}
-                              onChange={(e) =>
+                              value={(
+                                pkg.services ||
+                                []
+                              ).join(
+                                '\n'
+                              )}
+                              onChange={(
+                                e
+                              ) =>
                                 updateTempPackageArray(
                                   key,
                                   'services',
-                                  e.target.value
+                                  e.target
+                                    .value
                                 )
                               }
                               className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-[11px] text-zinc-300"
                               placeholder="One service per line"
                             />
-
                           </div>
 
                           {/* FEATURES */}
 
                           <div>
-
                             <label className="text-[9px] uppercase text-zinc-400 font-semibold block mb-1">
                               Features
                             </label>
 
                             <textarea
                               rows="6"
-                              value={(pkg.features || []).join('\n')}
-                              onChange={(e) =>
+                              value={(
+                                pkg.features ||
+                                []
+                              ).join(
+                                '\n'
+                              )}
+                              onChange={(
+                                e
+                              ) =>
                                 updateTempPackageArray(
                                   key,
                                   'features',
-                                  e.target.value
+                                  e.target
+                                    .value
                                 )
                               }
                               className="w-full bg-zinc-950 border border-zinc-700 p-2 rounded-lg text-[11px] text-zinc-300"
                               placeholder="One feature per line"
                             />
-
                           </div>
 
                         </div>
@@ -20332,15 +23056,18 @@ function Price() {
                         <button
                           type="button"
                           onClick={() =>
-                            handleSelectPackageClick(key)
+                            handleSelectPackageClick(
+                              key
+                            )
                           }
                           className="w-full bg-[#dfb557] text-black py-2.5 text-[10px] uppercase font-bold tracking-[0.2em] hover:bg-[#c99f45] transition-all rounded-xl shadow-md cursor-pointer"
                         >
-                          Select {pkg.name} ➔
+                          Select{' '}
+                          {pkg.name}{' '}
+                          ➔
                         </button>
 
                       </div>
-
                     );
                   })}
 
@@ -20348,13 +23075,15 @@ function Price() {
 
               </div>
 
-              {/* SAVE / CANCEL MAIN PACKAGE EDIT */}
+              {/* SAVE / CANCEL */}
 
               <div className="flex flex-col-reverse sm:flex-row justify-end gap-2 sm:gap-4 pt-4 border-t border-zinc-900">
 
                 <button
                   type="button"
-                  onClick={handleCancelEdit}
+                  onClick={
+                    handleCancelEdit
+                  }
                   className="w-full sm:w-auto px-6 py-3 bg-zinc-900 text-zinc-300 rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-zinc-800 transition-all"
                 >
                   Cancel
@@ -20362,7 +23091,9 @@ function Price() {
 
                 <button
                   type="button"
-                  onClick={handleSaveAndExit}
+                  onClick={
+                    handleSaveAndExit
+                  }
                   className="w-full sm:w-auto px-6 py-3 bg-[#dfb557] text-black rounded-xl text-xs uppercase font-bold tracking-widest hover:bg-[#c99f45] transition-all"
                 >
                   Save Changes
@@ -20371,7 +23102,6 @@ function Price() {
               </div>
 
             </div>
-
           </div>
 
         ) : (
@@ -20385,7 +23115,6 @@ function Price() {
             <div className="flex justify-end mb-4">
 
               {!isEditGateOpen ? (
-
                 <div className="flex flex-col items-end">
 
                   <div className="flex items-center gap-2 bg-zinc-900 p-2 rounded-xl border border-[#dfb557]/40 shadow-lg">
@@ -20393,7 +23122,9 @@ function Price() {
                     <input
                       type="password"
                       placeholder="Admin Code"
-                      value={adminPasscode}
+                      value={
+                        adminPasscode
+                      }
                       onChange={(e) =>
                         setAdminPasscode(
                           e.target.value
@@ -20421,19 +23152,18 @@ function Price() {
                   )}
 
                 </div>
-
               ) : (
-
                 <button
                   type="button"
                   onClick={() =>
-                    setIsEditMode(true)
+                    setIsEditMode(
+                      true
+                    )
                   }
                   className="px-4 py-2 bg-[#dfb557] text-black rounded-xl text-xs uppercase font-semibold tracking-widest shadow-md hover:bg-[#c99f45] transition-all"
                 >
                   Enter Edit Mode ⚙️
                 </button>
-
               )}
 
             </div>
@@ -20454,12 +23184,13 @@ function Price() {
 
             <div className="flex lg:grid lg:grid-cols-4 gap-5 lg:gap-6 text-left overflow-x-auto lg:overflow-x-visible snap-x snap-mandatory lg:snap-none pb-5 lg:pb-0 -mx-4 px-4 lg:mx-0 lg:px-0 scrollbar-thin scrollbar-thumb-[#dfb557]/50 scrollbar-track-zinc-900">
 
-              {Object.keys(packages).map((key) => {
-
-                const pkg = packages[key];
+              {Object.keys(
+                packages
+              ).map((key) => {
+                const pkg =
+                  packages[key];
 
                 return (
-
                   <div
                     key={key}
                     className={`flex-none w-[82vw] sm:w-[65vw] md:w-[45vw] lg:w-auto snap-start bg-zinc-950/90 border-2 ${
@@ -20492,36 +23223,50 @@ function Price() {
                       </p>
 
                       {pkg.services &&
-                        pkg.services.length > 0 && (
-
+                        pkg.services.length >
+                          0 && (
                           <div className="text-xs sm:text-sm text-zinc-300 space-y-2 mb-4 font-light border-b border-zinc-900 pb-4">
 
                             {pkg.services.map(
-                              (service, index) => (
-
-                                <p key={index}>
-                                  {service}
+                              (
+                                service,
+                                index
+                              ) => (
+                                <p
+                                  key={
+                                    index
+                                  }
+                                >
+                                  {
+                                    service
+                                  }
                                 </p>
-
                               )
                             )}
 
                           </div>
-
                         )}
 
                       <ul className="text-xs sm:text-sm text-zinc-300 space-y-3 mb-6 font-light">
 
-                        {(pkg.features || []).map(
-                          (feature, index) => (
-
+                        {(
+                          pkg.features ||
+                          []
+                        ).map(
+                          (
+                            feature,
+                            index
+                          ) => (
                             <li
-                              key={index}
+                              key={
+                                index
+                              }
                               className="flex items-center gap-2"
                             >
-                              {feature}
+                              {
+                                feature
+                              }
                             </li>
-
                           )
                         )}
 
@@ -20530,7 +23275,6 @@ function Price() {
                     </div>
 
                   </div>
-
                 );
               })}
 
@@ -20538,12 +23282,13 @@ function Price() {
 
             <div className="lg:hidden flex items-center justify-center gap-2 mt-2 text-[9px] text-zinc-500 uppercase tracking-[0.2em]">
               <span>←</span>
-              <span>Swipe to view packages</span>
+              <span>
+                Swipe to view packages
+              </span>
               <span>→</span>
             </div>
 
           </div>
-
         )}
 
       </div>
@@ -20554,7 +23299,6 @@ function Price() {
 
       {isBookingModalOpen &&
         selectedPackage && (
-
           <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-start sm:items-center justify-center p-2 sm:p-4 overflow-y-auto overscroll-contain">
 
             <div className="bg-zinc-950 border border-[#dfb557]/40 p-4 sm:p-6 md:p-8 rounded-2xl max-w-5xl w-full max-h-[calc(100dvh-1rem)] sm:max-h-[calc(100dvh-2rem)] overflow-y-auto shadow-2xl space-y-5 sm:space-y-6 my-0 sm:my-8">
@@ -20564,13 +23308,15 @@ function Price() {
                 <div>
 
                   <h3 className="text-base sm:text-lg font-serif text-[#dfb557] leading-snug">
-                    {editingNoteId !== null
+                    {editingNoteId !==
+                    null
                       ? '✏️ Edit Admin Notebook'
                       : 'ዝርዝር መረጻ ንዓሚል ምዝገባ'}
                   </h3>
 
                   <span className="text-[10px] text-zinc-500">
-                    {editingNoteId !== null
+                    {editingNoteId !==
+                    null
                       ? 'ዝርዝር ናይዚ Notebook ጥራሕ እዩ ዝቕየር'
                       : 'Selected package is an independent copy'}
                   </span>
@@ -20610,7 +23356,9 @@ function Price() {
                       type="text"
                       required
                       placeholder="ኣብነት: ኣቤል ዳዊት"
-                      value={customerName}
+                      value={
+                        customerName
+                      }
                       onChange={(e) =>
                         setCustomerName(
                           e.target.value
@@ -20630,7 +23378,9 @@ function Price() {
                     <input
                       type="date"
                       required
-                      value={bookingDate}
+                      value={
+                        bookingDate
+                      }
                       onChange={(e) =>
                         setBookingDate(
                           e.target.value
@@ -20656,7 +23406,8 @@ function Price() {
                     <input
                       type="text"
                       value={
-                        selectedPackage.name || ''
+                        selectedPackage.name ||
+                        ''
                       }
                       onChange={(e) =>
                         updateSelectedPackageField(
@@ -20678,7 +23429,8 @@ function Price() {
                     <input
                       type="text"
                       value={
-                        selectedPackage.tier || ''
+                        selectedPackage.tier ||
+                        ''
                       }
                       onChange={(e) =>
                         updateSelectedPackageField(
@@ -20704,7 +23456,9 @@ function Price() {
                   <input
                     type="text"
                     required
-                    value={customizedPrice}
+                    value={
+                      customizedPrice
+                    }
                     onChange={(e) => {
                       setCustomizedPrice(
                         e.target.value
@@ -20720,7 +23474,7 @@ function Price() {
 
                 </div>
 
-                {/* SERVICES + FEATURES EDITABLE */}
+                {/* SERVICES + FEATURES */}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
 
@@ -20735,7 +23489,10 @@ function Price() {
                       </h4>
 
                       <span className="text-[9px] text-zinc-500">
-                        {selectedPackage.services?.length || 0}{' '}
+                        {selectedPackage
+                          .services
+                          ?.length ||
+                          0}{' '}
                         items
                       </span>
 
@@ -20743,12 +23500,12 @@ function Price() {
 
                     <textarea
                       rows="12"
-                      value={
-                        (
-                          selectedPackage.services ||
-                          []
-                        ).join('\n')
-                      }
+                      value={(
+                        selectedPackage.services ||
+                        []
+                      ).join(
+                        '\n'
+                      )}
                       onChange={(e) =>
                         updateSelectedPackageArray(
                           'services',
@@ -20776,7 +23533,10 @@ function Price() {
                       </h4>
 
                       <span className="text-[9px] text-zinc-500">
-                        {selectedPackage.features?.length || 0}{' '}
+                        {selectedPackage
+                          .features
+                          ?.length ||
+                          0}{' '}
                         items
                       </span>
 
@@ -20784,12 +23544,12 @@ function Price() {
 
                     <textarea
                       rows="12"
-                      value={
-                        (
-                          selectedPackage.features ||
-                          []
-                        ).join('\n')
-                      }
+                      value={(
+                        selectedPackage.features ||
+                        []
+                      ).join(
+                        '\n'
+                      )}
                       onChange={(e) =>
                         updateSelectedPackageArray(
                           'features',
@@ -20827,51 +23587,47 @@ function Price() {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
 
                     <div>
-
                       <p className="text-[9px] text-zinc-500 uppercase mb-1">
                         Customer
                       </p>
 
                       <p className="text-sm text-white font-semibold">
-                        {customerName || '—'}
+                        {customerName ||
+                          '—'}
                       </p>
-
                     </div>
 
                     <div>
-
                       <p className="text-[9px] text-zinc-500 uppercase mb-1">
                         Date
                       </p>
 
                       <p className="text-sm text-white">
-                        {bookingDate || '—'}
+                        {bookingDate ||
+                          '—'}
                       </p>
-
                     </div>
 
                     <div>
-
                       <p className="text-[9px] text-zinc-500 uppercase mb-1">
                         Package
                       </p>
 
                       <p className="text-sm text-white font-semibold">
-                        {selectedPackage.name || '—'}
+                        {selectedPackage.name ||
+                          '—'}
                       </p>
-
                     </div>
 
                     <div>
-
                       <p className="text-[9px] text-zinc-500 uppercase mb-1">
                         Price
                       </p>
 
                       <p className="text-sm text-[#dfb557] font-bold">
-                        {customizedPrice || '—'}
+                        {customizedPrice ||
+                          '—'}
                       </p>
-
                     </div>
 
                   </div>
@@ -20896,7 +23652,8 @@ function Price() {
                     type="submit"
                     className="w-full sm:w-1/2 bg-[#dfb557] text-black py-3 rounded-xl text-xs uppercase font-bold hover:bg-[#c99f45] transition-all shadow-lg min-h-[44px]"
                   >
-                    {editingNoteId !== null
+                    {editingNoteId !==
+                    null
                       ? 'Update / Save'
                       : 'ኣቐመጥ (Save)'}
                   </button>
@@ -20906,9 +23663,7 @@ function Price() {
               </form>
 
             </div>
-
           </div>
-
         )}
 
       <Footer />
@@ -20916,5 +23671,5 @@ function Price() {
     </div>
   );
 }
-//
+
 export default Price;
