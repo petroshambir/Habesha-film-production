@@ -16871,75 +16871,196 @@ function Price() {
   // SAVE NOTEBOOK
   // =========================================================
 
-  const handleBookingSubmit = (e) => {
-    e.preventDefault();
+  // const handleBookingSubmit = (e) => {
+  //   e.preventDefault();
 
-    if (
-      !customerName.trim() ||
-      !bookingDate ||
-      !selectedPackage
-    ) {
-      return;
+  //   if (
+  //     !customerName.trim() ||
+  //     !bookingDate ||
+  //     !selectedPackage
+  //   ) {
+  //     return;
+  //   }
+
+  //   const newBookingRecord = {
+  //     id:
+  //       editingNoteId !== null
+  //         ? editingNoteId
+  //         : Date.now(),
+
+  //     customerName: customerName.trim(),
+
+  //     bookingDate,
+
+  //     packageName: selectedPackage.name || '',
+
+  //     packagePrice: customizedPrice,
+
+  //     tier: selectedPackage.tier || '',
+
+  //     packageServices: Array.isArray(
+  //       selectedPackage.services
+  //     )
+  //       ? [...selectedPackage.services]
+  //       : [],
+
+  //     packageFeatures: Array.isArray(
+  //       selectedPackage.features
+  //     )
+  //       ? [...selectedPackage.features]
+  //       : [],
+
+  //     timestamp:
+  //       editingNoteId !== null
+  //         ? notebookList.find(
+  //             (item) => item.id === editingNoteId
+  //           )?.timestamp ||
+  //           new Date().toLocaleString()
+  //         : new Date().toLocaleString(),
+  //   };
+
+  //   let updatedList;
+
+  //   if (editingNoteId !== null) {
+  //     updatedList = notebookList.map((item) =>
+  //       item.id === editingNoteId
+  //         ? newBookingRecord
+  //         : item
+  //     );
+  //   } else {
+  //     updatedList = [
+  //       newBookingRecord,
+  //       ...notebookList,
+  //     ];
+  //   }
+
+  //   setNotebookList(updatedList);
+
+  //   localStorage.setItem(
+  //     'adminNotebookListPersistent',
+  //     JSON.stringify(updatedList)
+  //   );
+
+  //   setIsBookingModalOpen(false);
+  //   setSelectedPackage(null);
+  //   setEditingNoteId(null);
+
+  //   alert(
+  //     editingNoteId !== null
+  //       ? 'ዝነበረ Notebook ብሰላም ተስተካኺሉ እዩ!'
+  //       : 'ብሰላም ኣብ Admin Notebook ተዓቂቡ እዩ!'
+  //   );
+  // };
+  const handleBookingSubmit = async (e) => {
+  e.preventDefault();
+
+  if (
+    !customerName.trim() ||
+    !bookingDate ||
+    !selectedPackage
+  ) {
+    return;
+  }
+
+  const newBookingRecord = {
+    id:
+      editingNoteId !== null
+        ? editingNoteId
+        : Date.now(),
+
+    customerName: customerName.trim(),
+
+    bookingDate,
+
+    packageName: selectedPackage.name || '',
+
+    packagePrice: customizedPrice,
+
+    tier: selectedPackage.tier || '',
+
+    packageServices: Array.isArray(
+      selectedPackage.services
+    )
+      ? [...selectedPackage.services]
+      : [],
+
+    packageFeatures: Array.isArray(
+      selectedPackage.features
+    )
+      ? [...selectedPackage.features]
+      : [],
+
+    timestamp:
+      editingNoteId !== null
+        ? notebookList.find(
+            (item) => item.id === editingNoteId
+          )?.timestamp ||
+          new Date().toLocaleString()
+        : new Date().toLocaleString(),
+  };
+
+  try {
+    // ==========================================
+    // SEND BOOKING TO BACKEND / MONGODB
+    // ==========================================
+
+    const response = await fetch(
+      'https://habesha-film-production-server.onrender.com/api/notebook',
+      {
+        method:
+          editingNoteId !== null
+            ? 'PUT'
+            : 'POST',
+
+        headers: {
+          'Content-Type': 'application/json',
+        },
+
+        body: JSON.stringify(newBookingRecord),
+      }
+    );
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(
+        data.message || 'Failed to save notebook'
+      );
     }
 
-    const newBookingRecord = {
-      id:
-        editingNoteId !== null
-          ? editingNoteId
-          : Date.now(),
-
-      customerName: customerName.trim(),
-
-      bookingDate,
-
-      packageName: selectedPackage.name || '',
-
-      packagePrice: customizedPrice,
-
-      tier: selectedPackage.tier || '',
-
-      packageServices: Array.isArray(
-        selectedPackage.services
-      )
-        ? [...selectedPackage.services]
-        : [],
-
-      packageFeatures: Array.isArray(
-        selectedPackage.features
-      )
-        ? [...selectedPackage.features]
-        : [],
-
-      timestamp:
-        editingNoteId !== null
-          ? notebookList.find(
-              (item) => item.id === editingNoteId
-            )?.timestamp ||
-            new Date().toLocaleString()
-          : new Date().toLocaleString(),
-    };
+    // ==========================================
+    // UPDATE REACT STATE
+    // ==========================================
 
     let updatedList;
 
     if (editingNoteId !== null) {
       updatedList = notebookList.map((item) =>
         item.id === editingNoteId
-          ? newBookingRecord
+          ? data.booking
           : item
       );
     } else {
       updatedList = [
-        newBookingRecord,
+        data.booking,
         ...notebookList,
       ];
     }
 
     setNotebookList(updatedList);
 
+    // ==========================================
+    // OPTIONAL LOCAL BACKUP
+    // ==========================================
+
     localStorage.setItem(
       'adminNotebookListPersistent',
       JSON.stringify(updatedList)
     );
+
+    // ==========================================
+    // CLOSE MODAL
+    // ==========================================
 
     setIsBookingModalOpen(false);
     setSelectedPackage(null);
@@ -16950,7 +17071,19 @@ function Price() {
         ? 'ዝነበረ Notebook ብሰላም ተስተካኺሉ እዩ!'
         : 'ብሰላም ኣብ Admin Notebook ተዓቂቡ እዩ!'
     );
-  };
+
+  } catch (err) {
+
+    console.error(
+      'Error saving notebook:',
+      err
+    );
+
+    alert(
+      'Notebook ናብ Server ምዕቃብ ኣይተዓወተን።'
+    );
+  }
+};
 
   // =========================================================
   // EDIT NOTEBOOK
