@@ -7,6 +7,7 @@ import projectRoutes from './Route/projectRoutes.js';
 import authRoutes from './Route/authRoutes.js';
 import clientRoutes from './Route/clientRoutes.js';
 import packageRoutes from './Route/packageRoutes.js';
+import notebookRoutes from './Route/notebookRoutes.js';
 
 // 1. መጀመርያ app ፍጠር
 const app = express(); 
@@ -22,6 +23,7 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
+
 // 3. ዳታቤዝ ኣራኽብ
 connectDB();
 
@@ -36,6 +38,10 @@ app.use('/api/projects', projectRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/client', clientRoutes);
 app.use('/api/packages', packageRoutes);
+app.use(
+  '/api/notebook',
+  notebookRoutes
+);
 
 // 6. ሰርቨር ኣበግሶ (ናብ server variable ለዊጥካ ኣብዚ Timeout ክትውስኾ ትኽእል)
 const PORT = process.env.PORT || 5000;
