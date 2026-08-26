@@ -3,6 +3,8 @@
 import React from 'react';
 import Navbar from './Navbar';
 import img_bg from "../assets/images/camera-pic-5-removebg-preview.png"
+import logoAi1 from "../assets/images/logoAi1.png"
+import logoAi2 from "../assets/images/logoAi2.png"
 
 function Hero({ imageSrc }) {
   return (
@@ -31,7 +33,8 @@ function Hero({ imageSrc }) {
       {/* ድሕረ ባይታ ስእሊ ምስ Cinematic Zoom Effect */}
       <div className="absolute inset-0 z-0 overflow-hidden">
         <img 
-          src={imageSrc || "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1920&auto=format&fit=crop"}
+          // src={imageSrc || "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1920&auto=format&fit=crop"}
+          src={logoAi1}
           alt="Habesha Film Production Hero" 
           className="w-full h-full object-cover brightness-[0.6] contrast-110 scale-105 animate-pulse duration-[10000ms]"
         />
