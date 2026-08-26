@@ -34,7 +34,7 @@ function Hero({ imageSrc }) {
       <div className="absolute inset-0 z-0 overflow-hidden">
         <img 
           // src={imageSrc || "https://images.unsplash.com/photo-1534447677768-be436bb09401?q=80&w=1920&auto=format&fit=crop"}
-          src={logoAi1}
+          src={logoAi2}
           alt="Habesha Film Production Hero" 
           className="w-full h-full object-cover brightness-[0.6] contrast-110 scale-105 animate-pulse duration-[10000ms]"
         />
