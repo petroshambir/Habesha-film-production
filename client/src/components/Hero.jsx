@@ -99,7 +99,6 @@
 // }
 
 // export default Hero;
-
 import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 
@@ -111,36 +110,48 @@ function Hero() {
   const slides = [
     {
       logo: logoAi1,
-      label: "HABESHA PICTURES",
-      subtitle: "Photography • Cinematography • Creative Stories",
+      small: "HABESHA PICTURES",
+      title1: "Stories",
+      title2: "that remain.",
+      subtitle:
+        "Photography • Cinematography • Creative Stories",
     },
     {
       logo: logoAi2,
-      label: "HABESHA PICTURES",
-      subtitle: "Film Production • Commercials • Visual Arts",
+      small: "HABESHA PICTURES",
+      title1: "Visuals",
+      title2: "that inspire.",
+      subtitle:
+        "Film Production • Commercials • Visual Arts",
     },
   ];
 
   const [activeSlide, setActiveSlide] = useState(0);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % slides.length);
-    }, 5000);
+  /* =====================================================
+     AUTO SLIDE
+  ===================================================== */
 
-    return () => clearInterval(interval);
-  }, [slides.length]);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % slides.length);
+    }, 6500);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const current = slides[activeSlide];
 
   return (
-    <section className="relative h-[88vh] min-h-[650px] w-full overflow-hidden bg-[#030303] text-white md:h-[96vh]">
+    <section className="relative h-[90vh] min-h-[680px] w-full overflow-hidden bg-[#020202] text-white md:h-[96vh]">
 
       {/* =====================================================
-          ANIMATIONS
+          CINEMATIC ANIMATIONS
       ===================================================== */}
+
       <style>{`
-        @keyframes heroZoom {
+
+        @keyframes cinematicZoom {
           0% {
             transform: scale(1);
           }
@@ -149,366 +160,667 @@ function Hero() {
           }
         }
 
-        @keyframes heroFloat {
-          0%, 100% {
-            transform: translateY(0px);
+        @keyframes logoReveal {
+          0% {
+            opacity: 0;
+            transform: scale(.86) translateY(35px);
+            filter: blur(12px);
           }
-          50% {
-            transform: translateY(-14px);
+
+          60% {
+            opacity: .85;
+            filter: blur(2px);
+          }
+
+          100% {
+            opacity: 1;
+            transform: scale(1) translateY(0);
+            filter: blur(0);
           }
         }
 
-        @keyframes goldFloat {
-          0%, 100% {
-            transform: translateX(-10px);
-            opacity: .35;
+        @keyframes cinematicFloat {
+          0%,
+          100% {
+            transform: translateY(0) rotate(0deg);
           }
+
           50% {
-            transform: translateX(25px);
-            opacity: .8;
+            transform: translateY(-18px) rotate(.5deg);
+          }
+        }
+
+        @keyframes goldGlow {
+          0%,
+          100% {
+            opacity: .25;
+            transform: scale(.95);
+          }
+
+          50% {
+            opacity: .65;
+            transform: scale(1.08);
           }
         }
 
         @keyframes lightSweep {
           0% {
-            transform: translateX(-120%) skewX(-20deg);
+            left: -40%;
             opacity: 0;
           }
-          20% {
-            opacity: .4;
+
+          15% {
+            opacity: .5;
           }
-          60% {
+
+          45% {
             opacity: .15;
           }
+
           100% {
-            transform: translateX(150%) skewX(-20deg);
+            left: 140%;
             opacity: 0;
           }
         }
 
-        @keyframes logoIn {
+        @keyframes textReveal {
           0% {
             opacity: 0;
-            transform: scale(.92) translateY(25px);
+            transform: translateY(30px);
           }
-          100% {
-            opacity: 1;
-            transform: scale(1) translateY(0);
-          }
-        }
 
-        @keyframes textIn {
-          0% {
-            opacity: 0;
-            transform: translateY(20px);
-          }
           100% {
             opacity: 1;
             transform: translateY(0);
           }
         }
 
-        @keyframes lineGrow {
+        @keyframes lineReveal {
           0% {
             width: 0;
-            opacity: 0;
           }
+
           100% {
             width: 100%;
-            opacity: 1;
           }
         }
 
-        .hero-zoom {
-          animation: heroZoom 6s ease-out forwards;
+        @keyframes ringRotate {
+          from {
+            transform: rotate(0deg);
+          }
+
+          to {
+            transform: rotate(360deg);
+          }
         }
 
-        .hero-float {
-          animation: heroFloat 4s ease-in-out infinite;
+        @keyframes particleFloat {
+          0% {
+            transform: translateY(0);
+            opacity: .15;
+          }
+
+          50% {
+            transform: translateY(-30px);
+            opacity: .8;
+          }
+
+          100% {
+            transform: translateY(-60px);
+            opacity: 0;
+          }
         }
 
-        .gold-float {
-          animation: goldFloat 5s ease-in-out infinite;
+        @keyframes scrollMove {
+          0% {
+            transform: translateY(-8px);
+            opacity: 0;
+          }
+
+          50% {
+            opacity: 1;
+          }
+
+          100% {
+            transform: translateY(12px);
+            opacity: 0;
+          }
+        }
+
+        .cinematic-zoom {
+          animation: cinematicZoom 7s ease-out forwards;
+        }
+
+        .logo-reveal {
+          animation: logoReveal 1.4s cubic-bezier(.16,1,.3,1) forwards;
+        }
+
+        .cinematic-float {
+          animation: cinematicFloat 5s ease-in-out infinite;
+        }
+
+        .gold-glow {
+          animation: goldGlow 5s ease-in-out infinite;
         }
 
         .light-sweep {
-          animation: lightSweep 5s ease-in-out infinite;
+          animation: lightSweep 6s ease-in-out infinite;
         }
 
-        .logo-in {
-          animation: logoIn 1.2s ease-out forwards;
+        .text-reveal {
+          animation: textReveal 1s cubic-bezier(.16,1,.3,1) forwards;
         }
 
-        .text-in {
-          animation: textIn 1s ease-out forwards;
+        .line-reveal {
+          animation: lineReveal 1.4s ease-out forwards;
         }
 
-        .line-grow {
-          animation: lineGrow 1.4s ease-out forwards;
+        .ring-rotate {
+          animation: ringRotate 25s linear infinite;
         }
+
+        .particle {
+          animation: particleFloat 5s ease-out infinite;
+        }
+
+        .scroll-move {
+          animation: scrollMove 1.8s ease-in-out infinite;
+        }
+
       `}</style>
 
       {/* =====================================================
           NAVBAR
       ===================================================== */}
-      <div className="absolute left-0 top-0 z-[60] w-full">
+
+      <div className="absolute left-0 top-0 z-[100] w-full">
         <Navbar />
       </div>
 
       {/* =====================================================
           BACKGROUND
       ===================================================== */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
 
-        {/* Dark cinematic background */}
-        <div className="absolute inset-0 bg-[#050505]" />
+      <div className="absolute inset-0 overflow-hidden">
 
-        {/* Soft gold glow - left */}
-        <div className="absolute -left-32 top-1/3 h-[450px] w-[450px] rounded-full bg-[#d4a943]/10 blur-[120px] gold-float" />
+        {/* Black base */}
+        <div className="absolute inset-0 bg-[#020202]" />
 
-        {/* Soft gold glow - right */}
+        {/* Gold cinematic glow LEFT */}
         <div
-          className="absolute -right-32 top-1/4 h-[500px] w-[500px] rounded-full bg-[#d4a943]/10 blur-[140px] gold-float"
-          style={{ animationDelay: "1.5s" }}
-        />
-
-        {/* Camera background */}
-        <img
-          src={img_bg}
-          alt=""
-          aria-hidden="true"
           className="
+            gold-glow
             absolute
-            -right-16
-            bottom-[-30px]
-            z-[1]
-            w-[430px]
-            max-w-[65vw]
-            object-contain
-            opacity-[0.13]
-            grayscale
-            hero-float
-            md:-right-5
-            md:bottom-[-40px]
-            md:w-[620px]
+            -left-[180px]
+            top-[25%]
+            h-[600px]
+            w-[600px]
+            rounded-full
+            bg-[#d4a943]/10
+            blur-[150px]
           "
         />
 
-        {/* Main cinematic image / logo */}
-        <div className="absolute inset-0 flex items-center justify-center">
+        {/* Gold cinematic glow RIGHT */}
+        <div
+          className="
+            gold-glow
+            absolute
+            -right-[180px]
+            top-[15%]
+            h-[650px]
+            w-[650px]
+            rounded-full
+            bg-[#d4a943]/10
+            blur-[160px]
+          "
+          style={{ animationDelay: "2s" }}
+        />
 
-          <img
-            key={current.logo}
-            src={current.logo}
-            alt="Habesha Pictures"
+        {/* =================================================
+            DECORATIVE GOLD RING
+        ================================================= */}
+
+        <div className="absolute left-1/2 top-[43%] hidden h-[600px] w-[600px] -translate-x-1/2 -translate-y-1/2 md:block">
+
+          <div
             className="
-              logo-in
-              hero-zoom
+              ring-rotate
               absolute
-              max-h-[70vh]
-              w-[90%]
-              max-w-[1100px]
-              object-contain
-              opacity-[0.90]
-              md:w-[78%]
+              inset-0
+              rounded-full
+              border
+              border-[#d6ae52]/10
             "
+          />
+
+          <div
+            className="
+              ring-rotate
+              absolute
+              inset-[50px]
+              rounded-full
+              border
+              border-dashed
+              border-[#d6ae52]/10
+            "
+            style={{ animationDirection: "reverse" }}
           />
 
         </div>
 
         {/* =================================================
-            CINEMATIC OVERLAYS
+            CAMERA
         ================================================= */}
 
-        {/* Top dark */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-black/20 to-black/80" />
+        <img
+          src={img_bg}
+          alt=""
+          aria-hidden="true"
+          className="
+            cinematic-float
+            absolute
+            bottom-[-20px]
+            left-[-100px]
+            z-[5]
+            w-[420px]
+            max-w-[70vw]
+            object-contain
+            opacity-30
+            grayscale
+            md:bottom-[-80px]
+            md:left-[-80px]
+            md:w-[680px]
+          "
+        />
 
-        {/* Bottom dark */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#020202] via-transparent to-transparent" />
+        {/* Camera gold glow */}
+        <div
+          className="
+            absolute
+            bottom-[8%]
+            left-[8%]
+            z-[4]
+            h-[250px]
+            w-[250px]
+            rounded-full
+            bg-[#d5ad50]/10
+            blur-[100px]
+          "
+        />
 
-        {/* Side vignette */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/60" />
+        {/* =================================================
+            MAIN LOGO
+        ================================================= */}
 
-        {/* Gold cinematic light */}
+        <div
+          className="
+            absolute
+            inset-0
+            z-[10]
+            flex
+            items-center
+            justify-center
+            px-5
+            pb-16
+            pt-24
+            md:pb-20
+          "
+        >
+
+          <div className="relative flex w-full max-w-[1100px] items-center justify-center">
+
+            {/* Logo golden glow */}
+
+            <div
+              key={`glow-${activeSlide}`}
+              className="
+                logo-reveal
+                absolute
+                h-[45%]
+                w-[60%]
+                rounded-full
+                bg-[#d8ae50]/20
+                blur-[100px]
+              "
+            />
+
+            <img
+              key={`logo-${activeSlide}`}
+              src={current.logo}
+              alt="Habesha Pictures"
+              className="
+                logo-reveal
+                cinematic-zoom
+                relative
+                z-10
+                max-h-[58vh]
+                w-[94%]
+                object-contain
+                drop-shadow-[0_0_35px_rgba(212,169,67,0.25)]
+                md:w-[78%]
+              "
+            />
+
+          </div>
+
+        </div>
+
+        {/* =================================================
+            CINEMATIC LIGHT SWEEP
+        ================================================= */}
+
         <div
           className="
             light-sweep
             pointer-events-none
             absolute
-            left-0
             top-0
-            z-10
+            z-[25]
             h-full
-            w-[25%]
+            w-[18%]
+            skew-x-[-18deg]
             bg-gradient-to-r
             from-transparent
-            via-[#e0b957]/20
+            via-[#f1d278]/15
             to-transparent
-            blur-xl
+            blur-2xl
           "
         />
 
-        {/* Film grain */}
-        <div className="pointer-events-none absolute inset-0 opacity-[0.035] mix-blend-overlay">
+        {/* =================================================
+            GOLD PARTICLES
+        ================================================= */}
+
+        <div className="pointer-events-none absolute inset-0 z-[15]">
+
+          <span className="particle absolute left-[20%] top-[55%] h-1 w-1 rounded-full bg-[#e4bd65]" />
+
+          <span
+            className="particle absolute left-[35%] top-[35%] h-[3px] w-[3px] rounded-full bg-[#e4bd65]"
+            style={{ animationDelay: "1s" }}
+          />
+
+          <span
+            className="particle absolute left-[65%] top-[25%] h-1 w-1 rounded-full bg-[#e4bd65]"
+            style={{ animationDelay: "2s" }}
+          />
+
+          <span
+            className="particle absolute right-[20%] top-[50%] h-[3px] w-[3px] rounded-full bg-[#e4bd65]"
+            style={{ animationDelay: "3s" }}
+          />
+
+          <span
+            className="particle absolute right-[35%] top-[30%] h-1 w-1 rounded-full bg-[#e4bd65]"
+            style={{ animationDelay: "4s" }}
+          />
+
+        </div>
+
+        {/* =================================================
+            CINEMATIC DARK OVERLAYS
+        ================================================= */}
+
+        <div className="absolute inset-0 z-[20] bg-gradient-to-b from-black/80 via-black/10 to-black/80" />
+
+        <div className="absolute inset-0 z-[21] bg-gradient-to-r from-black/80 via-transparent to-black/65" />
+
+        <div className="absolute inset-0 z-[22] bg-gradient-to-t from-[#020202] via-transparent to-transparent" />
+
+        {/* Grain */}
+
+        <div className="pointer-events-none absolute inset-0 z-[23] opacity-[0.035] mix-blend-overlay">
+
           <div
             className="h-full w-full"
             style={{
               backgroundImage:
-                "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.35'/%3E%3C/svg%3E\")",
+                "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.4'/%3E%3C/svg%3E\")",
             }}
           />
+
         </div>
 
       </div>
 
       {/* =====================================================
-          HERO CONTENT
+          HERO TEXT
       ===================================================== */}
-      <div className="relative z-30 flex h-full w-full items-end">
 
-        <div className="w-full px-5 pb-12 sm:px-10 md:px-20 md:pb-16 lg:px-24">
+      <div className="absolute inset-x-0 bottom-0 z-[50]">
 
-          <div className="max-w-[720px]">
+        <div className="mx-auto max-w-[1600px] px-5 pb-10 sm:px-8 md:px-14 md:pb-14 lg:px-20">
 
-            {/* Small label */}
-            <div
-              key={`label-${activeSlide}`}
-              className="text-in mb-5 flex items-center gap-4"
-            >
-              <span className="h-px w-10 bg-[#d9b45b]" />
+          <div className="grid items-end gap-10 lg:grid-cols-[1fr_auto]">
 
-              <span className="text-[9px] font-medium uppercase tracking-[0.38em] text-[#d9b45b] sm:text-[10px]">
-                {current.label}
-              </span>
-            </div>
+            {/* LEFT */}
 
-            {/* Main title */}
-            <div
-              key={`title-${activeSlide}`}
-              className="text-in"
-            >
-              <h1 className="font-serif text-5xl font-light leading-[0.9] tracking-[-0.04em] text-white sm:text-7xl md:text-8xl lg:text-[110px]">
+            <div className="max-w-[760px]">
 
-                <span className="block">
-                  Stories
-                </span>
-
-                <span className="ml-4 block italic text-[#d5af58] sm:ml-8">
-                  that remain.
-                </span>
-
-              </h1>
-            </div>
-
-            {/* Description */}
-            <p
-              key={`desc-${activeSlide}`}
-              className="
-                text-in
-                mt-6
-                max-w-[570px]
-                text-[10px]
-                font-light
-                uppercase
-                leading-6
-                tracking-[0.22em]
-                text-white/55
-                sm:text-xs
-                sm:leading-7
-              "
-              style={{ animationDelay: "250ms" }}
-            >
-              {current.subtitle}
-            </p>
-
-            {/* Gold line */}
-            <div className="mt-7 h-px w-full max-w-[470px] overflow-hidden bg-white/10">
-              <div
-                key={`line-${activeSlide}`}
-                className="line-grow h-full bg-gradient-to-r from-[#d6ae52] via-[#f2d27c] to-transparent"
-              />
-            </div>
-
-            {/* Bottom information */}
-            <div className="mt-6 flex flex-wrap items-center gap-x-8 gap-y-3">
+              {/* Label */}
 
               <div
-                key={`info-${activeSlide}`}
-                className="text-in flex items-center gap-3"
-                style={{ animationDelay: "450ms" }}
+                key={`label-${activeSlide}`}
+                className="text-reveal mb-5 flex items-center gap-4"
               >
-                <span className="text-[8px] tracking-[0.3em] text-white/35">
+
+                <span className="h-px w-12 bg-[#d8b45c]" />
+
+                <span className="text-[8px] font-medium uppercase tracking-[0.4em] text-[#d8b45c] sm:text-[10px]">
+                  {current.small}
+                </span>
+
+              </div>
+
+              {/* Title */}
+
+              <div key={`title-${activeSlide}`} className="text-reveal">
+
+                <h1 className="font-serif text-[48px] font-light leading-[.88] tracking-[-.04em] sm:text-7xl md:text-8xl lg:text-[105px]">
+
+                  <span className="block text-white">
+                    {current.title1}
+                  </span>
+
+                  <span className="ml-4 block italic text-[#d6af57] sm:ml-8">
+                    {current.title2}
+                  </span>
+
+                </h1>
+
+              </div>
+
+              {/* Subtitle */}
+
+              <p
+                key={`subtitle-${activeSlide}`}
+                className="
+                  text-reveal
+                  mt-6
+                  max-w-[600px]
+                  text-[9px]
+                  uppercase
+                  leading-6
+                  tracking-[0.28em]
+                  text-white/55
+                  sm:text-xs
+                  sm:leading-7
+                "
+                style={{ animationDelay: "300ms" }}
+              >
+                {current.subtitle}
+              </p>
+
+              {/* Line */}
+
+              <div className="mt-6 h-px w-full max-w-[520px] overflow-hidden bg-white/10">
+
+                <div
+                  key={`line-${activeSlide}`}
+                  className="
+                    line-reveal
+                    h-full
+                    bg-gradient-to-r
+                    from-[#d6ae52]
+                    via-[#f1d078]
+                    to-transparent
+                  "
+                />
+
+              </div>
+
+              {/* Bottom labels */}
+
+              <div className="mt-5 flex flex-wrap items-center gap-5 sm:gap-8">
+
+                <span className="text-[7px] tracking-[0.3em] text-white/35 sm:text-[8px]">
+                  FILM PRODUCTION
+                </span>
+
+                <span className="h-3 w-px bg-white/15" />
+
+                <span className="text-[7px] tracking-[0.3em] text-white/35 sm:text-[8px]">
                   PHOTOGRAPHY
                 </span>
 
-                <span className="h-3 w-px bg-white/20" />
+                <span className="h-3 w-px bg-white/15" />
 
-                <span className="text-[8px] tracking-[0.3em] text-white/35">
+                <span className="text-[7px] tracking-[0.3em] text-white/35 sm:text-[8px]">
                   CINEMATOGRAPHY
                 </span>
+
               </div>
 
             </div>
 
-          </div>
+            {/* =================================================
+                RIGHT SIDE
+            ================================================= */}
 
-          {/* =================================================
-              SLIDE INDICATORS
-          ================================================= */}
-          <div className="absolute bottom-12 right-5 flex items-center gap-3 sm:right-10 md:bottom-16 md:right-20 lg:right-24">
+            <div className="hidden w-[210px] border-l border-white/10 pl-7 lg:block">
 
-            <span className="mr-2 font-mono text-[9px] text-white/30">
-              0{activeSlide + 1}
-            </span>
+              <span className="text-[8px] tracking-[0.35em] text-[#d6af57]">
+                SELECTED WORK
+              </span>
 
-            {slides.map((_, index) => (
-              <button
-                key={index}
-                type="button"
-                onClick={() => setActiveSlide(index)}
-                aria-label={`Show slide ${index + 1}`}
-                className="group relative h-5 w-10"
-              >
-                <span
-                  className={`
-                    absolute
-                    left-0
-                    top-1/2
-                    h-px
-                    -translate-y-1/2
-                    transition-all
-                    duration-500
-                    ${
-                      activeSlide === index
-                        ? "w-10 bg-[#d7b45b]"
-                        : "w-5 bg-white/25 group-hover:w-8 group-hover:bg-white/60"
-                    }
-                  `}
-                />
-              </button>
-            ))}
+              <div className="mt-5">
 
-            <span className="ml-1 font-mono text-[9px] text-white/30">
-              0{slides.length}
-            </span>
+                <span className="font-serif text-5xl font-light text-white">
+                  0{activeSlide + 1}
+                </span>
+
+                <span className="mx-2 text-white/20">
+                  /
+                </span>
+
+                <span className="font-mono text-[9px] text-white/30">
+                  0{slides.length}
+                </span>
+
+              </div>
+
+              <p className="mt-5 text-[9px] leading-5 tracking-[0.08em] text-white/35">
+                Creating cinematic visual stories
+                designed to remain unforgettable.
+              </p>
+
+            </div>
 
           </div>
 
         </div>
+
+      </div>
+
+      {/* =====================================================
+          SLIDE CONTROLS
+      ===================================================== */}
+
+      <div
+        className="
+          absolute
+          bottom-8
+          right-5
+          z-[70]
+          flex
+          items-center
+          gap-2
+          sm:right-10
+          md:bottom-12
+          md:right-16
+        "
+      >
+
+        <span className="mr-2 font-mono text-[9px] text-white/30">
+          0{activeSlide + 1}
+        </span>
+
+        {slides.map((_, index) => (
+
+          <button
+            key={index}
+            type="button"
+            onClick={() => setActiveSlide(index)}
+            className="relative h-6 w-10"
+            aria-label={`Show slide ${index + 1}`}
+          >
+
+            <span
+              className={`
+                absolute
+                left-0
+                top-1/2
+                h-px
+                -translate-y-1/2
+                transition-all
+                duration-500
+                ${
+                  activeSlide === index
+                    ? "w-10 bg-[#d8b45c]"
+                    : "w-5 bg-white/20 hover:w-8 hover:bg-white/50"
+                }
+              `}
+            />
+
+          </button>
+
+        ))}
+
+        <span className="ml-1 font-mono text-[9px] text-white/30">
+          0{slides.length}
+        </span>
 
       </div>
 
       {/* =====================================================
           SCROLL INDICATOR
       ===================================================== */}
-      <div className="absolute bottom-6 left-1/2 z-40 hidden -translate-x-1/2 flex-col items-center gap-3 md:flex">
+
+      <div
+        className="
+          absolute
+          bottom-6
+          left-1/2
+          z-[70]
+          hidden
+          -translate-x-1/2
+          flex-col
+          items-center
+          gap-2
+          md:flex
+        "
+      >
 
         <span className="text-[7px] uppercase tracking-[0.4em] text-white/30">
-          Scroll
+          Explore
         </span>
 
-        <div className="h-10 w-px overflow-hidden bg-white/10">
-          <div className="h-1/2 w-full animate-pulse bg-[#d7b45b]" />
+        <div className="relative h-10 w-px overflow-hidden bg-white/10">
+
+          <div className="scroll-move absolute left-0 top-0 h-3 w-full bg-[#d8b45c]" />
+
         </div>
 
       </div>
