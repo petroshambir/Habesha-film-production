@@ -103,7 +103,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "./Navbar";
 
 import img_bg from "../assets/images/camera-pic-5-removebg-preview.png";
-import logoAi1 from "../assets/images/logoAi1.png";
+import logoAi1 from "../assets/images/logoAi3.png";
 import logoAi2 from "../assets/images/logoAi2.png";
 
 function Hero() {
