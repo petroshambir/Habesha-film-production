@@ -433,140 +433,142 @@
 
 // export default Hero;
 
+
 import React from "react";
 import Navbar from "./Navbar";
 
 import img_bg from "../assets/images/camera-pic-5-removebg-preview.png";
-import logoAi2 from "../assets/images/logoAi2.png";
+import logoAi1 from "../assets/images/logoAi1.png";
 
-function Hero({ imageSrc }) {
+function Hero() {
   return (
-    <section className="relative min-h-screen w-full overflow-hidden bg-[#070707] text-white">
+    <section className="relative min-h-screen overflow-hidden bg-[#080807] text-white">
 
-      {/* ================= GLOBAL CINEMATIC STYLE ================= */}
+      {/* ================= CINEMATIC ANIMATIONS ================= */}
       <style>{`
-        @keyframes heroZoom {
+        @keyframes heroScale {
           0%, 100% {
             transform: scale(1);
           }
 
           50% {
-            transform: scale(1.05);
+            transform: scale(1.045);
           }
         }
 
-        @keyframes floatCamera {
+        @keyframes cameraFloat {
           0%, 100% {
             transform: translateY(0);
           }
 
           50% {
-            transform: translateY(-10px);
+            transform: translateY(-8px);
           }
         }
 
-        @keyframes goldPulse {
-          0%, 100% {
-            opacity: .25;
-            transform: scale(.96);
+        @keyframes lightMove {
+          0% {
+            transform: translateX(-20%);
+            opacity: .15;
           }
 
           50% {
-            opacity: .55;
-            transform: scale(1.04);
-          }
-        }
-
-        @keyframes lineReveal {
-          0% {
-            width: 0;
-            opacity: 0;
+            opacity: .4;
           }
 
           100% {
-            width: 100%;
-            opacity: 1;
+            transform: translateX(20%);
+            opacity: .15;
           }
         }
 
-        @keyframes fadeUp {
-          0% {
-            opacity: 0;
-            transform: translateY(30px);
-          }
-
-          100% {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes slowRotate {
+        @keyframes revealUp {
           from {
-            transform: rotate(0deg);
+            opacity: 0;
+            transform: translateY(35px);
           }
 
           to {
-            transform: rotate(360deg);
+            opacity: 1;
+            transform: translateY(0);
           }
         }
 
-        @keyframes shimmer {
+        @keyframes revealLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-30px);
+          }
+
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+
+        @keyframes lineGrow {
+          from {
+            width: 0;
+          }
+
+          to {
+            width: 100%;
+          }
+        }
+
+        @keyframes scrollMove {
           0% {
-            transform: translateX(-120%);
+            transform: translateY(-100%);
+          }
+
+          50% {
+            transform: translateY(100%);
           }
 
           100% {
-            transform: translateX(120%);
+            transform: translateY(200%);
           }
         }
 
-        .hero-zoom {
-          animation: heroZoom 20s ease-in-out infinite;
+        .hero-scale {
+          animation: heroScale 18s ease-in-out infinite;
         }
 
         .camera-float {
-          animation: floatCamera 5s ease-in-out infinite;
+          animation: cameraFloat 6s ease-in-out infinite;
         }
 
-        .gold-pulse {
-          animation: goldPulse 5s ease-in-out infinite;
-        }
-
-        .fade-up {
-          animation: fadeUp 1s ease forwards;
-        }
-
-        .fade-up-delay-1 {
-          animation: fadeUp 1s .15s ease forwards;
+        .reveal-up {
+          animation: revealUp 1s .2s ease forwards;
           opacity: 0;
         }
 
-        .fade-up-delay-2 {
-          animation: fadeUp 1s .3s ease forwards;
+        .reveal-up-2 {
+          animation: revealUp 1s .4s ease forwards;
           opacity: 0;
         }
 
-        .fade-up-delay-3 {
-          animation: fadeUp 1s .45s ease forwards;
+        .reveal-up-3 {
+          animation: revealUp 1s .6s ease forwards;
           opacity: 0;
         }
 
-        .fade-up-delay-4 {
-          animation: fadeUp 1s .6s ease forwards;
+        .reveal-left {
+          animation: revealLeft 1s .7s ease forwards;
           opacity: 0;
         }
 
-        .slow-rotate {
-          animation: slowRotate 40s linear infinite;
+        .light-move {
+          animation: lightMove 8s ease-in-out infinite;
         }
 
-        .gold-line {
-          animation: lineReveal 1.5s ease forwards;
+        .line-grow {
+          animation: lineGrow 1.5s 1s ease forwards;
+          width: 0;
         }
 
-        .shimmer {
-          animation: shimmer 4s ease-in-out infinite;
+        .scroll-line {
+          animation: scrollMove 2.5s ease-in-out infinite;
         }
       `}</style>
 
@@ -574,37 +576,36 @@ function Hero({ imageSrc }) {
       {/* ================= BACKGROUND ================= */}
       <div className="absolute inset-0 overflow-hidden">
 
-        {/* Main background */}
+        {/* Cinematic background */}
         <div
-          className="absolute inset-0 scale-105 hero-zoom"
+          className="absolute inset-[-3%] hero-scale"
           style={{
-            backgroundImage: `url(${imageSrc || logoAi2})`,
+            backgroundImage: `
+              linear-gradient(
+                90deg,
+                rgba(5,5,4,.82) 0%,
+                rgba(5,5,4,.48) 42%,
+                rgba(5,5,4,.16) 75%,
+                rgba(5,5,4,.35) 100%
+              ),
+              url(${logoAi1})
+            `,
             backgroundSize: "cover",
             backgroundPosition: "center",
-            filter: "brightness(1.18) contrast(1.03)",
           }}
         />
 
-        {/* Soft cinematic dark overlay */}
-        <div className="absolute inset-0 bg-black/35" />
+        {/* Warm cinematic light */}
+        <div className="light-move absolute left-[35%] top-[15%] h-[35%] w-[45%] rotate-[-12deg] bg-[#d8a948]/10 blur-[100px]" />
 
-        {/* Soft left gradient */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent" />
+        {/* Bottom shadow */}
+        <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-[#080807] via-[#080807]/55 to-transparent" />
 
-        {/* Soft bottom gradient */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
+        {/* Left readability */}
+        <div className="absolute inset-y-0 left-0 w-[65%] bg-gradient-to-r from-[#080807]/75 via-[#080807]/35 to-transparent" />
 
-        {/* Golden cinematic atmosphere */}
-        <div className="absolute left-[52%] top-[18%] h-[520px] w-[520px] rounded-full bg-[#d9a441]/12 blur-[130px] gold-pulse" />
-
-        {/* Second subtle golden glow */}
-        <div className="absolute right-[5%] top-[45%] h-[300px] w-[300px] rounded-full bg-[#d9a441]/8 blur-[100px]" />
-
-        {/* Lighter vignette */}
-        <div className="absolute inset-0 shadow-[inset_0_0_150px_45px_rgba(0,0,0,0.55)]" />
-
-        {/* Very subtle grain */}
-        <div className="absolute inset-0 opacity-[0.02] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+        {/* Soft vignette */}
+        <div className="absolute inset-0 shadow-[inset_0_0_140px_35px_rgba(0,0,0,.45)]" />
 
       </div>
 
@@ -615,86 +616,102 @@ function Hero({ imageSrc }) {
       </div>
 
 
-      {/* ================= GOLD DECORATIVE LINES ================= */}
-      <div className="absolute left-0 top-[115px] z-20 hidden h-px w-[22%] bg-gradient-to-r from-[#d7a83d] to-transparent lg:block" />
-
-      <div className="absolute right-0 top-[115px] z-20 hidden h-px w-[15%] bg-gradient-to-l from-[#d7a83d] to-transparent lg:block" />
+      {/* ================= TOP GOLD LINE ================= */}
+      <div className="absolute left-0 right-0 top-[88px] z-30 hidden h-px bg-gradient-to-r from-[#d8aa48]/0 via-[#d8aa48]/40 to-[#d8aa48]/0 lg:block" />
 
 
-      {/* ================= MAIN CONTENT ================= */}
-      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[1600px] items-center px-6 pb-20 pt-32 sm:px-10 lg:px-16 xl:px-24">
+      {/* ================= MAIN HERO ================= */}
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[1600px] items-center px-6 pb-16 pt-28 sm:px-10 lg:px-16 xl:px-24">
 
-        <div className="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-[1.05fr_.95fr] lg:gap-8">
+        <div className="grid w-full grid-cols-1 items-center lg:grid-cols-[1fr_320px] xl:grid-cols-[1fr_380px]">
 
 
-          {/* ================= LEFT CONTENT ================= */}
-          <div className="relative z-20 max-w-3xl">
+          {/* ================= LEFT ================= */}
+          <div className="max-w-4xl">
 
-            {/* Small Label */}
-            <div className="fade-up mb-7 flex items-center gap-4">
+            {/* Eyebrow */}
+            <div className="reveal-left flex items-center gap-4">
 
-              <span className="h-px w-10 bg-[#d8aa45]" />
+              <span className="h-px w-12 bg-[#d8aa48]" />
 
-              <span className="text-[10px] font-medium uppercase tracking-[0.45em] text-[#e0b653] sm:text-xs">
-                Film Production • Photography • Cinematography
+              <span className="text-[9px] font-medium uppercase tracking-[0.5em] text-[#dfb75c] sm:text-[11px]">
+                Habesha Pictures
               </span>
 
             </div>
 
 
-            {/* Main Heading */}
-            <div className="fade-up-delay-1">
+            {/* Main headline */}
+            <div className="reveal-up mt-8">
 
-              <h1 className="font-serif text-[54px] font-medium leading-[0.9] tracking-[-0.04em] text-white drop-shadow-[0_4px_25px_rgba(0,0,0,0.45)] sm:text-[76px] md:text-[96px] lg:text-[105px] xl:text-[120px]">
-                We Create
+              <h1 className="font-serif text-[58px] font-normal leading-[.9] tracking-[-.045em] sm:text-[78px] md:text-[92px] lg:text-[105px] xl:text-[125px]">
+
+                We Turn
+
               </h1>
 
-              <h1 className="mt-2 font-serif text-[54px] font-medium leading-[0.9] tracking-[-0.04em] text-[#d8aa45] drop-shadow-[0_4px_25px_rgba(0,0,0,0.45)] sm:text-[76px] md:text-[96px] lg:text-[105px] xl:text-[120px]">
-                Visual Stories.
+              <h1 className="mt-1 font-serif text-[58px] font-normal leading-[.9] tracking-[-.045em] text-[#d9ab49] sm:text-[78px] md:text-[92px] lg:text-[105px] xl:text-[125px]">
+
+                Ideas
+
+              </h1>
+
+              <h1 className="mt-1 font-serif text-[58px] font-normal leading-[.9] tracking-[-.045em] sm:text-[78px] md:text-[92px] lg:text-[105px] xl:text-[125px]">
+
+                Into Stories.
+
               </h1>
 
             </div>
 
 
-            {/* Gold Divider */}
-            <div className="fade-up-delay-2 mt-8 h-px w-20 bg-[#d8aa45]" />
+            {/* Divider */}
+            <div className="reveal-up-2 mt-8 flex items-center gap-4">
+
+              <div className="h-px w-24 bg-[#d8aa48]" />
+
+              <span className="text-[9px] uppercase tracking-[.35em] text-zinc-400">
+                Film • Photo • Motion
+              </span>
+
+            </div>
 
 
             {/* Description */}
-            <p className="fade-up-delay-2 mt-7 max-w-xl text-sm font-light leading-7 tracking-wide text-zinc-200 sm:text-base sm:leading-8">
-              From powerful cinematic films to unforgettable photography,
-              we transform ideas, people and moments into visual stories
-              that connect with audiences across the world.
+            <p className="reveal-up-2 mt-7 max-w-xl text-sm font-light leading-7 tracking-wide text-zinc-300 sm:text-[15px] sm:leading-8">
+
+              We create cinematic films, photography and visual
+              experiences for brands, artists and stories that deserve
+              to be remembered.
+
             </p>
 
 
             {/* CTA */}
-            <div className="fade-up-delay-3 mt-9 flex flex-wrap items-center gap-4">
+            <div className="reveal-up-3 mt-9 flex flex-wrap items-center gap-5">
 
               <a
                 href="#portfolio"
-                className="group relative inline-flex items-center gap-4 overflow-hidden border border-[#d8aa45] bg-[#d8aa45] px-7 py-4 text-[10px] font-semibold uppercase tracking-[0.3em] text-black transition-all duration-500 hover:bg-transparent hover:text-[#d8aa45] sm:px-8"
+                className="group relative flex items-center gap-5 overflow-hidden bg-[#d8aa48] px-7 py-4 text-[10px] font-semibold uppercase tracking-[.3em] text-black transition-all duration-500 hover:bg-white"
               >
 
-                <span className="relative z-10">
+                <span>
                   Explore Our Work
                 </span>
 
-                <span className="relative z-10 text-lg transition-transform duration-500 group-hover:translate-x-2">
+                <span className="text-lg transition-transform duration-500 group-hover:translate-x-2">
                   →
                 </span>
-
-                <span className="absolute inset-0 -translate-x-full bg-white/20 shimmer" />
 
               </a>
 
 
               <a
                 href="#contact"
-                className="group inline-flex items-center gap-3 border border-white/30 bg-black/10 px-7 py-4 text-[10px] font-medium uppercase tracking-[0.3em] text-white backdrop-blur-sm transition-all duration-500 hover:border-[#d8aa45] hover:text-[#d8aa45] sm:px-8"
+                className="group flex items-center gap-3 border border-white/30 px-7 py-4 text-[10px] font-medium uppercase tracking-[.3em] text-white backdrop-blur-sm transition-all duration-500 hover:border-[#d8aa48] hover:text-[#d8aa48]"
               >
 
-                Start A Project
+                Let's Create
 
                 <span className="transition-transform duration-300 group-hover:translate-x-1">
                   ↗
@@ -705,44 +722,50 @@ function Hero({ imageSrc }) {
             </div>
 
 
-            {/* ================= STATS ================= */}
-            <div className="fade-up-delay-4 mt-12 grid max-w-2xl grid-cols-3 border-y border-white/15 py-5">
+            {/* ================= MINI CREDIBILITY ================= */}
+            <div className="reveal-up-3 mt-12 flex items-center gap-8">
 
-              <div className="border-r border-white/15 pr-4">
+              <div className="flex items-center gap-3">
 
-                <div className="font-serif text-2xl text-[#e0b653] sm:text-3xl">
+                <span className="font-serif text-2xl text-[#d8aa48]">
                   250+
-                </div>
+                </span>
 
-                <div className="mt-1 text-[8px] uppercase tracking-[0.25em] text-zinc-400 sm:text-[9px]">
+                <span className="max-w-[70px] text-[8px] uppercase leading-4 tracking-[.2em] text-zinc-400">
                   Projects
-                </div>
+                </span>
 
               </div>
 
 
-              <div className="border-r border-white/15 px-4">
+              <div className="h-8 w-px bg-white/15" />
 
-                <div className="font-serif text-2xl text-[#e0b653] sm:text-3xl">
+
+              <div className="flex items-center gap-3">
+
+                <span className="font-serif text-2xl text-[#d8aa48]">
                   120+
-                </div>
+                </span>
 
-                <div className="mt-1 text-[8px] uppercase tracking-[0.25em] text-zinc-400 sm:text-[9px]">
+                <span className="max-w-[70px] text-[8px] uppercase leading-4 tracking-[.2em] text-zinc-400">
                   Clients
-                </div>
+                </span>
 
               </div>
 
 
-              <div className="pl-4">
+              <div className="h-8 w-px bg-white/15" />
 
-                <div className="font-serif text-2xl text-[#e0b653] sm:text-3xl">
+
+              <div className="flex items-center gap-3">
+
+                <span className="font-serif text-2xl text-[#d8aa48]">
                   10+
-                </div>
+                </span>
 
-                <div className="mt-1 text-[8px] uppercase tracking-[0.25em] text-zinc-400 sm:text-[9px]">
+                <span className="max-w-[70px] text-[8px] uppercase leading-4 tracking-[.2em] text-zinc-400">
                   Years
-                </div>
+                </span>
 
               </div>
 
@@ -751,64 +774,107 @@ function Hero({ imageSrc }) {
           </div>
 
 
-          {/* ================= RIGHT VISUAL ================= */}
-          <div className="relative flex min-h-[420px] items-center justify-center lg:min-h-[650px]">
+          {/* ================= RIGHT SIDE ================= */}
+          <div className="relative hidden h-[650px] lg:block">
 
-            {/* Outer golden orbit */}
-            <div className="absolute h-[330px] w-[330px] rounded-full border border-[#d8aa45]/25 sm:h-[450px] sm:w-[450px] lg:h-[560px] lg:w-[560px]" />
-
-            {/* Rotating orbit */}
-            <div className="absolute h-[390px] w-[390px] rounded-full border border-[#d8aa45]/12 sm:h-[510px] sm:w-[510px] lg:h-[620px] lg:w-[620px] slow-rotate" />
+            {/* Vertical gold line */}
+            <div className="absolute right-[90px] top-1/2 h-[440px] w-px -translate-y-1/2 bg-gradient-to-b from-transparent via-[#d8aa48]/70 to-transparent" />
 
 
-            {/* Logo glow */}
-            <div className="absolute h-[280px] w-[280px] rounded-full bg-[#d8aa45]/15 blur-[100px] sm:h-[380px] sm:w-[380px]" />
+            {/* Services */}
+            <div className="absolute right-0 top-1/2 w-[260px] -translate-y-1/2 xl:w-[290px]">
+
+              <div className="reveal-left mb-8">
+
+                <span className="text-[9px] uppercase tracking-[.45em] text-[#d8aa48]">
+                  What We Do
+                </span>
+
+              </div>
 
 
-            {/* Main Logo */}
-            <div className="relative z-10 camera-float">
+              {/* Service 01 */}
+              <div className="reveal-left group mb-8 flex cursor-pointer items-start gap-5">
 
-              <img
-                src={logoAi2}
-                alt="Habesha Pictures"
-                className="w-[310px] max-w-[80vw] object-contain drop-shadow-[0_0_60px_rgba(216,170,69,0.35)] sm:w-[430px] lg:w-[540px] xl:w-[610px]"
-              />
+                <span className="pt-1 text-[9px] text-[#d8aa48]">
+                  01
+                </span>
+
+                <div>
+
+                  <h3 className="font-serif text-2xl transition-colors duration-300 group-hover:text-[#d8aa48]">
+                    Film Production
+                  </h3>
+
+                  <p className="mt-2 text-[10px] leading-5 tracking-wide text-zinc-400">
+                    Stories crafted with cinematic precision.
+                  </p>
+
+                </div>
+
+              </div>
+
+
+              {/* Service 02 */}
+              <div className="reveal-left group mb-8 flex cursor-pointer items-start gap-5">
+
+                <span className="pt-1 text-[9px] text-[#d8aa48]">
+                  02
+                </span>
+
+                <div>
+
+                  <h3 className="font-serif text-2xl transition-colors duration-300 group-hover:text-[#d8aa48]">
+                    Photography
+                  </h3>
+
+                  <p className="mt-2 text-[10px] leading-5 tracking-wide text-zinc-400">
+                    Powerful imagery with timeless character.
+                  </p>
+
+                </div>
+
+              </div>
+
+
+              {/* Service 03 */}
+              <div className="reveal-left group flex cursor-pointer items-start gap-5">
+
+                <span className="pt-1 text-[9px] text-[#d8aa48]">
+                  03
+                </span>
+
+                <div>
+
+                  <h3 className="font-serif text-2xl transition-colors duration-300 group-hover:text-[#d8aa48]">
+                    Cinematography
+                  </h3>
+
+                  <p className="mt-2 text-[10px] leading-5 tracking-wide text-zinc-400">
+                    Visual language designed to move people.
+                  </p>
+
+                </div>
+
+              </div>
 
             </div>
 
 
-            {/* Camera */}
-            <div className="absolute bottom-[-25px] left-[-5px] z-20 w-[230px] camera-float sm:bottom-[-35px] sm:left-0 sm:w-[300px] lg:bottom-[-30px] lg:left-[-35px] lg:w-[370px]">
+            {/* ================= CAMERA FOREGROUND ================= */}
+            <div className="camera-float absolute bottom-[-35px] left-[-180px] z-20 w-[430px] xl:left-[-210px] xl:w-[500px]">
 
               <img
                 src={img_bg}
                 alt="Professional cinema camera"
-                className="w-full object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.75)]"
+                className="w-full object-contain drop-shadow-[0_35px_45px_rgba(0,0,0,.9)]"
               />
 
             </div>
 
 
-            {/* Golden light particles */}
-            <div className="absolute right-[12%] top-[18%] h-2 w-2 rounded-full bg-[#e3b64e] shadow-[0_0_20px_8px_rgba(216,170,69,0.35)]" />
-
-            <div className="absolute left-[18%] top-[25%] h-1.5 w-1.5 rounded-full bg-[#e3b64e] shadow-[0_0_12px_4px_rgba(216,170,69,0.25)]" />
-
-            <div className="absolute right-[25%] top-[38%] h-1 w-1 rounded-full bg-[#e3b64e]" />
-
-
-            {/* Visual Label */}
-            <div className="absolute bottom-[10%] right-0 hidden border-l border-[#d8aa45] pl-4 lg:block">
-
-              <p className="text-[9px] uppercase tracking-[0.35em] text-[#d8aa45]">
-                Visual Storytelling
-              </p>
-
-              <p className="mt-1 text-[10px] tracking-wide text-zinc-400">
-                Crafted Beyond Imagination
-              </p>
-
-            </div>
+            {/* Golden light behind camera */}
+            <div className="absolute bottom-[80px] left-[-80px] h-[180px] w-[280px] rounded-full bg-[#d8aa48]/10 blur-[90px]" />
 
           </div>
 
@@ -817,38 +883,71 @@ function Hero({ imageSrc }) {
       </div>
 
 
-      {/* ================= BOTTOM SCROLL ================= */}
-      <div className="absolute bottom-7 left-1/2 z-30 hidden -translate-x-1/2 flex-col items-center md:flex">
+      {/* ================= BOTTOM BAR ================= */}
+      <div className="absolute bottom-0 left-0 right-0 z-30 border-t border-white/10 bg-black/20 backdrop-blur-[2px]">
 
-        <span className="mb-3 text-[8px] uppercase tracking-[0.5em] text-zinc-400">
-          Scroll To Explore
-        </span>
+        <div className="mx-auto flex h-[68px] max-w-[1600px] items-center justify-between px-6 sm:px-10 lg:px-16 xl:px-24">
 
-        <div className="relative h-10 w-px overflow-hidden bg-white/20">
+          {/* Left */}
+          <div className="hidden items-center gap-4 sm:flex">
 
-          <div className="absolute left-0 top-0 h-1/2 w-full bg-[#d8aa45]" />
+            <span className="text-[8px] uppercase tracking-[.4em] text-zinc-500">
+              Based in
+            </span>
+
+            <span className="text-[9px] uppercase tracking-[.3em] text-zinc-300">
+              Africa • Europe • Worldwide
+            </span>
+
+          </div>
+
+
+          {/* Center */}
+          <div className="absolute left-1/2 flex -translate-x-1/2 items-center gap-3">
+
+            <span className="text-[8px] uppercase tracking-[.4em] text-[#d8aa48]">
+              Scroll to explore
+            </span>
+
+            <span className="text-[#d8aa48]">
+              ↓
+            </span>
+
+          </div>
+
+
+          {/* Right */}
+          <div className="ml-auto flex items-center gap-4">
+
+            <span className="text-[9px] text-[#d8aa48]">
+              01
+            </span>
+
+            <div className="h-px w-12 bg-white/20">
+
+              <div className="h-px w-1/3 bg-[#d8aa48]" />
+
+            </div>
+
+            <span className="text-[9px] text-zinc-500">
+              04
+            </span>
+
+          </div>
 
         </div>
 
       </div>
 
 
-      {/* ================= SIDE INDEX ================= */}
-      <div className="absolute bottom-10 right-8 z-30 hidden lg:block">
+      {/* ================= MOBILE CAMERA ================= */}
+      <div className="camera-float absolute bottom-[65px] right-[-80px] z-10 w-[270px] opacity-80 lg:hidden">
 
-        <div className="flex items-center gap-3">
-
-          <span className="text-[9px] uppercase tracking-[0.35em] text-[#d8aa45]">
-            01
-          </span>
-
-          <span className="h-px w-10 bg-[#d8aa45]/60" />
-
-          <span className="text-[9px] uppercase tracking-[0.35em] text-zinc-500">
-            04
-          </span>
-
-        </div>
+        <img
+          src={img_bg}
+          alt="Cinema camera"
+          className="w-full object-contain"
+        />
 
       </div>
 
