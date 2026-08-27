@@ -99,1150 +99,335 @@
 // }
 
 // export default Hero;
-import React, { useEffect, useState } from "react";
+import React from "react";
 import Navbar from "./Navbar";
 
 import img_bg from "../assets/images/camera-pic-5-removebg-preview.png";
-import logoAi1 from "../assets/images/logoAi3.png";
 import logoAi2 from "../assets/images/logoAi2.png";
 
-function Hero() {
-  const slides = [
-    {
-      logo: logoAi1,
-      eyebrow: "CAPTURING LIFE • CREATING MEMORIES",
-      line1: "WE DON'T JUST",
-      line2: "CAPTURE MOMENTS.",
-      highlight: "WE TELL STORIES",
-      line3: "THAT LIVE FOREVER.",
-      subtitle: "Photography • Film Production • Cinematography",
-    },
-    {
-      logo: logoAi2,
-      eyebrow: "VISUAL STORIES • CINEMATIC EXPERIENCES",
-      line1: "YOUR VISION.",
-      line2: "OUR CREATIVE",
-      highlight: "STORYTELLING.",
-      line3: "MADE TO LAST.",
-      subtitle: "Film Production • Commercials • Visual Arts",
-    },
-  ];
-
-  const [activeSlide, setActiveSlide] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % slides.length);
-    }, 8000);
-
-    return () => clearInterval(timer);
-  }, []);
-
-  const current = slides[activeSlide];
-
+function Hero({ imageSrc }) {
   return (
-    <section className="relative min-h-[760px] h-[100vh] w-full overflow-hidden bg-[#020202] text-white">
-
-      {/* =========================================================
-          CINEMATIC ANIMATIONS
-      ========================================================= */}
-
+    <section className="relative min-h-screen w-full overflow-hidden bg-[#030303] text-white">
+      
+      {/* ================= GLOBAL CINEMATIC STYLE ================= */}
       <style>{`
-
-        @keyframes cameraFloat {
-          0%, 100% {
-            transform: translateY(0) scale(1);
-          }
-          50% {
-            transform: translateY(-12px) scale(1.015);
-          }
+        @keyframes heroZoom {
+          0%, 100% { transform: scale(1); }
+          50% { transform: scale(1.06); }
         }
 
-        @keyframes logoCinematicIn {
+        @keyframes floatCamera {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-12px); }
+        }
+
+        @keyframes goldPulse {
+          0%, 100% { opacity: .35; transform: scale(.95); }
+          50% { opacity: .75; transform: scale(1.05); }
+        }
+
+        @keyframes lineReveal {
+          0% { width: 0; opacity: 0; }
+          100% { width: 100%; opacity: 1; }
+        }
+
+        @keyframes fadeUp {
           0% {
             opacity: 0;
-            transform: translate(-50%, -50%) scale(.72);
-            filter: blur(15px);
+            transform: translateY(30px);
           }
-
-          45% {
-            opacity: .55;
-            filter: blur(5px);
-          }
-
-          75% {
-            opacity: .9;
-            filter: blur(1px);
-          }
-
-          100% {
-            opacity: 1;
-            transform: translate(-50%, -50%) scale(1);
-            filter: blur(0);
-          }
-        }
-
-        @keyframes logoSlowZoom {
-          0% {
-            transform: translate(-50%, -50%) scale(1);
-          }
-
-          100% {
-            transform: translate(-50%, -50%) scale(1.08);
-          }
-        }
-
-        @keyframes textCinematicIn {
-          0% {
-            opacity: 0;
-            transform: translateY(35px);
-            filter: blur(5px);
-          }
-
           100% {
             opacity: 1;
             transform: translateY(0);
-            filter: blur(0);
           }
         }
 
-        @keyframes goldLightMove {
-          0% {
-            transform: translateX(-120%) skewX(-20deg);
-            opacity: 0;
-          }
-
-          15% {
-            opacity: .35;
-          }
-
-          45% {
-            opacity: .12;
-          }
-
-          100% {
-            transform: translateX(500%) skewX(-20deg);
-            opacity: 0;
-          }
+        @keyframes slowRotate {
+          from { transform: rotate(0deg); }
+          to { transform: rotate(360deg); }
         }
 
-        @keyframes glowPulse {
-          0%, 100% {
-            opacity: .18;
-            transform: scale(.92);
-          }
-
-          50% {
-            opacity: .48;
-            transform: scale(1.08);
-          }
+        @keyframes shimmer {
+          0% { transform: translateX(-120%); }
+          100% { transform: translateX(120%); }
         }
 
-        @keyframes filmRoll {
-          0% {
-            transform: translateX(-30px) rotate(-4deg);
-          }
-
-          50% {
-            transform: translateX(30px) rotate(3deg);
-          }
-
-          100% {
-            transform: translateX(-30px) rotate(-4deg);
-          }
-        }
-
-        @keyframes particleUp {
-          0% {
-            transform: translateY(30px) scale(.6);
-            opacity: 0;
-          }
-
-          30% {
-            opacity: .7;
-          }
-
-          100% {
-            transform: translateY(-120px) scale(1);
-            opacity: 0;
-          }
-        }
-
-        @keyframes shine {
-          0% {
-            transform: translateX(-150%);
-            opacity: 0;
-          }
-
-          20% {
-            opacity: .8;
-          }
-
-          50% {
-            opacity: .15;
-          }
-
-          100% {
-            transform: translateX(250%);
-            opacity: 0;
-          }
-        }
-
-        @keyframes bottomLine {
-          0% {
-            width: 0;
-          }
-
-          100% {
-            width: 100%;
-          }
-        }
-
-        @keyframes scrollDown {
-          0% {
-            transform: translateY(-10px);
-            opacity: 0;
-          }
-
-          50% {
-            opacity: 1;
-          }
-
-          100% {
-            transform: translateY(14px);
-            opacity: 0;
-          }
+        .hero-zoom {
+          animation: heroZoom 18s ease-in-out infinite;
         }
 
         .camera-float {
-          animation: cameraFloat 6s ease-in-out infinite;
+          animation: floatCamera 5s ease-in-out infinite;
         }
 
-        .logo-cinematic-in {
-          animation:
-            logoCinematicIn 1.5s cubic-bezier(.16,1,.3,1) forwards,
-            logoSlowZoom 8s ease-out 1.5s forwards;
+        .gold-pulse {
+          animation: goldPulse 4s ease-in-out infinite;
         }
 
-        .text-cinematic-in {
-          animation: textCinematicIn 1s cubic-bezier(.16,1,.3,1) forwards;
+        .fade-up {
+          animation: fadeUp 1s ease forwards;
         }
 
-        .gold-light-move {
-          animation: goldLightMove 7s ease-in-out infinite;
+        .fade-up-delay-1 {
+          animation: fadeUp 1s .15s ease forwards;
+          opacity: 0;
         }
 
-        .glow-pulse {
-          animation: glowPulse 5s ease-in-out infinite;
+        .fade-up-delay-2 {
+          animation: fadeUp 1s .3s ease forwards;
+          opacity: 0;
         }
 
-        .film-roll {
-          animation: filmRoll 8s ease-in-out infinite;
+        .fade-up-delay-3 {
+          animation: fadeUp 1s .45s ease forwards;
+          opacity: 0;
         }
 
-        .particle-up {
-          animation: particleUp 5s ease-out infinite;
+        .fade-up-delay-4 {
+          animation: fadeUp 1s .6s ease forwards;
+          opacity: 0;
         }
 
-        .shine {
-          animation: shine 4s ease-in-out infinite;
+        .slow-rotate {
+          animation: slowRotate 35s linear infinite;
         }
 
-        .bottom-line {
-          animation: bottomLine 1.5s ease-out forwards;
+        .gold-line {
+          animation: lineReveal 1.5s ease forwards;
         }
 
-        .scroll-down {
-          animation: scrollDown 1.8s ease-in-out infinite;
+        .shimmer {
+          animation: shimmer 4s ease-in-out infinite;
         }
-
       `}</style>
 
+      {/* ================= BACKGROUND ================= */}
+      <div className="absolute inset-0 overflow-hidden">
+        
+        <div
+          className="absolute inset-0 scale-105 hero-zoom"
+          style={{
+            backgroundImage: `url(${imageSrc || logoAi2})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        />
 
-      {/* =========================================================
-          NAVBAR
-      ========================================================= */}
+        {/* Dark cinematic overlay */}
+        <div className="absolute inset-0 bg-black/70" />
 
-      <div className="absolute left-0 top-0 z-[100] w-full">
+        {/* Left cinematic darkness */}
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/75 to-transparent" />
+
+        {/* Bottom darkness */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/20 to-transparent" />
+
+        {/* Golden radial atmosphere */}
+        <div className="absolute left-[55%] top-[20%] h-[500px] w-[500px] rounded-full bg-[#d9a441]/10 blur-[120px] gold-pulse" />
+
+        {/* Subtle vignette */}
+        <div className="absolute inset-0 shadow-[inset_0_0_180px_70px_rgba(0,0,0,0.95)]" />
+
+        {/* Film grain */}
+        <div className="absolute inset-0 opacity-[0.035] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]" />
+      </div>
+
+      {/* ================= NAVBAR ================= */}
+      <div className="absolute left-0 top-0 z-50 w-full">
         <Navbar />
       </div>
 
-
-      {/* =========================================================
-          CINEMATIC BACKGROUND
-      ========================================================= */}
-
-      <div className="absolute inset-0 overflow-hidden">
-
-        {/* Black background */}
-
-        <div className="absolute inset-0 bg-[#020202]" />
-
-
-        {/* Subtle gold atmosphere - LEFT */}
-
-        <div
-          className="
-            glow-pulse
-            absolute
-            -left-[250px]
-            top-[35%]
-            h-[600px]
-            w-[600px]
-            rounded-full
-            bg-[#c9982e]/20
-            blur-[170px]
-          "
-        />
-
-
-        {/* Subtle gold atmosphere - RIGHT */}
-
-        <div
-          className="
-            glow-pulse
-            absolute
-            -right-[250px]
-            top-[15%]
-            h-[700px]
-            w-[700px]
-            rounded-full
-            bg-[#c9982e]/15
-            blur-[180px]
-          "
-          style={{ animationDelay: "2s" }}
-        />
-
-
-        {/* =====================================================
-            CAMERA — LEFT BOTTOM
-        ===================================================== */}
-
-        <div
-          className="
-            camera-float
-            absolute
-            bottom-[-35px]
-            left-[-110px]
-            z-[8]
-            w-[440px]
-            sm:w-[520px]
-            md:bottom-[-65px]
-            md:left-[-80px]
-            md:w-[650px]
-            lg:w-[720px]
-          "
-        >
-
-          {/* Camera glow */}
-
-          <div
-            className="
-              absolute
-              bottom-[10%]
-              left-[25%]
-              h-[220px]
-              w-[320px]
-              rounded-full
-              bg-[#d6a83d]/20
-              blur-[100px]
-            "
-          />
-
-          <img
-            src={img_bg}
-            alt="Professional Camera"
-            className="
-              relative
-              z-10
-              w-full
-              object-contain
-              grayscale-[20%]
-              opacity-[0.72]
-              drop-shadow-[0_20px_50px_rgba(0,0,0,0.9)]
-            "
-          />
-
-        </div>
-
-
-        {/* =====================================================
-            MAIN LOGO AREA
-        ===================================================== */}
-
-        <div
-          className="
-            absolute
-            inset-0
-            z-[15]
-            flex
-            items-center
-            justify-center
-            px-4
-            pb-[190px]
-            pt-[100px]
-            sm:pb-[160px]
-            md:pb-[90px]
-            lg:justify-center
-          "
-        >
-
-          <div className="relative h-full w-full max-w-[1050px]">
-
-            {/* Logo ambient glow */}
-
-            <div
-              key={`logo-glow-${activeSlide}`}
-              className="
-                logo-cinematic-in
-                absolute
-                left-1/2
-                top-1/2
-                h-[330px]
-                w-[330px]
-                -translate-x-1/2
-                -translate-y-1/2
-                rounded-full
-                bg-[#d6a83d]/20
-                blur-[110px]
-                sm:h-[430px]
-                sm:w-[430px]
-                md:h-[500px]
-                md:w-[500px]
-              "
-            />
-
-
-            {/* Logo */}
-
-            <img
-              key={`logo-${activeSlide}`}
-              src={current.logo}
-              alt="Habesha Pictures"
-              className="
-                logo-cinematic-in
-                absolute
-                left-1/2
-                top-1/2
-                z-10
-                max-h-[48vh]
-                w-[78%]
-                -translate-x-1/2
-                -translate-y-1/2
-                object-contain
-                drop-shadow-[0_0_45px_rgba(212,169,67,0.35)]
-                sm:w-[70%]
-                md:max-h-[58vh]
-                md:w-[62%]
-                lg:w-[58%]
-              "
-            />
-
-          </div>
-
-        </div>
-
-
-        {/* =====================================================
-            GOLD CINEMATIC LIGHT
-        ===================================================== */}
-
-        <div
-          className="
-            gold-light-move
-            pointer-events-none
-            absolute
-            left-0
-            top-[-20%]
-            z-[30]
-            h-[150%]
-            w-[16%]
-            rotate-[12deg]
-            bg-gradient-to-r
-            from-transparent
-            via-[#f5d36b]/25
-            to-transparent
-            blur-[30px]
-          "
-        />
-
-
-        {/* =====================================================
-            GOLD PARTICLES
-        ===================================================== */}
-
-        <div className="pointer-events-none absolute inset-0 z-[25]">
-
-          <span
-            className="
-              particle-up
-              absolute
-              left-[28%]
-              top-[58%]
-              h-[3px]
-              w-[3px]
-              rounded-full
-              bg-[#e8c46b]
-            "
-          />
-
-          <span
-            className="
-              particle-up
-              absolute
-              left-[40%]
-              top-[50%]
-              h-[2px]
-              w-[2px]
-              rounded-full
-              bg-[#f0d37a]
-            "
-            style={{ animationDelay: "1s" }}
-          />
-
-          <span
-            className="
-              particle-up
-              absolute
-              left-[58%]
-              top-[42%]
-              h-[3px]
-              w-[3px]
-              rounded-full
-              bg-[#e8c46b]
-            "
-            style={{ animationDelay: "2s" }}
-          />
-
-          <span
-            className="
-              particle-up
-              absolute
-              left-[72%]
-              top-[55%]
-              h-[2px]
-              w-[2px]
-              rounded-full
-              bg-[#f0d37a]
-            "
-            style={{ animationDelay: "3s" }}
-          />
-
-          <span
-            className="
-              particle-up
-              absolute
-              left-[82%]
-              top-[45%]
-              h-[3px]
-              w-[3px]
-              rounded-full
-              bg-[#e8c46b]
-            "
-            style={{ animationDelay: "4s" }}
-          />
-
-        </div>
-
-
-        {/* =====================================================
-            LIGHT SHINE ON LOGO
-        ===================================================== */}
-
-        <div
-          className="
-            shine
-            pointer-events-none
-            absolute
-            left-[45%]
-            top-[10%]
-            z-[28]
-            h-[70%]
-            w-[10%]
-            rotate-[15deg]
-            bg-gradient-to-r
-            from-transparent
-            via-white/10
-            to-transparent
-            blur-2xl
-          "
-        />
-
-
-        {/* =====================================================
-            CINEMATIC VIGNETTE
-        ===================================================== */}
-
-        <div
-          className="
-            pointer-events-none
-            absolute
-            inset-0
-            z-[40]
-            bg-gradient-to-b
-            from-black/80
-            via-transparent
-            to-black/90
-          "
-        />
-
-        <div
-          className="
-            pointer-events-none
-            absolute
-            inset-0
-            z-[41]
-            bg-gradient-to-r
-            from-black/80
-            via-transparent
-            to-black/60
-          "
-        />
-
-
-        {/* Bottom cinematic shadow */}
-
-        <div
-          className="
-            pointer-events-none
-            absolute
-            bottom-0
-            left-0
-            right-0
-            z-[42]
-            h-[35%]
-            bg-gradient-to-t
-            from-black
-            via-black/70
-            to-transparent
-          "
-        />
-
-
-        {/* Film grain */}
-
-        <div className="pointer-events-none absolute inset-0 z-[45] opacity-[0.025] mix-blend-overlay">
-
-          <div
-            className="h-full w-full"
-            style={{
-              backgroundImage:
-                "url(\"data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='.35'/%3E%3C/svg%3E\")",
-            }}
-          />
-
-        </div>
-
-      </div>
-
-
-      {/* =========================================================
-          LEFT CINEMATIC MESSAGE
-      ========================================================= */}
-
-      <div
-        key={`content-${activeSlide}`}
-        className="
-          text-cinematic-in
-          absolute
-          left-0
-          top-1/2
-          z-[60]
-          w-full
-          -translate-y-1/2
-          px-6
-          sm:px-10
-          md:px-16
-          lg:px-20
-          xl:px-24
-        "
-      >
-
-        <div className="max-w-[520px]">
-
-          {/* Eyebrow */}
-
-          <div className="mb-6 flex items-center gap-4">
-
-            <span className="h-px w-9 bg-[#d6ae52]" />
-
-            <span
-              className="
-                text-[8px]
-                font-medium
-                uppercase
-                tracking-[0.38em]
-                text-[#e2bd62]
-                sm:text-[10px]
-              "
-            >
-              {current.eyebrow}
-            </span>
-
-          </div>
-
-
-          {/* Main message */}
-
-          <h1
-            className="
-              font-serif
-              text-[36px]
-              font-light
-              leading-[1.08]
-              tracking-[0.01em]
-              text-white
-              sm:text-[48px]
-              md:text-[54px]
-              lg:text-[58px]
-          "
-          >
-
-            <span className="block">
-              {current.line1}
-            </span>
-
-            <span className="block">
-              {current.line2}
-            </span>
-
-            <span
-              className="
-                block
-                text-[#d6aa43]
-                drop-shadow-[0_0_20px_rgba(214,170,67,0.18)]
-              "
-            >
-              {current.highlight}
-            </span>
-
-            <span className="block">
-              {current.line3}
-            </span>
-
-          </h1>
-
-
-          {/* Gold divider */}
-
-          <div className="mt-7 h-px w-[260px] overflow-hidden bg-white/10">
-
-            <div
-              key={`line-${activeSlide}`}
-              className="
-                bottom-line
-                h-full
-                bg-gradient-to-r
-                from-[#b98724]
-                via-[#f1cf72]
-                to-transparent
-              "
-            />
-
-          </div>
-
-
-          {/* Subtitle */}
-
-          <p className="
-            mt-5
-            text-[9px]
-            uppercase
-            tracking-[0.28em]
-            text-white/50
-            sm:text-[10px]
-          ">
-            {current.subtitle}
-          </p>
-
-
-          {/* CTA */}
-
-          <button
-            type="button"
-            className="
-              group
-              mt-7
-              flex
-              items-center
-              gap-6
-              border
-              border-[#c99b35]/60
-              bg-black/20
-              px-6
-              py-3
-              text-[9px]
-              uppercase
-              tracking-[0.25em]
-              text-[#e5c66f]
-              backdrop-blur-sm
-              transition-all
-              duration-500
-              hover:border-[#f1ce70]
-              hover:bg-[#c99b35]/10
-              hover:shadow-[0_0_30px_rgba(210,167,66,0.15)]
-            "
-          >
-
-            <span>
-              Discover Our Work
-            </span>
-
-            <span
-              className="
-                text-lg
-                transition-transform
-                duration-500
-                group-hover:translate-x-2
-              "
-            >
-              →
-            </span>
-
-          </button>
-
-        </div>
-
-      </div>
-
-
-      {/* =========================================================
-          RIGHT SIDE SERVICES
-      ========================================================= */}
-
-      <div
-        className="
-          absolute
-          right-5
-          top-1/2
-          z-[60]
-          hidden
-          -translate-y-1/2
-          lg:block
-          xl:right-12
-        "
-      >
-
-        <div className="w-[220px]">
-
-          <ServiceItem
-            icon="◉"
-            title="PHOTOGRAPHY"
-            subtitle="Timeless & Elegant"
-          />
-
-          <ServiceItem
-            icon="▣"
-            title="FILM PRODUCTION"
-            subtitle="Cinematic & Creative"
-          />
-
-          <ServiceItem
-            icon="▷"
-            title="CINEMATOGRAPHY"
-            subtitle="Visual Storytelling"
-          />
-
-        </div>
-
-      </div>
-
-
-      {/* =========================================================
-          BOTTOM STATS
-      ========================================================= */}
-
-      <div
-        className="
-          absolute
-          bottom-0
-          left-0
-          right-0
-          z-[70]
-          border-t
-          border-white/10
-          bg-black/35
-          backdrop-blur-sm
-        "
-      >
-
-        <div
-          className="
-            mx-auto
-            flex
-            max-w-[1500px]
-            items-center
-            justify-between
-            px-5
-            py-4
-            sm:px-8
-            md:px-12
-            lg:px-20
-          "
-        >
-
-          <div className="hidden items-center gap-4 sm:flex">
-
-            <span className="text-2xl text-[#d6ae52]">
-              ◎
-            </span>
-
-            <div>
-
-              <p className="text-[9px] tracking-[0.25em] text-white">
-                GLOBAL VISION
-              </p>
-
-              <p className="mt-1 text-[8px] text-white/35">
-                Stories Beyond Borders
-              </p>
+      {/* ================= GOLD DECORATIVE LINE ================= */}
+      <div className="absolute left-0 top-[115px] z-20 hidden h-px w-[22%] bg-gradient-to-r from-[#d7a83d] to-transparent lg:block" />
+
+      <div className="absolute right-0 top-[115px] z-20 hidden h-px w-[15%] bg-gradient-to-l from-[#d7a83d] to-transparent lg:block" />
+
+      {/* ================= MAIN CONTENT ================= */}
+      <div className="relative z-10 mx-auto flex min-h-screen w-full max-w-[1600px] items-center px-6 pb-20 pt-32 sm:px-10 lg:px-16 xl:px-24">
+
+        <div className="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-[1.05fr_.95fr] lg:gap-8">
+
+          {/* ================= LEFT CONTENT ================= */}
+          <div className="relative z-20 max-w-3xl">
+
+            {/* Small Label */}
+            <div className="fade-up mb-7 flex items-center gap-4">
+              <span className="h-px w-10 bg-[#d8aa45]" />
+
+              <span className="text-[10px] font-medium uppercase tracking-[0.45em] text-[#d8aa45] sm:text-xs">
+                Film Production • Photography • Cinematography
+              </span>
+            </div>
+
+            {/* Main Heading */}
+            <div className="fade-up-delay-1">
+              <h1 className="font-serif text-[54px] font-medium leading-[0.9] tracking-[-0.04em] sm:text-[76px] md:text-[96px] lg:text-[105px] xl:text-[120px]">
+                We Create
+              </h1>
+
+              <h1 className="mt-2 font-serif text-[54px] font-medium leading-[0.9] tracking-[-0.04em] text-[#d8aa45] sm:text-[76px] md:text-[96px] lg:text-[105px] xl:text-[120px]">
+                Visual Stories.
+              </h1>
+            </div>
+
+            {/* Gold Divider */}
+            <div className="fade-up-delay-2 mt-8 h-px w-20 bg-[#d8aa45]" />
+
+            {/* Description */}
+            <p className="fade-up-delay-2 mt-7 max-w-xl text-sm font-light leading-7 tracking-wide text-zinc-300 sm:text-base sm:leading-8">
+              From powerful cinematic films to unforgettable photography,
+              we transform ideas, people and moments into visual stories
+              that connect with audiences across the world.
+            </p>
+
+            {/* CTA */}
+            <div className="fade-up-delay-3 mt-9 flex flex-wrap items-center gap-4">
+
+              <a
+                href="#portfolio"
+                className="group relative inline-flex items-center gap-4 overflow-hidden border border-[#d8aa45] bg-[#d8aa45] px-7 py-4 text-[10px] font-semibold uppercase tracking-[0.3em] text-black transition-all duration-500 hover:bg-transparent hover:text-[#d8aa45] sm:px-8"
+              >
+                <span className="relative z-10">
+                  Explore Our Work
+                </span>
+
+                <span className="relative z-10 text-lg transition-transform duration-500 group-hover:translate-x-2">
+                  →
+                </span>
+
+                <span className="absolute inset-0 -translate-x-full bg-white/20 shimmer" />
+              </a>
+
+              <a
+                href="#contact"
+                className="group inline-flex items-center gap-3 border border-white/20 px-7 py-4 text-[10px] font-medium uppercase tracking-[0.3em] text-white transition-all duration-500 hover:border-[#d8aa45] hover:text-[#d8aa45] sm:px-8"
+              >
+                Start A Project
+
+                <span className="transition-transform duration-300 group-hover:translate-x-1">
+                  ↗
+                </span>
+              </a>
+
+            </div>
+
+            {/* ================= STATS ================= */}
+            <div className="fade-up-delay-4 mt-12 grid max-w-2xl grid-cols-3 border-y border-white/10 py-5">
+
+              <div className="border-r border-white/10 pr-4">
+                <div className="font-serif text-2xl text-[#d8aa45] sm:text-3xl">
+                  250+
+                </div>
+
+                <div className="mt-1 text-[8px] uppercase tracking-[0.25em] text-zinc-500 sm:text-[9px]">
+                  Projects
+                </div>
+              </div>
+
+              <div className="border-r border-white/10 px-4">
+                <div className="font-serif text-2xl text-[#d8aa45] sm:text-3xl">
+                  120+
+                </div>
+
+                <div className="mt-1 text-[8px] uppercase tracking-[0.25em] text-zinc-500 sm:text-[9px]">
+                  Clients
+                </div>
+              </div>
+
+              <div className="pl-4">
+                <div className="font-serif text-2xl text-[#d8aa45] sm:text-3xl">
+                  10+
+                </div>
+
+                <div className="mt-1 text-[8px] uppercase tracking-[0.25em] text-zinc-500 sm:text-[9px]">
+                  Years
+                </div>
+              </div>
 
             </div>
 
           </div>
 
+          {/* ================= RIGHT VISUAL ================= */}
+          <div className="relative flex min-h-[420px] items-center justify-center lg:min-h-[650px]">
 
-          <Stat number="250+" label="PROJECTS COMPLETED" />
-          <Stat number="120+" label="HAPPY CLIENTS" />
-          <Stat number="10+" label="YEARS EXPERIENCE" />
+            {/* Golden orbit */}
+            <div className="absolute h-[330px] w-[330px] rounded-full border border-[#d8aa45]/20 sm:h-[450px] sm:w-[450px] lg:h-[560px] lg:w-[560px]" />
 
+            <div className="absolute h-[390px] w-[390px] rounded-full border border-[#d8aa45]/10 sm:h-[510px] sm:w-[510px] lg:h-[620px] lg:w-[620px] slow-rotate" />
 
-          <div className="hidden items-center gap-4 sm:flex">
+            {/* Glow behind logo */}
+            <div className="absolute h-[250px] w-[250px] rounded-full bg-[#d8aa45]/15 blur-[100px] sm:h-[350px] sm:w-[350px]" />
 
-            <span className="text-2xl text-[#d6ae52]">
-              ◉
-            </span>
+            {/* Main Logo */}
+            <div className="relative z-10 camera-float">
+              <img
+                src={logoAi2}
+                alt="Habesha Pictures"
+                className="w-[310px] max-w-[80vw] object-contain drop-shadow-[0_0_50px_rgba(216,170,69,0.25)] sm:w-[430px] lg:w-[540px] xl:w-[610px]"
+              />
+            </div>
 
-            <div>
+            {/* Camera */}
+            <div className="absolute bottom-[-25px] left-[-5px] z-20 w-[230px] camera-float sm:bottom-[-35px] sm:left-[0] sm:w-[300px] lg:bottom-[-30px] lg:left-[-35px] lg:w-[370px]">
+              <img
+                src={img_bg}
+                alt="Professional cinema camera"
+                className="w-full object-contain drop-shadow-[0_25px_35px_rgba(0,0,0,0.9)]"
+              />
+            </div>
 
-              <p className="text-[9px] tracking-[0.25em] text-white">
-                PASSION DRIVEN
+            {/* Floating Golden Dot */}
+            <div className="absolute right-[12%] top-[18%] h-2 w-2 rounded-full bg-[#d8aa45] shadow-[0_0_20px_8px_rgba(216,170,69,0.3)]" />
+
+            <div className="absolute left-[18%] top-[25%] h-1.5 w-1.5 rounded-full bg-[#d8aa45]" />
+
+            {/* Visual Label */}
+            <div className="absolute bottom-[10%] right-0 hidden border-l border-[#d8aa45] pl-4 lg:block">
+              <p className="text-[9px] uppercase tracking-[0.35em] text-[#d8aa45]">
+                Visual Storytelling
               </p>
 
-              <p className="mt-1 text-[8px] text-white/35">
-                Detail. Emotion. Impact.
+              <p className="mt-1 text-[10px] tracking-wide text-zinc-500">
+                Crafted Beyond Imagination
               </p>
-
             </div>
 
           </div>
 
         </div>
-
       </div>
 
+      {/* ================= BOTTOM SCROLL ================= */}
+      <div className="absolute bottom-7 left-1/2 z-30 hidden -translate-x-1/2 flex-col items-center md:flex">
 
-      {/* =========================================================
-          SLIDE CONTROLS
-      ========================================================= */}
-
-      <div
-        className="
-          absolute
-          right-5
-          top-[110px]
-          z-[90]
-          flex
-          items-center
-          gap-2
-          sm:right-8
-          md:right-14
-        "
-      >
-
-        <span className="mr-2 font-mono text-[8px] text-white/35">
-          0{activeSlide + 1}
-        </span>
-
-        {slides.map((_, index) => (
-
-          <button
-            key={index}
-            type="button"
-            onClick={() => setActiveSlide(index)}
-            className="group relative h-5 w-8"
-            aria-label={`Show slide ${index + 1}`}
-          >
-
-            <span
-              className={`
-                absolute
-                left-0
-                top-1/2
-                h-px
-                -translate-y-1/2
-                transition-all
-                duration-500
-                ${
-                  activeSlide === index
-                    ? "w-8 bg-[#e1bb5c]"
-                    : "w-4 bg-white/20 group-hover:w-6 group-hover:bg-white/50"
-                }
-              `}
-            />
-
-          </button>
-
-        ))}
-
-        <span className="ml-1 font-mono text-[8px] text-white/35">
-          0{slides.length}
-        </span>
-
-      </div>
-
-
-      {/* =========================================================
-          SCROLL
-      ========================================================= */}
-
-      <div
-        className="
-          absolute
-          bottom-[88px]
-          left-1/2
-          z-[80]
-          hidden
-          -translate-x-1/2
-          flex-col
-          items-center
-          md:flex
-        "
-      >
-
-        <span className="
-          text-[7px]
-          uppercase
-          tracking-[0.45em]
-          text-white/35
-        ">
+        <span className="mb-3 text-[8px] uppercase tracking-[0.5em] text-zinc-500">
           Scroll To Explore
         </span>
 
-        <div className="relative mt-3 h-8 w-px bg-white/10">
-
-          <div
-            className="
-              scroll-down
-              absolute
-              left-0
-              top-0
-              h-3
-              w-px
-              bg-[#e2bd62]
-            "
-          />
-
+        <div className="relative h-10 w-px overflow-hidden bg-white/10">
+          <div className="absolute left-0 top-0 h-1/2 w-full bg-[#d8aa45]" />
         </div>
 
+      </div>
+
+      {/* ================= SIDE INDEX ================= */}
+      <div className="absolute bottom-10 right-8 z-30 hidden lg:block">
+        <div className="flex items-center gap-3">
+          <span className="text-[9px] uppercase tracking-[0.35em] text-[#d8aa45]">
+            01
+          </span>
+
+          <span className="h-px w-10 bg-[#d8aa45]/50" />
+
+          <span className="text-[9px] uppercase tracking-[0.35em] text-zinc-600">
+            04
+          </span>
+        </div>
       </div>
 
     </section>
   );
 }
-
-
-/* ============================================================
-   SERVICE ITEM
-============================================================ */
-
-function ServiceItem({ icon, title, subtitle }) {
-  return (
-    <div className="
-      group
-      border-b
-      border-white/10
-      py-5
-      transition-all
-      duration-500
-      hover:border-[#d6ae52]/70
-    ">
-
-      <div className="flex items-center gap-4">
-
-        <span className="
-          flex
-          h-9
-          w-9
-          items-center
-          justify-center
-          rounded-full
-          border
-          border-[#c89b35]/60
-          text-sm
-          text-[#d6ae52]
-          transition-all
-          duration-500
-          group-hover:bg-[#c89b35]/10
-          group-hover:shadow-[0_0_20px_rgba(214,174,82,0.2)]
-        ">
-          {icon}
-        </span>
-
-        <div>
-
-          <p className="
-            text-[9px]
-            tracking-[0.22em]
-            text-white
-          ">
-            {title}
-          </p>
-
-          <p className="
-            mt-1
-            text-[8px]
-            text-white/35
-          ">
-            {subtitle}
-          </p>
-
-        </div>
-
-      </div>
-
-    </div>
-  );
-}
-
-
-/* ============================================================
-   STAT
-============================================================ */
-
-function Stat({ number, label }) {
-  return (
-    <div className="
-      border-l
-      border-white/10
-      px-4
-      text-center
-      sm:px-7
-      md:px-10
-    ">
-
-      <p className="
-        font-serif
-        text-2xl
-        text-[#e0b95f]
-        sm:text-3xl
-      ">
-        {number}
-      </p>
-
-      <p className="
-        mt-1
-        text-[7px]
-        tracking-[0.2em]
-        text-white/45
-        sm:text-[8px]
-      ">
-        {label}
-      </p>
-
-    </div>
-  );
-}
-
 
 export default Hero;
