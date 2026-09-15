@@ -10,49 +10,125 @@ const sectionsConfig = [
 ];
 
 // ምስሊ ናብ ኣዝዩ ንኡስ ኪሎባይት (KB) ንምቕናስ ዝሕግዝ ፈንክሽን - ንካስተመር ፖርታል ጥራሕ ዝዓለመ
+// const compressImageFile = (file) => {
+//   return new Promise((resolve) => {
+//     const reader = new FileReader();
+//     reader.readAsDataURL(file);
+//     reader.onload = (event) => {
+//       const img = new Image();
+//       img.src = event.target.result;
+//       img.onload = () => {
+//         const canvas = document.createElement('canvas');
+//         let width = img.width;
+//         let height = img.height;
+
+//         const MAX_WIDTH = 800;
+//         const MAX_HEIGHT = 800;
+//         if (width > height) {
+//           if (width > MAX_WIDTH) {
+//             height *= MAX_WIDTH / width;
+//             width = MAX_WIDTH;
+//           }
+//         } else {
+//           if (height > MAX_HEIGHT) {
+//             width *= MAX_HEIGHT / height;
+//             height = MAX_HEIGHT;
+//           }
+//         }
+
+//         canvas.width = width;
+//         canvas.height = height;
+//         const ctx = canvas.getContext('2d');
+//         ctx.drawImage(img, 0, 0, width, height);
+
+//         canvas.toBlob((blob) => {
+//           const compressedFile = new File([blob], file.name, {
+//             type: 'image/jpeg',
+//             lastModified: Date.now(),
+//           });
+//           resolve(compressedFile);
+//         }, 'image/jpeg', 0.2);
+//       };
+//     };
+//   });
+// };
+// Client Portal images:
+// Reduce file size while keeping NORMAL / GOOD visual quality.
+// This is NOT aggressive compression.
 const compressImageFile = (file) => {
-  return new Promise((resolve) => {
+  return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.readAsDataURL(file);
+
     reader.onload = (event) => {
       const img = new Image();
-      img.src = event.target.result;
+
       img.onload = () => {
-        const canvas = document.createElement('canvas');
         let width = img.width;
         let height = img.height;
 
-        const MAX_WIDTH = 800;
-        const MAX_HEIGHT = 800;
-        if (width > height) {
-          if (width > MAX_WIDTH) {
-            height *= MAX_WIDTH / width;
-            width = MAX_WIDTH;
-          }
-        } else {
-          if (height > MAX_HEIGHT) {
-            width *= MAX_HEIGHT / height;
-            height = MAX_HEIGHT;
-          }
+        // Keep high resolution.
+        // Only resize very large images.
+        const MAX_WIDTH = 4500;
+        const MAX_HEIGHT = 4500;
+
+        if (width > MAX_WIDTH || height > MAX_HEIGHT) {
+          const ratio = Math.min(MAX_WIDTH / width, MAX_HEIGHT / height);
+
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
         }
 
+        const canvas = document.createElement("canvas");
         canvas.width = width;
         canvas.height = height;
-        const ctx = canvas.getContext('2d');
+
+        const ctx = canvas.getContext("2d");
+
+        // Better quality when resizing
+        ctx.imageSmoothingEnabled = true;
+        ctx.imageSmoothingQuality = "high";
+
         ctx.drawImage(img, 0, 0, width, height);
 
-        canvas.toBlob((blob) => {
-          const compressedFile = new File([blob], file.name, {
-            type: 'image/jpeg',
-            lastModified: Date.now(),
-          });
-          resolve(compressedFile);
-        }, 'image/jpeg', 0.2);
+        // NORMAL JPEG QUALITY
+        // 0.88 = good balance between quality and file size
+        canvas.toBlob(
+          (blob) => {
+            if (!blob) {
+              reject(new Error("Image compression failed"));
+              return;
+            }
+
+            const compressedFile = new File(
+              [blob],
+              file.name.replace(/\.[^/.]+$/, "") + ".jpg",
+              {
+                type: "image/jpeg",
+                lastModified: Date.now(),
+              },
+            );
+
+            resolve(compressedFile);
+          },
+          "image/jpeg",
+          0.95,
+        );
       };
+
+      img.onerror = () => {
+        reject(new Error("Could not load image"));
+      };
+
+      img.src = event.target.result;
     };
+
+    reader.onerror = () => {
+      reject(new Error("Could not read image"));
+    };
+
+    reader.readAsDataURL(file);
   });
 };
-
 function AdminDashboard() {
   const [sectionsData, setSectionsData] = useState({});
 
